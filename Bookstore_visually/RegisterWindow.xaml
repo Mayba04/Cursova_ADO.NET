@@ -1,0 +1,48 @@
+﻿<Window x:Class="Bookstore_visually.RegisterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bookstore_visually"
+        mc:Ignorable="d"
+        Title="RegisterWindow" Height="550" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="Registration Form" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,20"/>
+
+        <Label Grid.Row="1" Content="Login:" Margin="20"/>
+        <TextBox Grid.Row="1" Name="LoginTextBox" Margin="120,0,20,0" VerticalAlignment="Center" Width="200" />
+
+        <Label Grid.Row="2" Content="Password:" Margin="20"/>
+        <TextBox Grid.Row="2" Name="PasswordBox" Margin="120,0,20,0" VerticalAlignment="Center" Width="200" />
+
+        <Label Grid.Row="3" Content="Confirm Password:" Margin="20"/>
+        <TextBox Grid.Row="3" Name="ConfirmPasswordBox" Margin="120,0,20,0" VerticalAlignment="Center" Width="200" />
+
+        
+        <Label Grid.Row="4" Content="Email:" Margin="20"/>
+        <TextBox Grid.Row="4" Name="EmailTextBox" Margin="120,0,20,0" IsEnabled="False" VerticalAlignment="Center" Width="200" />
+
+        <Label Grid.Row="5" Content="Name:" Margin="20"/>
+        <TextBox Grid.Row="5" Name="NameTextBox" Margin="120,0,20,0" IsEnabled="False" VerticalAlignment="Center" Width="200" />
+
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20">
+            <Button Name="CreateCredentials" Content="Create Credentials" Margin="10" Click="CreateCredentials_Click"/>
+            <Button Name ="CreateAccount" Content="Create Account" Margin="10" IsEnabled="False" Click="CreateAccount_Click"/>
+            <Button Content="Cancel" Margin="10" Click="Cancel_Click"/>
+        </StackPanel>
+
+
+    </Grid>
+</Window>

@@ -1,0 +1,225 @@
+﻿using Bookstore.Entities;
+using Microsoft.Data.SqlClient.Server;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Reflection.Emit;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Bookstore.Helpers
+{
+    internal static class DBInitializer
+    {
+        public static void SeedGenres(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Genre>().HasData(new Genre[]
+            {
+                new Genre() {Id = 1, Name = "Fiction"},
+                new Genre() {Id = 2, Name = "Non-fiction"},
+                new Genre() {Id = 3, Name = "Mystery"},
+                new Genre() {Id = 4, Name = "Fiction"},
+                new Genre() {Id = 5, Name = "Romance"},
+                new Genre() {Id = 6, Name = "Science Fiction"},
+                new Genre() {Id = 7, Name = "Fantasy"}
+            });
+        }
+
+        public static void SeedBooks(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>().HasData(new Book[]
+            {
+            
+            new Book
+                {
+                    Id = 1,
+                    Title = "The Great Gatsby",
+                    Publisher = "Scribner",
+                    Year = 1925,
+                    Price = 12.99m,
+                    Quantity = 20,
+                    GenreId = 1,
+                },
+                new Book
+                {
+                    Id = 2,
+                    Title = "Harry Potter and the Philosopher's Stone",
+                    Publisher = "Bloomsbury",
+                    Year = 1997,
+                    Price = 10.99m,
+                    Quantity = 19,
+                    GenreId = 1
+                },
+                new Book
+                {
+                    Id = 3,
+                    Title = "The Da Vinci Code",
+                    Publisher = "Doubleday",
+                    Year = 2003,
+                    Price = 19.99m,
+                    Quantity = 18,
+                    GenreId = 3
+                },
+                new Book
+                {
+                    Id = 4,
+                    Title = "Murder on the Orient Express",
+                    Publisher = "Collins Crime Club",
+                    Year = 1934,
+                    Price = 8.99m,
+                    Quantity = 15,
+                    GenreId = 3
+                },
+                new Book
+                {
+                    Id = 5,
+                    Title = "Pride and Prejudice",
+                    Publisher = "T. Egerton, Whitehall",
+                    Year = 1813,
+                    Price = 6.99m,
+                    Quantity = 10,
+                    GenreId = 4
+                },
+                new Book
+                {
+                    Id = 6,
+                    Title = "The Lord of the Rings",
+                    Publisher = "Allen & Unwin",
+                    Year = 1954,
+                    Price = 15.99m,
+                    Quantity = 13,
+                    GenreId = 6
+                },
+                new Book
+                {
+                    Id = 7,
+                    Title = "Foundation",
+                    Publisher = "Gnome Press",
+                    Year = 1951,
+                    Price = 12.99m,
+                    Quantity = 11,
+                    GenreId = 5
+                }
+
+            });
+        }
+
+        public static void SeedAuthors(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Authors>().HasData(new Authors[]
+            {
+                new Authors()
+                {
+                    Id = 1, Name = "J.K.", Surname = "Rowling"
+
+                },
+                new Authors()
+                {
+                     Id = 2, Name = "Stephen", Surname = "King"
+                },
+                new Authors()
+                {
+                     Id = 3, Name = "Dan", Surname = "Brown"
+                },
+                new Authors()
+                {
+                     Id = 4, Name = "Agatha", Surname = "Christie"
+                },
+                new Authors()
+                {
+                     Id = 5, Name = "Jane", Surname = "Austen"
+                },
+                new Authors()
+                {
+                     Id = 6, Name = "J.R.R.", Surname = "Tolkien"
+                },
+                new Authors()
+                {
+                     Id = 7, Name = "Isaac", Surname = "Asimov"
+                }
+            });
+
+        }
+
+
+
+        public static void SeedBookAuthors(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<BookAuthor>().HasData(new BookAuthor[]
+            {
+                new BookAuthor() {BookId = 1, AuthorId = 1},
+                new BookAuthor() {BookId = 2, AuthorId = 3},
+                new BookAuthor() {BookId = 3, AuthorId = 2},
+                new BookAuthor() {BookId = 4, AuthorId = 2},
+                new BookAuthor() {BookId = 5, AuthorId = 1},
+                new BookAuthor() {BookId = 5, AuthorId = 3},
+                new BookAuthor() {BookId = 6, AuthorId = 3}
+            });
+        }
+
+        public static void SeedCredentials(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Credentials>().HasData(
+                new Credentials
+                {
+                    Id = 1,
+                    Login = "user1",
+                    Password = "password1"
+                },
+                new Credentials
+                {
+                    Id = 2,
+                    Login = "user2",
+                    Password = "password2"
+                }
+               
+            );
+        }
+
+        public static void SeedClients(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Client>().HasData(
+                new Client
+                {
+                    CredentialsId = 1,
+                    Name = "John Doe",
+                    Email = "john.doe@example.com",
+                    Status_admin = false,
+
+                },
+                new Client
+                {
+                    CredentialsId = 2,
+                    Name = "Jane Smith",
+                    Email = "jane.smith@example.com",
+                    Status_admin = false,
+                }
+                
+            );
+        }
+
+        public static void SeedOrders(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Order>().HasData(
+
+            new Order { Id = 1, Date = DateTime.Now, ClientId = 1, Price = 15.99m, Quantity = 1, Payment_status = false },
+            new Order { Id = 2, Date = DateTime.Now, ClientId = 2, Price = 10.99m, Quantity = 1, Payment_status = false },
+            new Order { Id = 3, Date = DateTime.Now, ClientId = 2, Price = 19.99m, Quantity = 1, Payment_status = false }
+            ); ;
+        }
+
+        public static void SeedOrderBooks(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OrderBook>().HasData(
+        
+            new OrderBook { OrderId = 1, BookId = 6  },
+            new OrderBook { OrderId = 2, BookId = 2 },
+            new OrderBook { OrderId = 2, BookId = 3 }
+            );
+        }
+    }
+}

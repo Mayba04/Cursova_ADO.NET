@@ -221,5 +221,14 @@ namespace Bookstore.Helpers
             new OrderBook { OrderId = 2, BookId = 3 }
             );
         }
+
+        public static void SeedComments (this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Comment>().HasData(new Comment[]
+            {
+                new Comment() {Id = 1, Text = "Very cool book", BookId = 1, ClientId = 1, CreatedAt = DateTime.Now},
+                new Comment() {Id = 2, Text = "I advise you to read it", BookId = 2, ClientId = 2, CreatedAt = DateTime.Now}
+            });
+        }
     }
 }

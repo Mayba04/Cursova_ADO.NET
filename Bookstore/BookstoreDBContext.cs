@@ -19,6 +19,7 @@ namespace Bookstore
         public DbSet<Credentials> Credentials { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderBook> OrderBooks { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -49,7 +50,6 @@ namespace Bookstore
             modelBuilder.Entity<Order>().HasKey(o => o.Id);
             modelBuilder.Entity<Order>().HasOne(o=> o.Clients).WithMany(c => c.Orders).HasForeignKey(o => o.ClientId);
 
-
             modelBuilder.Entity<OrderBook>().HasKey(ob => new { ob.OrderId, ob.BookId });
             modelBuilder.Entity<OrderBook>().HasOne(o => o.Order).WithMany(o => o.OrderBooks).HasForeignKey(o => o.OrderId);
             modelBuilder.Entity<OrderBook>().HasOne(b => b.Book).WithMany(b => b.OrderBooks).HasForeignKey(b => b.BookId);
@@ -59,16 +59,17 @@ namespace Bookstore
             modelBuilder.Entity<Client>().Property(c => c.Name).IsRequired().HasMaxLength(100).HasColumnName("FirstName");
             modelBuilder.Entity<Client>().Property(c => c.Email).IsRequired().HasMaxLength(100);
 
-
             modelBuilder.Entity<Authors>().HasKey(a => a.Id);
             modelBuilder.Entity<Authors>().Property(a => a.Name).IsRequired();
             modelBuilder.Entity<Authors>().Property(a => a.Surname).IsRequired();
 
-
-
             modelBuilder.Entity<BookAuthor>().HasKey(ba => new { ba.AuthorId, ba.BookId });
             modelBuilder.Entity<BookAuthor>().HasOne(a => a.Author).WithMany(a => a.BookAuthors).HasForeignKey(a => a.AuthorId);
             modelBuilder.Entity<BookAuthor>().HasOne(b => b.Book).WithMany(b => b.BookAuthors).HasForeignKey(b => b.BookId);
+
+            modelBuilder.Entity<Comment>().HasKey(c => c.Id);
+            modelBuilder.Entity<Comment>().HasOne(c => c.Book).WithMany(b => b.Comments).HasForeignKey(c => c.BookId);
+            modelBuilder.Entity<Comment>().HasOne(c => c.Client).WithMany(c => c.Comments).HasForeignKey(c => c.ClientId);
 
             modelBuilder.SeedGenres();
             modelBuilder.SeedAuthors();
@@ -78,6 +79,7 @@ namespace Bookstore
             modelBuilder.SeedClients();
             modelBuilder.SeedOrders();
             modelBuilder.SeedOrderBooks();
+            modelBuilder.SeedComments();
 
         }
 

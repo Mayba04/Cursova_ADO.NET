@@ -19,5 +19,7 @@ namespace Bookstore.Entities
         public ICollection<Order> Orders { get; set; }
 
         public Credentials Credentials { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
     }
 }

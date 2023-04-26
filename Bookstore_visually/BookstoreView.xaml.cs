@@ -63,6 +63,26 @@ namespace Bookstore_visually
             model.AddCDGBook(ff);
         }
 
+        private void WriteCommentBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (Book.SelectedItem != null)
+            {
+                var selectedRow = (dynamic)Book.SelectedItems;
+                int id = selectedRow[0].Id;
+                int idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Credentials)Credential_user).Id).Select(c => c.CredentialsId).FirstOrDefault();
+                this.IsEnabled = false;
+                CommentWindow comment = new CommentWindow(id, idClient);
+                comment.Closed += Comment_Closed;
+                comment.Show();
+                //int? id = ((Order)OrderDataGrid.SelectedItem).Id;
+            }
+        }
+
+        private void Comment_Closed(object? sender, EventArgs e)
+        {
+            this.IsEnabled = true;
+        }
+
         //book
         //search
         private void AuthorSearchButton_Click(object sender, RoutedEventArgs e)
@@ -329,6 +349,13 @@ namespace Bookstore_visually
 
         }
 
+        private void ExitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
+        }
 
+      
     }
 }

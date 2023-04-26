@@ -16,6 +16,10 @@ namespace Bookstore_visually
         private ObservableCollection<object> CDGMPAuthor;
         private ObservableCollection<object> CDGMPGenre;
 
+        private ObservableCollection<CommentInfo> commentInfos;
+
+        public string Books { get; set; }
+
 
         public ViewModel()
         {
@@ -27,6 +31,7 @@ namespace Bookstore_visually
             CDGMostSold = new ObservableCollection<object>();
             CDGMPAuthor = new ObservableCollection<object>();
             CDGMPGenre = new ObservableCollection<object>();
+            commentInfos = new ObservableCollection<CommentInfo>();
         }
 
         public IEnumerable<object> ClientDataGridDatabook => CDGBook;
@@ -37,6 +42,8 @@ namespace Bookstore_visually
         public IEnumerable<object> CDGDMostSold => CDGMostSold;
         public IEnumerable<object> CDGDMPAuthor => CDGMPAuthor;
         public IEnumerable<object> CDGDMPGenre => CDGMPGenre;
+        public IEnumerable<CommentInfo> CommentsInfo => commentInfos;
+
 
         public void AddCDGBook(List<object> list)
         {
@@ -110,8 +117,27 @@ namespace Bookstore_visually
             }
         }
 
+        public void AddComment(CommentInfo info)
+        {
+            commentInfos.Add(info);
+        }
+
+        public void ClearComment()
+        {
+            commentInfos.Clear();
+        }
+
+
+
     }
 
+    [AddINotifyPropertyChangedInterface]
+    public class CommentInfo
+    {
+        public string Name { get; set; }
+        public string Date { get; set; }
+        public string Text { get; set; }
+        public int IdComment { get; set; }
+    }
 
-    
 }

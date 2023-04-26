@@ -9,7 +9,8 @@
          d:DataContext="{d:DesignInstance local:ViewModel}"
         Title="BookstoreView" Height="450" Width="800">
     <Grid>
-        <TabControl>
+        <Button  Content="Exit" HorizontalAlignment="Right"  VerticalAlignment="Top" Click="ExitBtn_Click"></Button>
+        <TabControl >
             <TabItem Header="Book ">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -17,9 +18,10 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Margin="10">
-                        <Button Content="GetAll Book" Width="100" Click="Button_Click_1"/>
+                        <Button Content="GetAll Book" Margin="5" Width="100" Click="Button_Click_1"/>
+                        <Button Content="Write a comment" Margin="5" Width="100" Click="WriteCommentBtn_Click"/>
                     </StackPanel>
-                    <DataGrid ItemsSource="{Binding ClientDataGridDatabook}"  Grid.Row="1" Margin="10" IsReadOnly="False" ></DataGrid>
+                    <DataGrid x:Name="Book" ItemsSource="{Binding ClientDataGridDatabook}"  Grid.Row="1" Margin="10" IsReadOnly="False" ></DataGrid>
                 </Grid>
             </TabItem>
             <TabItem Header="Search">

@@ -26,9 +26,41 @@ namespace Bookstore_visually
         IRepository<Book> repository = new Repository<Book>(new BookstoreDBContext());
         BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
 
+        ViewModel model;
         public AdminPage()
         {
             InitializeComponent();
+            model = new ViewModel();
+            dataGrid.SelectionChanged += DataGrid_SelectionChanged;
+            this.DataContext = model;
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateComment();
+        }
+
+        public void UpdateComment()
+        {
+            if (dataGrid.SelectedItems != null)
+            {
+                var selectedRow = (dynamic)dataGrid.SelectedItem;
+                int id = selectedRow.Id;
+                model.ClearComment();
+                var comment = bookstoreDBContext.Comments.Where(b => b.BookId == id).Select(c => new { ID = c.Id, Name = c.Client.Name, Date = c.CreatedAt, Text = c.Text }).ToList();
+
+                foreach (var item in comment)
+                {
+                    CommentInfo commentInfo = new CommentInfo();
+                    commentInfo.Name = item.Name;
+                    commentInfo.Date = item.Date.ToShortDateString();
+                    commentInfo.Text = item.Text;
+                    commentInfo.IdComment = item.ID;
+                    model.AddComment(commentInfo);
+
+                }
+            }
+           
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
@@ -112,5 +144,16 @@ namespace Bookstore_visually
             RefreshDataGrid();
         }
 
+        private void DeleteCommentBTN(object sender, RoutedEventArgs e)
+        {
+            if (CommentBox.SelectedItem != null)
+            {
+                var selectedRow = (dynamic)CommentBox.SelectedItem;
+                int id = selectedRow.IdComment;
+                bookstoreDBContext.Comments.Remove(bookstoreDBContext.Comments.Where(b => b.Id == id).FirstOrDefault());
+                bookstoreDBContext.SaveChanges();
+                UpdateComment();
+            }
+        }
     }
 }

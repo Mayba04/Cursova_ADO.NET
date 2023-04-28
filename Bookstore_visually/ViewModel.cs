@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Media.Imaging;
 using PropertyChanged;
 
 namespace Bookstore_visually
@@ -20,6 +21,7 @@ namespace Bookstore_visually
 
         public string Books { get; set; }
 
+        public BitmapImage Image{ get; set; }
 
         public ViewModel()
         {

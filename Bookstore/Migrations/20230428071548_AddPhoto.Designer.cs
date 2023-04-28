@@ -4,14 +4,16 @@ using Bookstore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bookstore.Migrations
 {
     [DbContext(typeof(BookstoreDBContext))]
-    partial class BookstoreDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230428071548_AddPhoto")]
+    partial class AddPhoto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,7 +316,7 @@ namespace Bookstore.Migrations
                             Id = 1,
                             BookId = 1,
                             ClientId = 1,
-                            CreatedAt = new DateTime(2023, 4, 28, 11, 48, 16, 514, DateTimeKind.Local).AddTicks(482),
+                            CreatedAt = new DateTime(2023, 4, 28, 10, 15, 47, 908, DateTimeKind.Local).AddTicks(2659),
                             Text = "Very cool book"
                         },
                         new
@@ -322,7 +324,7 @@ namespace Bookstore.Migrations
                             Id = 2,
                             BookId = 2,
                             ClientId = 2,
-                            CreatedAt = new DateTime(2023, 4, 28, 11, 48, 16, 514, DateTimeKind.Local).AddTicks(708),
+                            CreatedAt = new DateTime(2023, 4, 28, 10, 15, 47, 908, DateTimeKind.Local).AddTicks(2918),
                             Text = "I advise you to read it"
                         });
                 });
@@ -448,7 +450,7 @@ namespace Bookstore.Migrations
                         {
                             Id = 1,
                             ClientId = 1,
-                            Date = new DateTime(2023, 4, 28, 11, 48, 16, 511, DateTimeKind.Local).AddTicks(7520),
+                            Date = new DateTime(2023, 4, 28, 10, 15, 47, 905, DateTimeKind.Local).AddTicks(9060),
                             Payment_status = false,
                             Price = 15.99m,
                             Quantity = 1
@@ -457,7 +459,7 @@ namespace Bookstore.Migrations
                         {
                             Id = 2,
                             ClientId = 2,
-                            Date = new DateTime(2023, 4, 28, 11, 48, 16, 513, DateTimeKind.Local).AddTicks(6057),
+                            Date = new DateTime(2023, 4, 28, 10, 15, 47, 907, DateTimeKind.Local).AddTicks(8424),
                             Payment_status = false,
                             Price = 10.99m,
                             Quantity = 1
@@ -466,7 +468,7 @@ namespace Bookstore.Migrations
                         {
                             Id = 3,
                             ClientId = 2,
-                            Date = new DateTime(2023, 4, 28, 11, 48, 16, 513, DateTimeKind.Local).AddTicks(6076),
+                            Date = new DateTime(2023, 4, 28, 10, 15, 47, 907, DateTimeKind.Local).AddTicks(8445),
                             Payment_status = false,
                             Price = 19.99m,
                             Quantity = 1
@@ -529,7 +531,7 @@ namespace Bookstore.Migrations
                     b.HasIndex("BookId")
                         .IsUnique();
 
-                    b.ToTable("Photos");
+                    b.ToTable("Photo");
 
                     b.HasData(
                         new

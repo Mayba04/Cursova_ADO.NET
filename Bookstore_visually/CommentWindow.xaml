@@ -12,6 +12,7 @@
             <RowDefinition Height="115"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -19,7 +20,8 @@
   
         </Grid.ColumnDefinitions>
         <Label Name="BooksComboBox" Content="{Binding Books}" Margin="10"/>
-        <Button Grid.Column="1" Width="45" Height="20" Margin="5" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="SendCommentBtn_Click"></Button>
+        <Image Grid.Column="1" Width="120" Source="{Binding Image}"></Image>
+        <Button Grid.Column="1" Grid.Row="4"  Grid.ColumnSpan="2" Width="45" Height="20" Margin="5" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="SendCommentBtn_Click"></Button>
         <ListBox Grid.Row="1" Grid.ColumnSpan="2" HorizontalContentAlignment="Stretch" ItemsSource="{Binding CommentsInfo}" 
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemTemplate>

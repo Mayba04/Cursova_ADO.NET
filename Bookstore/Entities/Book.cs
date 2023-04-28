@@ -19,6 +19,6 @@ namespace Bookstore.Entities
         public ICollection<BookAuthor> BookAuthors { get; set; }
         public ICollection<OrderBook> OrderBooks { get; set; }
         public ICollection<Comment> Comments { get; set; }
-
+        public Photo CoverPhoto { get; set; }
     }
 }

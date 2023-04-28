@@ -20,6 +20,7 @@ namespace Bookstore
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderBook> OrderBooks { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Photo> Photos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -46,6 +47,7 @@ namespace Bookstore
             modelBuilder.Entity<Book>().HasOne(b => b.Genre).WithMany(g => g.Books).HasForeignKey(b => b.GenreId);
             modelBuilder.Entity<Book>().Property(b => b.Title).IsRequired();
             modelBuilder.Entity<Book>().Property(b => b.Publisher).IsRequired();
+            modelBuilder.Entity<Book>().HasOne(b => b.CoverPhoto).WithOne(p => p.Book).HasForeignKey<Photo>(p => p.BookId);
 
             modelBuilder.Entity<Order>().HasKey(o => o.Id);
             modelBuilder.Entity<Order>().HasOne(o=> o.Clients).WithMany(c => c.Orders).HasForeignKey(o => o.ClientId);
@@ -71,6 +73,10 @@ namespace Bookstore
             modelBuilder.Entity<Comment>().HasOne(c => c.Book).WithMany(b => b.Comments).HasForeignKey(c => c.BookId);
             modelBuilder.Entity<Comment>().HasOne(c => c.Client).WithMany(c => c.Comments).HasForeignKey(c => c.ClientId);
 
+            modelBuilder.Entity<Photo>().HasKey(p => p.Id);
+            modelBuilder.Entity<Photo>().Property(p => p.Name).IsRequired().HasMaxLength(100);
+            modelBuilder.Entity<Photo>().Property(p => p.ImageData).IsRequired();
+
             modelBuilder.SeedGenres();
             modelBuilder.SeedAuthors();
             modelBuilder.SeedBooks();
@@ -80,6 +86,7 @@ namespace Bookstore
             modelBuilder.SeedOrders();
             modelBuilder.SeedOrderBooks();
             modelBuilder.SeedComments();
+            modelBuilder.SeedPhoto();
 
         }
 

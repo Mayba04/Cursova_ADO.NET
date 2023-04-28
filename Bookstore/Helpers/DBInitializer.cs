@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection.Emit;
@@ -175,6 +176,8 @@ namespace Bookstore.Helpers
                     Id = 2,
                     Login = "user2",
                     Password = "password2"
+
+
                 }
                
             );
@@ -228,6 +231,15 @@ namespace Bookstore.Helpers
             {
                 new Comment() {Id = 1, Text = "Very cool book", BookId = 1, ClientId = 1, CreatedAt = DateTime.Now},
                 new Comment() {Id = 2, Text = "I advise you to read it", BookId = 2, ClientId = 2, CreatedAt = DateTime.Now}
+            });
+        }
+
+        public static void SeedPhoto(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Photo>().HasData(new Photo[]
+            {
+                new Photo() {Id = 1, Name = Path.GetFileName("C:\\Users\\Asus\\OneDrive\\Робочий стіл\\images.png"), ImageData=File.ReadAllBytes("C:\\Users\\Asus\\OneDrive\\Робочий стіл\\images.png"), BookId=1 }
+               
             });
         }
     }

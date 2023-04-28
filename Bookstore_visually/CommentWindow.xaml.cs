@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,22 @@ namespace Bookstore_visually
             this.DataContext = model;
             UpdateBook();
             UpdateComment();
-            
+            //model.Image = bookstoreDBContext.Photos.Where(p => p.BookId == ID).Select(p => p.ImageData).FirstOrDefault();
+            byte[] imageData = bookstoreDBContext.Photos.Where(p => p.BookId == ID).Select(p => p.ImageData).FirstOrDefault();
+            if (imageData != null)
+            {
+                using (MemoryStream memoryStream = new MemoryStream(imageData))
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = memoryStream;
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.EndInit();
+
+                    model.Image = bitmapImage;
+                }
+            }
+
         }
 
         public void UpdateBook()

@@ -42,6 +42,7 @@ namespace Bookstore
         {
             modelBuilder.Entity<Genre>().HasKey(g => g.Id);
             modelBuilder.Entity<Genre>().Property(g => g.Name).IsRequired();
+            modelBuilder.Entity<Genre>().HasIndex(g => g.Name).IsUnique();
 
             modelBuilder.Entity<Book>().HasKey(b => b.Id);
             modelBuilder.Entity<Book>().HasOne(b => b.Genre).WithMany(g => g.Books).HasForeignKey(b => b.GenreId);
@@ -60,6 +61,7 @@ namespace Bookstore
             modelBuilder.Entity<Client>().HasOne(с => с.Credentials).WithOne(c => c.Client).HasForeignKey<Client>(c => c.CredentialsId);
             modelBuilder.Entity<Client>().Property(c => c.Name).IsRequired().HasMaxLength(100).HasColumnName("FirstName");
             modelBuilder.Entity<Client>().Property(c => c.Email).IsRequired().HasMaxLength(100);
+            modelBuilder.Entity<Client>().HasIndex(c => c.Email).IsUnique();
 
             modelBuilder.Entity<Authors>().HasKey(a => a.Id);
             modelBuilder.Entity<Authors>().Property(a => a.Name).IsRequired();

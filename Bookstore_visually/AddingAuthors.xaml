@@ -1,0 +1,26 @@
+﻿<Window x:Class="Bookstore_visually.AddingAuthors"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bookstore_visually"
+        mc:Ignorable="d"
+        
+        Title="AddingAuthors" Height="150" Width="280">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Label Margin="5" Content="Name:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox x:Name="AuthorNameBox" Margin="5" Grid.Column="1" BorderBrush="Black" ></TextBox>
+        <Label Margin="5" Grid.Row="1" Content="Surname:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox x:Name="AuthorSurnameBox" Margin="5" Grid.Row="1" Grid.Column="1" BorderBrush="Black" ></TextBox>
+        <Button Margin="5" Grid.Row="2" Grid.ColumnSpan="2" Content="Add" HorizontalAlignment="Center" VerticalAlignment="Center" Click="AddAthorBTN"></Button>
+    </Grid>
+</Window>

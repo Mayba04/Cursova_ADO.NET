@@ -238,8 +238,7 @@ namespace Bookstore.Helpers
         {
             modelBuilder.Entity<Photo>().HasData(new Photo[]
             {
-                new Photo() {Id = 1, Name = Path.GetFileName("C:\\Users\\Asus\\OneDrive\\Робочий стіл\\images.png"), ImageData=File.ReadAllBytes("C:\\Users\\Asus\\OneDrive\\Робочий стіл\\images.png"), BookId=1 }
-               
+                new Photo() {Id = 1, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\images.png"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\images.png"), BookId=1 }
             });
         }
     }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bookstore_visually"
         mc:Ignorable="d"
+        
          d:DataContext="{d:DesignInstance local:ViewModel}"
         Title="CommentWindow" Height="450" Width="800">
     <Grid>

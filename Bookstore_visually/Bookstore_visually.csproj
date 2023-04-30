@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="LiqPay" Version="2022.6.1812.5401" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bookstore_visually"
         mc:Ignorable="d"
+        
            d:DataContext="{d:DesignInstance local:ViewModel}"
         Title="AdminPage" Height="450" Width="800">
     <Grid>
@@ -15,6 +16,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Margin="10">
                         <Button Content="Add Book" Width="100" Margin="5" Click="Button_Click_3"/>
@@ -22,9 +24,19 @@
                         <Button Content="Update Book" Width="100" Margin="5" Click="Button_Click" />
                         <Button Content="GetAll Book" Width="100" Margin="5" Click="Button_Click_1"/>
                         <Button Content="Delete Comment" Width="100" Margin="5" Click="DeleteCommentBTN"/>
+                        <Button Content="Add a photo" Width="100" Margin="5" Click="AddPhotoBTN"/>
+                        <Button Content="Exit" Width="100" Margin="5" Click="ExitBtn"/>
                     </StackPanel>
                     <DataGrid Name="dataGrid"  Grid.Row="1" Margin="10" IsReadOnly="False"></DataGrid>
-                    <ListBox x:Name="CommentBox" Grid.Row="2" HorizontalContentAlignment="Stretch" ItemsSource="{Binding CommentsInfo}" 
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Name="BooksComboBox" Content="{Binding Books}" Margin="10"/>
+                        <Image Grid.Column="1" Width="120" Source="{Binding Image}"></Image>
+                    </Grid>
+                        <ListBox x:Name="CommentBox" Grid.Row="3" HorizontalContentAlignment="Stretch" ItemsSource="{Binding CommentsInfo}" 
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListBox.ItemTemplate>
                             <DataTemplate>

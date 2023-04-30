@@ -6,11 +6,16 @@
         xmlns:local="clr-namespace:Bookstore_visually"
        
         mc:Ignorable="d"
+
          d:DataContext="{d:DesignInstance local:ViewModel}"
         Title="BookstoreView" Height="450" Width="800">
     <Grid>
-        <Button  Content="Exit" HorizontalAlignment="Right"  VerticalAlignment="Top" Click="ExitBtn_Click"></Button>
-        <TabControl >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="239*"/>
+            <ColumnDefinition Width="161*"/>
+        </Grid.ColumnDefinitions>
+        <Button  Content="Exit" HorizontalAlignment="Right"  VerticalAlignment="Top" Click="ExitBtn_Click" Grid.Column="1"></Button>
+        <TabControl Grid.ColumnSpan="2" >
             <TabItem Header="Book ">
                 <Grid>
                     <Grid.RowDefinitions>

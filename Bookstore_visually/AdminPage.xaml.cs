@@ -14,6 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Bookstore.Repository;
+using System.IO;
+using Path = System.IO.Path;
+using Microsoft.Win32;
 
 namespace Bookstore_visually
 {
@@ -33,58 +36,105 @@ namespace Bookstore_visually
             model = new ViewModel();
             dataGrid.SelectionChanged += DataGrid_SelectionChanged;
             this.DataContext = model;
+            RefreshDataGrid();
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateComment();
+            UpdateImage();
+            UpdateBookInfo();
+        }
+
+        public void UpdateBookInfo()
+        {
+            if (dataGrid.SelectedItem != null)
+            {
+                var selectedRow = (dynamic)dataGrid.SelectedItem;
+                int id = selectedRow.Id;
+                var book = bookstoreDBContext.Books.Where(b => b.Id == id).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).FirstOrDefault();
+
+                //List<object> ff = new List<object>();
+                model.Books = $"Title: {book.Title}\nAuthor: {book.AuthorSurname} {book.AuthorName}\nPrice: {book.Price} UAH\nPublisher: {book.Publisher}\nYear of publication: {book.Year}";
+                //ff.Add(book);
+                //model.AddCDGBook(ff);
+            }
+                
+        }
+
+        public void UpdateImage()
+        {
+            if (dataGrid.SelectedItem != null)
+            {
+                model.Image = null;
+                var selectedRow = (dynamic)dataGrid.SelectedItem;
+                int id = selectedRow.Id;
+                byte[] imageData = bookstoreDBContext.Photos.Where(p => p.BookId == id).Select(p => p.ImageData).FirstOrDefault();
+                if (imageData != null)
+                {
+                    using (MemoryStream memoryStream = new MemoryStream(imageData))
+                    {
+                        BitmapImage bitmapImage = new BitmapImage();
+                        bitmapImage.BeginInit();
+                        bitmapImage.StreamSource = memoryStream;
+                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmapImage.EndInit();
+
+                        model.Image = bitmapImage;
+                    }
+                }
+            }
         }
 
         public void UpdateComment()
         {
-            if (dataGrid.SelectedItems != null)
+            if (dataGrid.SelectedItem != null)
             {
-                var selectedRow = (dynamic)dataGrid.SelectedItem;
-                int id = selectedRow.Id;
-                model.ClearComment();
-                var comment = bookstoreDBContext.Comments.Where(b => b.BookId == id).Select(c => new { ID = c.Id, Name = c.Client.Name, Date = c.CreatedAt, Text = c.Text }).ToList();
-
-                foreach (var item in comment)
+                try
                 {
-                    CommentInfo commentInfo = new CommentInfo();
-                    commentInfo.Name = item.Name;
-                    commentInfo.Date = item.Date.ToShortDateString();
-                    commentInfo.Text = item.Text;
-                    commentInfo.IdComment = item.ID;
-                    model.AddComment(commentInfo);
+                    var selectedRow = (dynamic)dataGrid.SelectedItem;
+                    int id = selectedRow.Id;//bug
+                    model.ClearComment();
+                    var comment = bookstoreDBContext.Comments.Where(b => b.BookId == id).Select(c => new { ID = c.Id, Name = c.Client.Name, Date = c.CreatedAt, Text = c.Text }).ToList();
 
+                    foreach (var item in comment)
+                    {
+                        CommentInfo commentInfo = new CommentInfo();
+                        commentInfo.Name = item.Name;
+                        commentInfo.Date = item.Date.ToShortDateString();
+                        commentInfo.Text = item.Text;
+                        commentInfo.IdComment = item.ID;
+                        model.AddComment(commentInfo);
+
+                    }
                 }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+               
             }
            
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            BookAuthor book = new BookAuthor();
-            Book newBook =
-                new Book()
-                {
-                    Title = "default",
-                    Publisher = "default",
-                    Year = 0,
-                    Price = 0,
-                    Quantity = 0,
-                    GenreId = 1,
-                    BookAuthors = (ICollection<BookAuthor>)new List<BookAuthor>(),
-                    Genre = bookstoreDBContext.Genres.Where(i => i.Id == 1).FirstOrDefault(),
-                    OrderBooks = (ICollection<OrderBook>)new List<OrderBook>()
-                };
-            bookstoreDBContext.Books.Add(newBook);
 
-            bookstoreDBContext.SaveChanges();
-            RefreshDataGrid();
+            AddingBooks addingBooks = new AddingBooks();
+            this.IsEnabled = false;
+            addingBooks.Closed += AddingBooks_Closed;
+            addingBooks.Show();
+            
+            //RefreshDataGrid();
             //repository.Insert(newBook);
             // repository.Save(); // зберігаємо зміни в базу даних
+        }
+
+        private void AddingBooks_Closed(object? sender, EventArgs e)
+        {
+            this.IsEnabled = true;
+            RefreshDataGrid();
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -96,9 +146,13 @@ namespace Bookstore_visually
                     // bookstoreDBContext.Books.Remove(book as Book);
                     //repository.Delete(((Book)book).Id);
                     bookstoreDBContext.Books.Remove(bookstoreDBContext.Books.Where(b => b.Id == ((Book)book).Id).FirstOrDefault());
+                    bookstoreDBContext.Photos.Remove(bookstoreDBContext.Photos.Where(p => p.BookId == ((Book)book).Id).FirstOrDefault());
                 }
                 bookstoreDBContext.SaveChanges();
                 RefreshDataGrid();
+                UpdateComment();
+                UpdateImage();
+                UpdateBookInfo();
             }
         }
 
@@ -113,6 +167,9 @@ namespace Bookstore_visually
             {
                 var selectedBook = (Book)dataGrid.SelectedItem;
                 UpdateBook(selectedBook);
+                UpdateComment();
+                UpdateImage();
+                UpdateBookInfo();
             }
         }
 
@@ -153,7 +210,59 @@ namespace Bookstore_visually
                 bookstoreDBContext.Comments.Remove(bookstoreDBContext.Comments.Where(b => b.Id == id).FirstOrDefault());
                 bookstoreDBContext.SaveChanges();
                 UpdateComment();
+                UpdateImage();
+                UpdateBookInfo();
             }
+        }
+
+        private void AddPhotoBTN(object sender, RoutedEventArgs e)
+        {
+            if (dataGrid.SelectedItem != null)
+            {
+                var selectedBook = (Book)dataGrid.SelectedItem;
+               
+              
+                
+                    OpenFileDialog fileDialog = new OpenFileDialog();
+                    fileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png";
+                    if (fileDialog.ShowDialog() == true)
+                    {
+                        string filePath = fileDialog.FileName;
+                      
+                        using (var context = new BookstoreDBContext())
+                        {
+
+                            var photo2 = bookstoreDBContext.Photos.Where(p => p.BookId == selectedBook.Id).FirstOrDefault();
+
+                            if (photo2 != null)
+                            {
+                                photo2.Name = Path.GetFileName(filePath);
+                                photo2.ImageData = File.ReadAllBytes(filePath);
+
+                               
+                                
+                                context.Photos.Update(photo2);
+                                context.SaveChanges();
+                                UpdateComment();
+                                UpdateImage();
+                                UpdateBookInfo();
+                            }
+                        }
+
+                    }
+                  
+
+                
+                
+                
+            }
+        }
+
+        private void ExitBtn(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
         }
     }
 }

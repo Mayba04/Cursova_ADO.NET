@@ -149,6 +149,7 @@ namespace Bookstore_visually
                 }
                 repositoryO.Update(dbEntry);
                 repositoryO.Save();
+                //bookstoreDBContext.Orders.Update(dbEntry);
                 bookstoreDBContext.SaveChanges();
                
                 //end enumarate

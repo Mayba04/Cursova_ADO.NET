@@ -228,7 +228,7 @@ namespace Bookstore_visually
                 int id = selectedRow.Id;
                 var dbBook = bookstoreDBContext.Books.FirstOrDefault(b => b.Id == id);
                 Book book = bookstoreDBContext.Books.FirstOrDefault(b => b.Id == id);
-                if (Quantity_Book.Text != null)
+                if (Quantity_Book.Text.Length > 0)
                 {
                     try
                     {
@@ -242,7 +242,7 @@ namespace Bookstore_visually
                              {
                                  Date = DateTime.Now,
                                  ClientId = idClient,
-                                 Price = book.Quantity * Quantity_B, /*(bookstoreDBContext.Books.Where(b => b.Id == ((Book)OrderBooksDataGrid.SelectedItem).Id).Select(b => b.Price).FirstOrDefault()) * Quantity_B,*/
+                                 Price = book.Price * Quantity_B, /*(bookstoreDBContext.Books.Where(b => b.Id == ((Book)OrderBooksDataGrid.SelectedItem).Id).Select(b => b.Price).FirstOrDefault()) * Quantity_B,*/
                                  Quantity = Quantity_B,
                                  Clients = bookstoreDBContext.Clients.Where(i => i.CredentialsId == idClient).FirstOrDefault(),
                                  Payment_status=false,

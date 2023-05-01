@@ -214,7 +214,7 @@
                                 <TextBlock Text="Order" FontSize="24" Margin="1,10,10,10" Grid.ColumnSpan="2" Grid.Column="1"/>
                                 <Button Width="120" Height="40" HorizontalAlignment="Left" Content="Payment" Click="Payment_ButtonClick" Grid.Column="3" VerticalAlignment="Center"></Button>
                                 <Button Width="120" Height="40" HorizontalAlignment="Center" Content="Order" Click="Order_ButtonClick"  Grid.Column="3" VerticalAlignment="Center"></Button>
-                                <Button Width="120" Height="40" HorizontalAlignment="Right" Content="OrderAll" Click="OrderAll_ButtonClick"  Grid.Column="3" Margin="0,6,0,6"/>
+                               
 
                                 <DataGrid x:Name="OrderDataGrid" Grid.Row="1" Margin="1,10,10,10"  AlternatingRowBackground="#FFDDEEEE" Grid.ColumnSpan="3" Grid.Column="1" ></DataGrid>
                             </Grid>

@@ -299,13 +299,8 @@ namespace Bookstore_visually
 
         }
 
-        private void OrderAll_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            //OrderDataGrid.ItemsSource = repositoryO.GetAll();
-            OrderDataGrid.ItemsSource = bookstoreDBContext.Orders.Include(o => o.OrderBooks).ThenInclude(ob => ob.Book).Include(o => o.Clients)
-           .Select(o => new { Id = o.Id, Date = o.Date, Price = o.Price, Quantity = o.Quantity, Payment_status = o.Payment_status, BookTitle = o.OrderBooks.FirstOrDefault().Book.Title, ClientName = o.Clients.Name }).ToList();
-
-        }
+      
+        
 
         private void Payment_ButtonClick(object sender, RoutedEventArgs e)
         {

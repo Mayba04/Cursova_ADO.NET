@@ -72,6 +72,27 @@
                     <DataGrid x:Name="AdminOrder" Grid.Row="1" Margin="1,10,10,10"  AlternatingRowBackground="#FFDDEEEE" Grid.ColumnSpan="3" Grid.Column="1" ></DataGrid>
                 </Grid>
             </TabItem>
+            <TabItem Header="Author">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="9*"/>
+                        <ColumnDefinition Width="259*"/>
+                        <ColumnDefinition Width="14*"/>
+                        <ColumnDefinition Width="506*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Order" FontSize="24" Margin="1,10,10,10" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <Button Width="120" Height="40" HorizontalAlignment="Center" Content="Delete Author" Click="DeleteAuthorBTN"  Grid.Column="3" Margin="6"/>
+                    <Button Width="120" Height="40" HorizontalAlignment="Right" Content="Author All" Click="GetAuthorAllBTN"  Grid.Column="3" Margin="6"/>
+                    <Button Width="120" Height="40" HorizontalAlignment="Left" Content="Add Author" Click="AddAuthorBTN"  Grid.Column="3" Margin="6"/>
+
+                    <DataGrid x:Name="AdminAuthor" Grid.Row="1" Margin="1,10,10,10"  AlternatingRowBackground="#FFDDEEEE" Grid.ColumnSpan="3" Grid.Column="1" ></DataGrid>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

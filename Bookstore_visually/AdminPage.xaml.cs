@@ -41,6 +41,7 @@ namespace Bookstore_visually
             this.DataContext = model;
             RefreshDataGrid();
             UdateOrder();
+            UpdateAuthors();
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -245,7 +246,7 @@ namespace Bookstore_visually
                 
                     OpenFileDialog fileDialog = new OpenFileDialog();
                     fileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png";
-                    if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.Yes)
+                    if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
                         string filePath = fileDialog.FileName;
                       
@@ -293,7 +294,7 @@ namespace Bookstore_visually
                 var selectedRow = (dynamic)AdminOrder.SelectedItem;
                 int id = selectedRow.Id;
                 bookstoreDBContext.Orders.Remove(bookstoreDBContext.Orders.Where(b => b.Id == id).FirstOrDefault());
-                bookstoreDBContext.OrderBooks.Remove(bookstoreDBContext.OrderBooks.Where(b => b.OrderId == id).FirstOrDefault());
+                bookstoreDBContext.OrderBooks.Remove(bookstoreDBContext.OrderBooks.Where(b => b.OrderId == id).FirstOrDefault());//bug потрібно оновити бд з Order із OrderBook
                 bookstoreDBContext.SaveChanges();
                 UdateOrder();
             }
@@ -303,6 +304,43 @@ namespace Bookstore_visually
         {
             AdminOrder.ItemsSource = bookstoreDBContext.Orders.Include(o => o.OrderBooks).ThenInclude(ob => ob.Book).Include(o => o.Clients)
         .Select(o => new { Id = o.Id, Date = o.Date, Price = o.Price, Quantity = o.Quantity, Payment_status = o.Payment_status, BookTitle = o.OrderBooks.FirstOrDefault().Book.Title, ClientName = o.Clients.Name }).ToList();
+        }
+
+        private void UpdateAuthors()
+        {
+            AdminAuthor.ItemsSource = bookstoreDBContext.Authors.Select(a => new { Id = a.Id, Name = a.Name, Surname = a.Surname }).ToList();
+        }
+
+        private void GetAuthorAllBTN(object sender, RoutedEventArgs e)
+        {
+            UpdateAuthors();
+        }
+
+        private void AddAuthorBTN(object sender, RoutedEventArgs e)
+        {
+            AddingAuthors addingAuthors = new AddingAuthors();
+            addingAuthors.Closed += AddingAuthors_Closed;
+            this.IsEnabled = false;
+            addingAuthors.Show();
+        }
+
+        private void AddingAuthors_Closed(object? sender, EventArgs e)
+        {
+            this.IsEnabled = true;
+            UpdateAuthors();
+        }
+
+        private void DeleteAuthorBTN(object sender, RoutedEventArgs e)
+        {
+            if(AdminAuthor.SelectedItem != null)
+            {
+                var selectedRow = (dynamic)AdminAuthor.SelectedItem;
+                int id = selectedRow.Id;
+                bookstoreDBContext.Authors.Remove(bookstoreDBContext.Authors.Where(a => a.Id == id).FirstOrDefault());
+                bookstoreDBContext.BookAuthors.RemoveRange(bookstoreDBContext.BookAuthors.Where(ba => ba.AuthorId == id).ToList());
+                bookstoreDBContext.SaveChanges();
+                UpdateAuthors();
+            }
         }
     }
 }

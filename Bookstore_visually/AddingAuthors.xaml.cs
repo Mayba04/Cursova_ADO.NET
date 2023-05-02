@@ -34,11 +34,21 @@ namespace Bookstore_visually
             {
                 if (AuthorSurnameBox.Text.Length > 0)
                 {
-                    Authors author = new Authors();
-                    author.Name = AuthorNameBox.Text;
-                    author.Surname = AuthorSurnameBox.Text;
-                    bookstoreDBContext.Authors.Add(author);
-                    bookstoreDBContext.SaveChanges();
+                    var authordb = bookstoreDBContext.Authors.Where(a => a.Name == AuthorNameBox.Text && a.Surname == AuthorSurnameBox.Text).FirstOrDefault();
+                    if (authordb == null)
+                    {
+                        Authors author = new Authors();
+                        author.Name = AuthorNameBox.Text;
+                        author.Surname = AuthorSurnameBox.Text;
+                        bookstoreDBContext.Authors.Add(author);
+                        bookstoreDBContext.SaveChanges();
+                        MessageBox.Show("Added successfully");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Such an author already exists");
+                    }
+                    
                 }
                 else
                 {

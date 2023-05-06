@@ -39,9 +39,11 @@ namespace Bookstore_visually
             model = new ViewModel();
             dataGrid.SelectionChanged += DataGrid_SelectionChanged;
             this.DataContext = model;
+            AdminCC.IsReadOnly = false;
             RefreshDataGrid();
             UdateOrder();
             UpdateAuthors();
+            UpdateClient();
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -294,7 +296,7 @@ namespace Bookstore_visually
                 var selectedRow = (dynamic)AdminOrder.SelectedItem;
                 int id = selectedRow.Id;
                 bookstoreDBContext.Orders.Remove(bookstoreDBContext.Orders.Where(b => b.Id == id).FirstOrDefault());
-                bookstoreDBContext.OrderBooks.Remove(bookstoreDBContext.OrderBooks.Where(b => b.OrderId == id).FirstOrDefault());//bug потрібно оновити бд з Order із OrderBook
+                bookstoreDBContext.OrderBooks.Remove(bookstoreDBContext.OrderBooks.Where(b => b.OrderId == id).FirstOrDefault());
                 bookstoreDBContext.SaveChanges();
                 UdateOrder();
             }
@@ -341,6 +343,64 @@ namespace Bookstore_visually
                 bookstoreDBContext.SaveChanges();
                 UpdateAuthors();
             }
+        }
+
+        private void GetClientAllBTN(object sender, RoutedEventArgs e)
+        {
+            UpdateClient();
+        }
+
+        private void UpdateClient()
+        {
+            var clientList = bookstoreDBContext.Clients.Include(c => c.Credentials).Select(c => new { CredentialsId = c.CredentialsId, Name = c.Name, Email = c.Email, Status_admin = c.Status_admin, Login = c.Credentials.Login, Password = c.Credentials.Password }).ToList();
+            AdminCC.ItemsSource = clientList;
+        }
+
+        private void DeleteClientBTN(object sender, RoutedEventArgs e)
+        {
+            if (AdminCC.SelectedItem != null)
+            {
+                var selectedd = (dynamic)AdminCC.SelectedItem;
+                int id = selectedd.CredentialsId;
+                bookstoreDBContext.Clients.Remove(bookstoreDBContext.Clients.Where(c => c.CredentialsId == id).FirstOrDefault());
+                bookstoreDBContext.Credentials.Remove(bookstoreDBContext.Credentials.Where(c => c.Id == id).FirstOrDefault());
+                foreach (var item in bookstoreDBContext.Orders.Where(o => o.ClientId == id).ToList())
+                {
+                    bookstoreDBContext.OrderBooks.Remove(bookstoreDBContext.OrderBooks.Where(o => o.OrderId == item.Id).FirstOrDefault());
+                }
+                
+                bookstoreDBContext.Orders.RemoveRange(bookstoreDBContext.Orders.Where(o => o.ClientId == id).ToList());
+                bookstoreDBContext.Comments.RemoveRange(bookstoreDBContext.Comments.Where(c => c.ClientId == id).ToList());
+                bookstoreDBContext.SaveChanges();
+                UdateOrder();
+                UpdateComment();
+                UpdateClient();
+
+            }
+        }
+
+        private void UpdateClientBTN(object sender, RoutedEventArgs e)
+        {
+            if (AdminCC.SelectedItem != null)
+            {
+                var selectedd = (dynamic)AdminCC.SelectedItem;
+                int id = selectedd.CredentialsId;
+                if (selectedd.Status_admin == false)
+                {
+                    ChangeDC changeDC = new ChangeDC(id);
+                    this.IsEnabled = false;
+                    changeDC.Closed += ChangeDC_Closed;
+                    changeDC.Show();
+                }
+               
+            }
+            
+        }
+
+        private void ChangeDC_Closed(object? sender, EventArgs e)
+        {
+            this.IsEnabled = true;
+            UpdateClient();
         }
     }
 }

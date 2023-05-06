@@ -351,6 +351,9 @@ namespace Bookstore_visually
             this.Close();
         }
 
-      
+        private void ReserveBookBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

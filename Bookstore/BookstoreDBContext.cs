@@ -21,6 +21,7 @@ namespace Bookstore
         public DbSet<OrderBook> OrderBooks { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -78,6 +79,10 @@ namespace Bookstore
             modelBuilder.Entity<Photo>().HasKey(p => p.Id);
             modelBuilder.Entity<Photo>().Property(p => p.Name).IsRequired().HasMaxLength(100);
             modelBuilder.Entity<Photo>().Property(p => p.ImageData).IsRequired();
+
+            modelBuilder.Entity<Reservation>().HasKey(res => res.Id);
+            modelBuilder.Entity<Reservation>().HasOne(res => res.Client).WithMany(c => c.Reservations).HasForeignKey(res => res.ClientId);
+            modelBuilder.Entity<Reservation>().HasOne(res => res.Book).WithMany(b => b.Reservations).HasForeignKey(res => res.BookId);
 
             modelBuilder.SeedGenres();
             modelBuilder.SeedAuthors();

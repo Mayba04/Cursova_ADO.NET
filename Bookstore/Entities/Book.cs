@@ -20,5 +20,6 @@ namespace Bookstore.Entities
         public ICollection<OrderBook> OrderBooks { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public Photo CoverPhoto { get; set; }
+        public ICollection<Reservation> Reservations { get; set; }
     }
 }

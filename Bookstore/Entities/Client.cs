@@ -17,9 +17,8 @@ namespace Bookstore.Entities
         public bool Status_admin { get; set; }
 
         public ICollection<Order> Orders { get; set; }
-
         public Credentials Credentials { get; set; }
-
         public ICollection<Comment> Comments { get; set; }
+        public ICollection<Reservation> Reservations { get; set; }
     }
 }

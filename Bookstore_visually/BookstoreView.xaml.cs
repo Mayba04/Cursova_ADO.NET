@@ -411,8 +411,6 @@ namespace Bookstore_visually
             {
                 MessageBox.Show("The book has already been paid for");
             }
-            
-
         }
 
         private void Payment_Closed(object? sender, EventArgs e)
@@ -435,7 +433,7 @@ namespace Bookstore_visually
 
         private void RefreshReserverBook()
         {
-            ReservDataGrid.ItemsSource = bookstoreDBContext.Reservations.Where(r=>r.Id == idClient).Include(r => r.Client).Include(r => r.Book).Select(r => new { Id=r.Id, ClientName = r.Client.Name, 
+            ReservDataGrid.ItemsSource = bookstoreDBContext.Reservations.Include(r => r.Client).Include(r => r.Book).Where(r => r.ClientId == idClient).Select(r => new { Id=r.Id, ClientName = r.Client.Name, 
                 BookTitle = r.Book.Title,ReservationDate = r.ReservationDate, CheckOutDate = r.CheckoutDate,DueDate = r.ReturnDate,IsReturned = r.IsReturned}).ToList();
         }
     }

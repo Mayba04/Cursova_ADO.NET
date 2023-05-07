@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bookstore_visually"
-       
         mc:Ignorable="d"
 
          d:DataContext="{d:DesignInstance local:ViewModel}"
@@ -44,18 +43,15 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-
                             <Grid Grid.Row="0" Margin="10,10,10,10" Grid.ColumnSpan="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="8*"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-
                                 <TextBox x:Name="TitleSearchTextBox" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" FontSize="16" Grid.ColumnSpan="2"/>
                                 <Button x:Name="TitleSearchButton" Grid.Column="2" Width="120" Height="36" Content="Search" FontSize="16" Click="TitleSearchButton_Click"/>
                             </Grid>
-
                             <DataGrid ItemsSource="{Binding CDGDSBookTitle}" Grid.Row="2" Margin="10,10,10,10"  AlternatingRowBackground="#FFDDEEEE" Grid.ColumnSpan="3" ></DataGrid>
                         </Grid>
                     </TabItem>
@@ -71,7 +67,6 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-
                             <Grid Grid.Row="0" Margin="10,10,10,10" Grid.ColumnSpan="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
@@ -82,7 +77,6 @@
                                 <TextBox x:Name="AuthorSearchTextBox" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" FontSize="16" Grid.ColumnSpan="2"/>
                                 <Button x:Name="AuthorSearchButton" Grid.Column="2" Width="120" Height="36" Content="Search" FontSize="16" Click="AuthorSearchButton_Click" VerticalAlignment="Top"/>
                             </Grid>
-
                             <DataGrid ItemsSource="{Binding CDGDSBookAuthor}" Grid.Row="2" Margin="10,10,10,10"  AlternatingRowBackground="#FFDDEEEE" Grid.ColumnSpan="3" ></DataGrid>
                         </Grid>
                     </TabItem>
@@ -98,7 +92,6 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="23*"/>
                             </Grid.RowDefinitions>
-
                             <Grid Grid.Row="0" Margin="10,10,10,10" Grid.ColumnSpan="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
@@ -109,7 +102,6 @@
                                 <TextBox x:Name="GenreSearchTextBox" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center" FontSize="16" Grid.ColumnSpan="2"/>
                                 <Button x:Name="GenreSearchButton" Grid.Column="2" Width="120" Height="36" Content="Search" FontSize="16" Click="GenreSearchButton_Click"/>
                             </Grid>
-
                             <DataGrid ItemsSource="{Binding CDGDSBookGenre}" Grid.Row="2" Margin="10,10,10,10"  AlternatingRowBackground="#FFDDEEEE" Grid.ColumnSpan="3" ></DataGrid>
                         </Grid>
                     </TabItem>
@@ -179,7 +171,6 @@
                     <TabControl>
                         <TabItem Header="Book">
                             <Grid>
-
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="135*"/>
                                     <ColumnDefinition Width="7*"/>
@@ -191,7 +182,6 @@
                                 </Grid.RowDefinitions>
                                 <TextBlock Text="Order a book" FontSize="24" Margin="10,10,10,10" Grid.ColumnSpan="3"/>
                                 <TextBlock Text="Quantity a Books"  Grid.Column="2" FontSize="24" Margin="10"/>
-
                                 <TextBox x:Name="Quantity_Book"  Width="40" Height="40"  Grid.Column="2" Background="#FFEEEEEE" HorizontalAlignment="Center" />
                                 <Button Width="120" Height="40" HorizontalAlignment="Left" Content="Order" Click="OrderBooks_ButtonClick" Margin="360,6,0,6" Grid.Column="2"></Button>
                                 <DataGrid Grid.Row="1" x:Name="OrderBooksDataGrid" Margin="10,10,10,10" Grid.ColumnSpan="3"></DataGrid>
@@ -199,7 +189,6 @@
                         </TabItem>
                         <TabItem Header="Order">
                             <Grid>
-
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="9*"/>
                                     <ColumnDefinition Width="259*"/>
@@ -213,24 +202,17 @@
                                 <TextBlock Text="Order" FontSize="24" Margin="1,10,10,10" Grid.ColumnSpan="2" Grid.Column="1"/>
                                 <Button Width="120" Height="40" HorizontalAlignment="Left" Content="Payment" Click="Payment_ButtonClick" Grid.Column="3" VerticalAlignment="Center"></Button>
                                 <Button Width="120" Height="40" HorizontalAlignment="Center" Content="Order" Click="Order_ButtonClick"  Grid.Column="3" VerticalAlignment="Center"></Button>
-
-
                                 <DataGrid x:Name="OrderDataGrid" Grid.Row="1" Margin="1,10,10,10"  AlternatingRowBackground="#FFDDEEEE" Grid.ColumnSpan="3" Grid.Column="1" ></DataGrid>
                             </Grid>
                         </TabItem>
                         <TabItem Header="reserv book">
                             <Grid>
-
-
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Text="Reserved books" FontSize="24" Margin="1,10,10,10" Grid.ColumnSpan="2" Grid.Column="1"/>
-
                                 <Button Width="120" Height="40" HorizontalAlignment="Center" Content="Update" Click="Update_ButtonClick"  Grid.Column="3" VerticalAlignment="Center"></Button>
-
-
                                 <DataGrid x:Name="ReservDataGrid" Grid.Row="1" Margin="10"  AlternatingRowBackground="#FFDDEEEE"  ></DataGrid>
                             </Grid>
                         </TabItem>

@@ -107,6 +107,7 @@ namespace Bookstore_visually
             foreach (var item in list)
             {
                 CDGMPAuthor.Add(item);
+                
             }
         }
 

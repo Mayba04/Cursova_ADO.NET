@@ -37,8 +37,8 @@ namespace Bookstore_visually
         ViewModel model;
 
         BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
-        object Credential_user;
-
+        private object Credential_user;
+        private int idClient;
         public BookstoreView(object credential)
         {
            
@@ -47,7 +47,15 @@ namespace Bookstore_visually
             this.DataContext = model;
             Credential_user = credential;
             //OrderBooksDataGrid.ItemsSource = repository.GetAll().ToList();
-            OrderBooksDataGrid.ItemsSource = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.Genre).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
+           
+            idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Credentials)Credential_user).Id).Select(c => c.CredentialsId).FirstOrDefault();
+            RefreshBook();
+            RefreshOrderBooks();
+            RefreshReserverBook();
+            RefreshOrderDG();
+
+            //
+
         }
         //book
 
@@ -56,11 +64,7 @@ namespace Bookstore_visually
         {
             //dataGrid.ItemsSource = bookstoreDBContext.Books.ToList();
             // dataGrid.ItemsSource = repository.GetAll().ToList();
-           
-            List<object> ff = new List<object>();
-            var book = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.Genre).Select(b=> new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname}).ToList();
-            ff.AddRange(book);
-            model.AddCDGBook(ff);
+            RefreshBook();
         }
 
         private void WriteCommentBtn_Click(object sender, RoutedEventArgs e)
@@ -69,7 +73,6 @@ namespace Bookstore_visually
             {
                 var selectedRow = (dynamic)Book.SelectedItems;
                 int id = selectedRow[0].Id;
-                int idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Credentials)Credential_user).Id).Select(c => c.CredentialsId).FirstOrDefault();
                 this.IsEnabled = false;
                 CommentWindow comment = new CommentWindow(id, idClient);
                 comment.Closed += Comment_Closed;
@@ -81,6 +84,47 @@ namespace Bookstore_visually
         private void Comment_Closed(object? sender, EventArgs e)
         {
             this.IsEnabled = true;
+        }
+
+        private void ReserveBookBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (Book.SelectedItem != null)
+            {
+                var selectedRow = (dynamic)Book.SelectedItems;
+                int id = selectedRow[0].Id;
+
+                if (selectedRow[0].Quantity - 1 >= 0)
+                {
+                    var book = bookstoreDBContext.Books.Where(b => b.Id == id).FirstOrDefault();
+                    book.Quantity = book.Quantity - 1;
+                    bookstoreDBContext.Books.Update(book);
+                    bookstoreDBContext.SaveChanges();
+                    Reservation reservation = new Reservation();
+                    reservation.ClientId = idClient;
+                    reservation.BookId = id;
+                    reservation.ReservationDate = DateTime.Today;
+
+                    bookstoreDBContext.Reservations.Add(reservation);
+                    bookstoreDBContext.SaveChanges();
+                    RefreshBook();
+                    RefreshReserverBook();
+                    //надсилання даних на електрону адресу
+                    MessageBox.Show("The book is reserved! All detailed information has been sent to your mailbox.");
+                }
+                else
+                {
+                    MessageBox.Show("There are no books available!");
+                }
+                
+            }
+        }
+
+        private void RefreshBook()
+        {
+            List<object> ff = new List<object>();
+            var book = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.Genre).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
+            ff.AddRange(book);
+            model.AddCDGBook(ff);
         }
 
         //book
@@ -196,17 +240,33 @@ namespace Bookstore_visually
         }
 
         //MOst popular Genre
-
+        //order
         private void Order_ButtonClick(object sender, RoutedEventArgs e)
         {
-            int idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Credentials)Credential_user).Id).Select(c => c.CredentialsId).FirstOrDefault(); // Id користувача який зайшов в програму 
+            RefreshOrderDG();
+        }
+
+        private void RefreshOrderDG()
+        {
             OrderDataGrid.ItemsSource = null;
-          //OrderDataGrid.ItemsSource = bookstoreDBContext.Orders.Where(o => o.ClientId == idClient).ToList();
+            //OrderDataGrid.ItemsSource = bookstoreDBContext.Orders.Where(o => o.ClientId == idClient).ToList();
 
             OrderDataGrid.ItemsSource = bookstoreDBContext.Orders.Where(o => o.ClientId == idClient).Include(o => o.OrderBooks).ThenInclude(ob => ob.Book).Include(o => o.Clients)
-            .Select(o => new{Id=o.Id, Date=o.Date, Price=o.Price, Quantity=o.Quantity, Payment_status = o.Payment_status, BookTitle = o.OrderBooks.FirstOrDefault().Book.Title, ClientName = o.Clients.Name}).ToList();
+            .Select(o => new { Id = o.Id, Date = o.Date, Price = o.Price, Quantity = o.Quantity, Payment_status = o.Payment_status, BookTitle = o.OrderBooks.FirstOrDefault().Book.Title, ClientName = o.Clients.Name }).ToList();
 
             //OrderDataGrid.ItemsSource = repositoryO.GetAll().Where(o => o.ClientId == idClient).ToList();
+        }
+
+
+
+        private void RefreshOrderBooks()
+        {
+            OrderBooksDataGrid.ItemsSource = bookstoreDBContext.Books.Include(b => b.BookAuthors).
+                ThenInclude(ba => ba.Author).Include(b => b.Genre).
+                Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher,
+                    Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name,
+                    AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, 
+                    AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
         }
 
         private void OrderBooks_ButtonClick(object sender, RoutedEventArgs e)
@@ -294,8 +354,9 @@ namespace Bookstore_visually
                 MessageBox.Show("Select a book !");
             }
             //OrderBooksDataGrid.ItemsSource = bookstoreDBContext.Books.ToList();
-            OrderBooksDataGrid.ItemsSource = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.Genre).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
-
+           //OrderBooksDataGrid.ItemsSource = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.Genre).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
+           RefreshOrderBooks();
+           RefreshOrderDG();
 
         }
 
@@ -306,42 +367,58 @@ namespace Bookstore_visually
         {
             var selectedRow = (dynamic)OrderDataGrid.SelectedItem;
             int id = selectedRow.Id;
-            Order order = bookstoreDBContext.Orders.FirstOrDefault(b => b.Id == id);
-            //int? id = ((Order)OrderDataGrid.SelectedItem).Id;
-            var dbEntry = bookstoreDBContext.Orders.FirstOrDefault(x => x.Id == order.Id);
-            
-            if (dbEntry != null)
+            if (selectedRow.Payment_status != true)
             {
-                var Order = new
+                Order order = bookstoreDBContext.Orders.FirstOrDefault(b => b.Id == id);
+                //int? id = ((Order)OrderDataGrid.SelectedItem).Id;
+                var dbEntry = bookstoreDBContext.Orders.FirstOrDefault(x => x.Id == order.Id);
+
+                if (dbEntry != null)
                 {
-                    version = 3,
-                    public_key = Config.LiqyPublicKey,
-                    action = "pay",
-                    amount = dbEntry.Price,
-                    currency = "UAH",
-                    description = "Pay book whit order " + dbEntry.Id,
-                    order_id = dbEntry.Id,
-                    language = "uk",
-                    paytypes = ""
-                };
-                string data = System.Text.Json.JsonSerializer.Serialize(Order);
-                string data64 = LiqyPayHelper.CreateData(data); //Convert.ToBase64String(Encoding.UTF8.GetBytes(data));
-                string privateKey = Bookstore.Config.LiqypayPrivateKey;
+                    var Order = new
+                    {
+                        version = 3,
+                        public_key = Config.LiqyPublicKey,
+                        action = "pay",
+                        amount = dbEntry.Price,
+                        currency = "UAH",
+                        description = "Pay book whit order " + dbEntry.Id,
+                        order_id = dbEntry.Id,
+                        language = "uk",
+                        paytypes = ""
+                    };
+                    string data = System.Text.Json.JsonSerializer.Serialize(Order);
+                    string data64 = LiqyPayHelper.CreateData(data); //Convert.ToBase64String(Encoding.UTF8.GetBytes(data));
+                    string privateKey = Bookstore.Config.LiqypayPrivateKey;
 
-                string signature_sourse = privateKey + data64 + privateKey;
-                var sha1 = SHA1.Create();
-                string signature = LiqyPayHelper.CreateSign(data64, privateKey);//Convert.ToBase64String(Encoding.UTF8.GetBytes(Convert.ToHexString(sha1.ComputeHash(Encoding.UTF8.GetBytes(signature_sourse)))));
-                Payment payment = new Payment();
-                payment.Show();
-                payment.StartWebResourceRequest(Config.LiqyPatCheckoutURl, data64, signature);
+                    string signature_sourse = privateKey + data64 + privateKey;
+                    var sha1 = SHA1.Create();
+                    string signature = LiqyPayHelper.CreateSign(data64, privateKey);//Convert.ToBase64String(Encoding.UTF8.GetBytes(Convert.ToHexString(sha1.ComputeHash(Encoding.UTF8.GetBytes(signature_sourse)))));
+                    Payment payment = new Payment();
+                    this.IsEnabled = false;
+                    payment.Closed += Payment_Closed;
+                    payment.Show();
+                    payment.StartWebResourceRequest(Config.LiqyPatCheckoutURl, data64, signature);
 
-                //Task task = new Task(()=>GetStatus());
-                // task.Start();
-                //task.Wait();
-                
+                    //Task task = new Task(()=>GetStatus());
+                    // task.Start();
+                    //task.Wait();
+
+                }
+                else { MessageBox.Show("Not selected order"); }
             }
-            else { MessageBox.Show("Not selected order"); }
+            else
+            {
+                MessageBox.Show("The book has already been paid for");
+            }
+            
 
+        }
+
+        private void Payment_Closed(object? sender, EventArgs e)
+        {
+            this.IsEnabled = true;
+            RefreshOrderDG();
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
@@ -351,9 +428,15 @@ namespace Bookstore_visually
             this.Close();
         }
 
-        private void ReserveBookBtn_Click(object sender, RoutedEventArgs e)
+        private void Update_ButtonClick(object sender, RoutedEventArgs e)
         {
+            RefreshReserverBook();
+        }
 
+        private void RefreshReserverBook()
+        {
+            ReservDataGrid.ItemsSource = bookstoreDBContext.Reservations.Where(r=>r.Id == idClient).Include(r => r.Client).Include(r => r.Book).Select(r => new { Id=r.Id, ClientName = r.Client.Name, 
+                BookTitle = r.Book.Title,ReservationDate = r.ReservationDate, CheckOutDate = r.CheckoutDate,DueDate = r.ReturnDate,IsReturned = r.IsReturned}).ToList();
         }
     }
 }

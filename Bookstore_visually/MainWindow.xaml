@@ -6,28 +6,36 @@
         xmlns:local="clr-namespace:Bookstore_visually"
         mc:Ignorable="d"
         
-        Title="MainWindow"  Height="350" Width="525">
+         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+     TextElement.FontWeight="Regular"
+     TextElement.FontSize="13"
+     TextOptions.TextFormattingMode="Ideal"
+     TextOptions.TextRenderingMode="Auto"
+     Background="{DynamicResource MaterialDesignPaper}"
+     FontFamily="{DynamicResource MaterialDesignFont}"
+        
+        Title="Login" MaxHeight="210" MinHeight="210"  Height="210" MinWidth="225" MaxWidth="225" Width="225">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-            <Label Content="Login:" Margin="10"/>
-        <TextBox x:Name="LoginTextBox" Text="user1" Margin="10" Width="350" Grid.Column="1"/>
-        <Label Content="Password:" Margin="10"  Grid.Row="1" />
-        <PasswordBox x:Name="PasswordBox" Password="password1"  Margin="10" Grid.Row="1" Grid.Column="1"/>
+
+
+        <TextBox x:Name="LoginTextBox" Text="user1" Margin="10"  materialDesign:HintAssist.Hint="Login" />
+      
+        <PasswordBox Margin="10" x:Name="PasswordBox" Password="password1" Grid.Row="1"
+          materialDesign:HintAssist.Hint="Password"
+          materialDesign:TextFieldAssist.HasClearButton="True"
+          materialDesign:HintAssist.HelperText="At least 8 characters" Height="25"/>
+        
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" Grid.Row="3">
             <Button Content="Login" Margin="10" Height="30" Click="LoginButton_Click" VerticalAlignment="Top"/>
             <Button Content="Register" Margin="10" Height="30" Click="RegisterButton_Click" VerticalAlignment="Top"/>
         </StackPanel>
-        <Grid Grid.Row="2" Grid.Column="1">
-            <DataGrid x:Name="CredentialsDataGrid"  Margin="10" Height="200"  ></DataGrid>
-        </Grid>
+      
             
     </Grid>
 </Window>

@@ -37,7 +37,6 @@ namespace Bookstore_visually
         public MainWindow()
         {
             InitializeComponent();
-            CredentialsDataGrid.ItemsSource = repository.GetAll().ToList();
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)

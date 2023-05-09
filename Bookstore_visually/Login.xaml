@@ -17,12 +17,12 @@
     <materialDesign:Card UniformCornerRadius="15" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Margin="2"  Style="{StaticResource MaterialDesignFlatButton}"
+                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
                     materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
                     materialDesign:ButtonAssist.CornerRadius="10" Click="minApp">
                     <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Button>
-                <Button Margin="2"  Style="{StaticResource MaterialDesignFlatButton}"
+                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
                     materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
                     materialDesign:ButtonAssist.CornerRadius="10" Click="exitApp" >
                     <materialDesign:PackIcon Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center"/>

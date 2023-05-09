@@ -13,7 +13,7 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
          d:DataContext="{d:DesignInstance local:ViewModel}"
-        Title="RegisterWindow" Height="650" Width="450">
+        Title="RegisterWindow" Height="660" Width="450">
     <materialDesign:Card UniformCornerRadius="15" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
         
         <StackPanel>

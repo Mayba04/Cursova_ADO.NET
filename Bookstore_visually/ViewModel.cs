@@ -19,6 +19,8 @@ namespace Bookstore_visually
 
         private ObservableCollection<CommentInfo> commentInfos;
 
+        public bool IsDarkTheme { get; set; }
+
         public string Books { get; set; }
 
         public BitmapImage Image{ get; set; }

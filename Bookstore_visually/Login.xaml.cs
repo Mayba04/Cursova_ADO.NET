@@ -25,10 +25,11 @@ namespace Bookstore_visually
         private readonly PaletteHelper paletteHelper;
 
         BookstoreDBContext bookstoreDBContext;
-
+        ViewModel model;
         public Login()
         {
             InitializeComponent();
+            model = new ViewModel();
             paletteHelper = new PaletteHelper();
             bookstoreDBContext = new BookstoreDBContext();
         }
@@ -111,6 +112,11 @@ namespace Bookstore_visually
             RegisterWindow registerWindow = new RegisterWindow();
             this.Close();
             registerWindow.ShowDialog();
+        }
+
+        private void minApp(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
         }
     }
 }

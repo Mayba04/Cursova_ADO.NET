@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bookstore_visually"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:ViewModel}"
           xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{x:Null}"
@@ -12,9 +13,22 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         Title="Login" Height="760" Width="450">
+    
     <materialDesign:Card UniformCornerRadius="15" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
         <StackPanel>
-            <materialDesign:PopupBox HorizontalAlignment="Right" Margin="0,20,20,0"
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Margin="2"  Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                    materialDesign:ButtonAssist.CornerRadius="10" Click="minApp">
+                    <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+                <Button Margin="2"  Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                    materialDesign:ButtonAssist.CornerRadius="10" Click="exitApp" >
+                    <materialDesign:PackIcon Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Button>
+            </StackPanel>
+            <materialDesign:PopupBox HorizontalAlignment="Right" Margin="0,2,2,0"
                                          PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="25">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="16 10 0 6">

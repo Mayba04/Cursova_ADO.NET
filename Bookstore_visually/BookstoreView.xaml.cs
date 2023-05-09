@@ -421,8 +421,8 @@ namespace Bookstore_visually
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            Login login = new Login();
+            login.Show();
             this.Close();
         }
 

@@ -290,8 +290,8 @@ namespace Bookstore_visually
 
         private void ExitBtn(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            Login loin = new Login();
+            loin.Show();
             this.Close();
         }
         //Order

@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Net;
+using MaterialDesignThemes.Wpf;
 
 namespace Bookstore_visually
 {
@@ -23,16 +24,19 @@ namespace Bookstore_visually
     /// </summary>
     public partial class RegisterWindow : Window
     {
-        IRepository<Credentials> repository = new Repository<Credentials>(new BookstoreDBContext());
+        
 
-
-        BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
+        public bool IsDarkTheme { get; set; }
+        private readonly PaletteHelper paletteHelper;
+        BookstoreDBContext bookstoreDBContext;
         bool CredentialsCreate;
 
         public RegisterWindow()
         {
             InitializeComponent();
             CredentialsCreate = false;
+            paletteHelper = new PaletteHelper();
+            bookstoreDBContext = new BookstoreDBContext();
         }
 
         private void CreateCredentials_Click(object sender, RoutedEventArgs e)
@@ -162,6 +166,32 @@ namespace Bookstore_visually
             Login mainWindow = new Login();
             mainWindow.Show();
             this.Close();
+        }
+
+        private void toggleTheme(object sender, RoutedEventArgs e)
+        {
+            ITheme theme = paletteHelper.GetTheme();
+            if (IsDarkTheme = theme.GetBaseTheme() == BaseTheme.Dark)
+            {
+                IsDarkTheme = false;
+                theme.SetBaseTheme(Theme.Light);
+            }
+            else
+            {
+                IsDarkTheme = true;
+                theme.SetBaseTheme(Theme.Dark);
+            }
+            paletteHelper.SetTheme(theme);
+        }
+
+        private void exitApp(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void minApp(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
         }
     }
 }

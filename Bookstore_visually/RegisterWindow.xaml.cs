@@ -120,7 +120,7 @@ namespace Bookstore_visually
                             ConfirmPasswordBox.Clear();
                             EmailTextBox.Clear();
                             NameTextBox.Clear();
-                            MainWindow mainWindow = new MainWindow();
+                            Login mainWindow = new Login();
                             mainWindow.Show();
                             this.Close();
                         }
@@ -159,7 +159,7 @@ namespace Bookstore_visually
             ConfirmPasswordBox.Clear();
             EmailTextBox.Clear();
             NameTextBox.Clear();
-            MainWindow mainWindow = new MainWindow();
+            Login mainWindow = new Login();
             mainWindow.Show();
             this.Close();
         }

@@ -1,11 +1,5 @@
-﻿using Bookstore;
-using Bookstore.Entities;
-using Bookstore.Repository;
-using Bookstore_visually;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,42 +8,69 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using Bookstore;
+using MaterialDesignThemes.Wpf;
 
 namespace Bookstore_visually
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Login.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Login : Window
     {
-        IRepository<Credentials> repository = new Repository<Credentials>(new BookstoreDBContext());
-         
+        public bool IsDarkTheme { get; set; }
+        private readonly PaletteHelper paletteHelper;
 
-        BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
+        BookstoreDBContext bookstoreDBContext;
 
-        public MainWindow()
+        public Login()
         {
             InitializeComponent();
+            paletteHelper = new PaletteHelper();
+            bookstoreDBContext = new BookstoreDBContext();
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private void toggleTheme(object sender, RoutedEventArgs e)
         {
-            string login = LoginTextBox.Text;
-            string password = PasswordBox.Password;
+            ITheme theme = paletteHelper.GetTheme();
+            if (IsDarkTheme = theme.GetBaseTheme() == BaseTheme.Dark)
+            {
+                IsDarkTheme = false;
+                theme.SetBaseTheme(Theme.Light);
+            }
+            else
+            {
+                IsDarkTheme = true;
+                theme.SetBaseTheme(Theme.Dark);
+            }
+            paletteHelper.SetTheme(theme);
+        }
+
+        private void exitApp(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            DragMove();
+        }
+
+        private void logInfo_Click(object sender, RoutedEventArgs e)
+        {
+            string login = textUsername.Text;
+            string password = txtPassword.Password;
 
             bool isValidUser = CheckUserCredentials(login, password);
 
             if (isValidUser)
             {
                 ///MessageBox.Show("Welcome to the bookstore");
-                
+
                 var Credentials = bookstoreDBContext.Credentials.FirstOrDefault(x => x.Login == login);
                 var user = bookstoreDBContext.Clients.FirstOrDefault(u => u.Credentials.Login == login);
                 if (user.Status_admin == true)
@@ -71,13 +92,6 @@ namespace Bookstore_visually
             }
         }
 
-        private void RegisterButton_Click(object sender, RoutedEventArgs e)
-        {
-            RegisterWindow registerWindow = new RegisterWindow();
-            this.Close();
-            registerWindow.ShowDialog();  
-        }
-
         private bool CheckUserCredentials(string login, string password)
         {
             var user = bookstoreDBContext.Credentials.FirstOrDefault(x => x.Login == login);
@@ -90,6 +104,13 @@ namespace Bookstore_visually
             {
                 return false;
             }
-        } 
+        }
+
+        private void signupInfo_Click(object sender, RoutedEventArgs e)
+        {
+            RegisterWindow registerWindow = new RegisterWindow();
+            this.Close();
+            registerWindow.ShowDialog();
+        }
     }
 }

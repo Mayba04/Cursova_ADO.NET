@@ -7,114 +7,137 @@
         mc:Ignorable="d"
         
            d:DataContext="{d:DesignInstance local:ViewModel}"
-        Title="AdminPage" Height="450" Width="800">
-    <Grid>
-        <TabControl>
-            <TabItem Header="Book ">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" Margin="10">
-                        <Button Content="Add Book" Width="100" Margin="5" Click="Button_Click_3"/>
-                        <Button Content="Delete Book" Width="100" Margin="5" Click="DeleteBookBTN" />
-                        <Button Content="Update Book" Width="100" Margin="5" Click="Button_Click" />
-                        <Button Content="GetAll Book" Width="100" Margin="5" Click="Button_Click_1"/>
-                        <Button Content="Delete Comment" Width="100" Margin="5" Click="DeleteCommentBTN"/>
-                        <Button Content="Add a photo" Width="100" Margin="5" Click="AddPhotoBTN"/>
-                        <Button Content="Exit" Width="100" Margin="5" Click="ExitBtn"/>
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{x:Null}"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Title="AdminPage" Height="750" Width="990">
+
+    <materialDesign:Card Width="900"  UniformCornerRadius="15" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                    materialDesign:ButtonAssist.CornerRadius="10" Click="minApp">
+                    <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                    materialDesign:ButtonAssist.CornerRadius="10" Click="CloseWind" >
+                    <materialDesign:PackIcon Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Button>
+            </StackPanel>
+            <materialDesign:PopupBox HorizontalAlignment="Right" Margin="0,2,2,0"
+                                         PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="25" VerticalAlignment="Top">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="16 10 0 6">
+                        <TextBlock VerticalAlignment="Center" Text="DarkMode"></TextBlock>
+                        <ToggleButton Cursor="Hand" ToolTip="Enable Dark Mode" Margin="12 0 0 0" x:Name="themeToggle"
+                                      IsChecked="{Binding IsDarkTheme}" Click="toggleTheme"/>
                     </StackPanel>
-                    <DataGrid Name="dataGrid"  Grid.Row="1" Margin="10" IsReadOnly="False"></DataGrid>
-                    <Grid Grid.Row="2" Margin="5" Background="Gainsboro">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Name="BooksComboBox" Content="{Binding Books}" Margin="10" BorderBrush="Black" Background="White"/>
-                        <Image Grid.Column="1" Width="120" Source="{Binding Image}" OpacityMask="White"/>
-                    </Grid>
-                    <ListBox Margin="5" x:Name="CommentBox" Grid.Row="3" HorizontalContentAlignment="Stretch" ItemsSource="{Binding CommentsInfo}" 
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderBrush="Black">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <DockPanel>
-                                    <TextBlock DockPanel.Dock="Left" Margin="5,0,5,0" Text="{Binding Name}" MaxWidth="155" TextTrimming="CharacterEllipsis" FontWeight="Bold"></TextBlock>
-                                    <TextBlock DockPanel.Dock="Left">  <Run Text="{Binding Text}"></Run></TextBlock>
-                                    <TextBlock DockPanel.Dock="Right"  Margin="5,0,5,0" ><Run Text="{Binding Date}"></Run></TextBlock>
-                                    <TextBlock DockPanel.Dock="Left"  Margin="5,0,5,0" ><Run Text="{Binding IdComment}"></Run></TextBlock>
-                                </DockPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
-            </TabItem>
+                    <Button ToolTip="Having Trouble Logging In" Margin="0 8 0 0" Content="Help Me"/>
+                    <Button x:Name="btn_Exit" ToolTip="Close" Margin="0 8 0 0" Content="Exit" Click="exitApp"/>
 
-            <TabItem Header="Order">
-                <TabControl>
-                    <TabItem Header="Order">
-                        <Grid>
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Text="Order"  FontSize="24" Margin="10"/>
-                            <Button Width="120" Height="40" HorizontalAlignment="Center" Content="Delete Order" Click="DeleteOrderBTN" Margin="6"/>
-                            <Button Width="120" Height="40" HorizontalAlignment="Right" Content="OrderAll" Click="OrderAll_ButtonClick" Margin="6"/>
-                            <DataGrid x:Name="AdminOrder" Grid.Row="1" Margin="10"  AlternatingRowBackground="#FFDDEEEE" ></DataGrid>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="Reserved">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Reserved books" FontSize="24" Margin="10"/>
-                                <Button Width="120" Height="40" Margin="10" HorizontalAlignment="Center" Content="Update" Click="UpdateReserveAdmin_BTN" VerticalAlignment="Center"></Button>
-                                <Button Width="120" Height="40" Margin="10" HorizontalAlignment="Center" Content="Change" Click="ChangeReserveAdmin_BTN" VerticalAlignment="Center"></Button>
-                                <Button Width="120" Height="40" Margin="10" HorizontalAlignment="Center" Content="Delete" Click="DeleteReserveAdmin_BTN" VerticalAlignment="Center"></Button>
+
+                </StackPanel>
+
+            </materialDesign:PopupBox>
+
+            <TabControl TabStripPlacement="Left" >
+                <TabItem Header="Book" HorizontalAlignment="Left" >
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10">
+                            <Button Content="Add Book" Width="100" Margin="5" Click="Button_Click_3"/>
+                            <Button Content="Delete Book" Width="110" Margin="5" Click="DeleteBookBTN" />
+                            <Button Content="Update Book" Width="115" Margin="5" Click="Button_Click" />
+                            <Button Content="GetAll Book" Width="108" Margin="5" Click="Button_Click_1"/>
+                            <Button Content="Delete Comment" Width="140" Margin="5" Click="DeleteCommentBTN"/>
+                            <Button Content="Add photo" Width="100" Margin="5" Click="AddPhotoBTN"/>
+
+                        </StackPanel>
+                        <DataGrid Name="dataGrid" Margin="10" IsReadOnly="False"></DataGrid>
+
+                        <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" >
+                            <materialDesign:Card VerticalAlignment="Center" Margin="25,5,25,5" Height="176" Width="350">
+
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="8 14 8 0" VerticalAlignment="Center">
+                                    <Image  Source="{Binding Image}" Height="150"  Width="160"  Stretch="Uniform" Margin="0,0,5,0"  />
+
+                                    <TextBlock  x:Name="BooksComboBox"  Style="{StaticResource MaterialDesignCaptionTextBlock}" FontWeight="Bold" TextWrapping="Wrap"  Text="{Binding Books}" Margin="5,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                                </StackPanel>
+
+                            </materialDesign:Card>
+
+                            <materialDesign:Card  VerticalAlignment="Center" Margin="25,5,25,5" Height="176" Width="325">
+                                <ListBox Margin="5" x:Name="CommentBox" HorizontalContentAlignment="Stretch" ItemsSource="{Binding CommentsInfo}" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderBrush="Black" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <TextBlock DockPanel.Dock="Left" Margin="5,0,5,0" Text="{Binding Name}" MaxWidth="155" TextTrimming="CharacterEllipsis" FontWeight="Bold"></TextBlock>
+                                                <TextBlock DockPanel.Dock="Left">  <Run Text="{Binding Text}"></Run></TextBlock>
+                                                <TextBlock DockPanel.Dock="Right"  Margin="5,0,5,0" ><Run Text="{Binding Date}"></Run></TextBlock>
+                                                <TextBlock DockPanel.Dock="Left"  Margin="5,0,5,0" ><Run Text="{Binding IdComment}"></Run></TextBlock>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </materialDesign:Card>
+                        </StackPanel>
+
+                    </StackPanel>
+                  
+                </TabItem>
+                <TabItem Header="Order" HorizontalAlignment="Left">
+                    <TabControl>
+                        <TabItem Header="Order">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Width="120" Height="40" HorizontalAlignment="Center" Content="Delete Order" Click="DeleteOrderBTN" Margin="6"/>
+                                    <Button Width="120" Height="40" HorizontalAlignment="Right" Content="OrderAll" Click="OrderAll_ButtonClick" Margin="6"/>
+                                </StackPanel>
+                                <DataGrid x:Name="AdminOrder" Margin="10" ></DataGrid>
                             </StackPanel>
-                            <DataGrid x:Name="ReservDGAdmin" Grid.Row="1" Margin="10"  AlternatingRowBackground="#FFDDEEEE"  ></DataGrid>
-                        </Grid>
-                    </TabItem>
-                </TabControl>
-            </TabItem>
-            <TabItem Header="Author">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Author" FontSize="24" Margin="10" VerticalAlignment="Center"/>
-                        <Button Width="120" Height="40" Content="Delete Author" Click="DeleteAuthorBTN" Margin="6"/>
-                        <Button Width="120" Height="40" Content="Author All" Click="GetAuthorAllBTN" Margin="6"/>
-                        <Button Width="120" Height="40" Content="Add Author" Click="AddAuthorBTN" Margin="6"/>
+
+                        </TabItem>
+                        <TabItem Header="Reserved">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Button Width="120" Height="40" Margin="10" HorizontalAlignment="Center" Content="Update" Click="UpdateReserveAdmin_BTN" VerticalAlignment="Center"></Button>
+                                    <Button Width="120" Height="40" Margin="10" HorizontalAlignment="Center" Content="Change" Click="ChangeReserveAdmin_BTN" VerticalAlignment="Center"></Button>
+                                    <Button Width="120" Height="40" Margin="10" HorizontalAlignment="Center" Content="Delete" Click="DeleteReserveAdmin_BTN" VerticalAlignment="Center"></Button>
+                                </StackPanel>
+                                <DataGrid x:Name="ReservDGAdmin" Margin="10" ></DataGrid>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+                </TabItem>
+                <TabItem Header="Author" HorizontalAlignment="Left" >
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Width="120" Height="40" Content="Delete Author" Click="DeleteAuthorBTN" Margin="6"/>
+                            <Button Width="120" Height="40" Content="Author All" Click="GetAuthorAllBTN" Margin="6"/>
+                            <Button Width="120" Height="40" Content="Add Author" Click="AddAuthorBTN" Margin="6"/>
+                        </StackPanel>
+                        <DataGrid x:Name="AdminAuthor" Margin="10"></DataGrid>
                     </StackPanel>
-                    <DataGrid x:Name="AdminAuthor" Grid.Row="1" Margin="1,10,10,10"  AlternatingRowBackground="#FFDDEEEE" Grid.ColumnSpan="4" Grid.Column="1" ></DataGrid>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Client and Credentials">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="28*"/>
-                        <ColumnDefinition Width="369*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Button Width="120" Height="40" HorizontalAlignment="Left" Content="Delete Client" Click="DeleteClientBTN" Margin="281,6,0,6" Grid.Column="1"/>
-                    <Button Width="120" Height="40" HorizontalAlignment="Left" Content="Client All" Click="GetClientAllBTN" Margin="5,6,0,6" Grid.ColumnSpan="2" />
-                    <Button Width="120" Height="40" HorizontalAlignment="Left" Content="Client Update" Click="UpdateClientBTN" Margin="612,6,0,6" Grid.Column="1"/>
-                    <DataGrid Name="AdminCC"  Grid.Row="1" Margin="10,10,10,10" IsReadOnly="False" Grid.ColumnSpan="2" ></DataGrid>
-                </Grid>
-            </TabItem>
-        </TabControl>
-    </Grid>
+                </TabItem>
+                <TabItem Header="Client" HorizontalAlignment="Left">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Margin="5" Width="120" Height="40" HorizontalAlignment="Left" Content="Delete Client" Click="DeleteClientBTN" />
+                            <Button Margin="5" Width="120" Height="40" HorizontalAlignment="Left" Content="Client All" Click="GetClientAllBTN"  />
+                            <Button Margin="5" Width="120" Height="40" HorizontalAlignment="Left" Content="Client Update" Click="UpdateClientBTN" />
+                        </StackPanel>
+                        <DataGrid Name="AdminCC" Margin="10" IsReadOnly="False" ></DataGrid>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </StackPanel>
+    </materialDesign:Card>
 </Window>

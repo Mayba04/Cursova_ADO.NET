@@ -12,7 +12,7 @@
         AllowsTransparency="True"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-         d:DataContext="{d:DesignInstance local:ViewModel}"
+        
         Title="RegisterWindow" Height="660" Width="450">
     <materialDesign:Card UniformCornerRadius="15" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
         
@@ -58,7 +58,7 @@
 
 
             <TextBox Margin=" 0 25 0 0" x:Name="ConfirmPasswordBox" Width="300" FontSize="18"
-                       materialDesign:HintAssist.Hint="Confirm Password" BorderThickness="2"
+                       materialDesign:HintAssist.Hint="Repeat Password" BorderThickness="2"
                      BorderBrush="{DynamicResource MaterialDesignDivider}"
                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      materialDesign:TextFieldAssist.HasClearButton="True"/>

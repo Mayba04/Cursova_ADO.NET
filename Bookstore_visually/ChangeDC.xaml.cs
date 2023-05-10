@@ -101,6 +101,21 @@ namespace Bookstore_visually
             bookstoreDBContext.SaveChanges();
         }
 
-       
+        private void closeWind(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void minApp(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            DragMove();
+        }
     }
 }

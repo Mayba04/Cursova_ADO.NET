@@ -5,22 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bookstore_visually"
         mc:Ignorable="d"
-        
-        Title="AddingAuthors" Height="150" Width="280">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Label Margin="5" Content="Name:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox x:Name="AuthorNameBox" Margin="5" Grid.Column="1" BorderBrush="Black" ></TextBox>
-        <Label Margin="5" Grid.Row="1" Content="Surname:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox x:Name="AuthorSurnameBox" Margin="5" Grid.Row="1" Grid.Column="1" BorderBrush="Black" ></TextBox>
-        <Button Margin="5" Grid.Row="2" Grid.ColumnSpan="2" Content="Add" HorizontalAlignment="Center" VerticalAlignment="Center" Click="AddAthorBTN"></Button>
-    </Grid>
+         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{x:Null}"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Title="AddingAuthors" Height="250" Width="280">
+    <materialDesign:Card UniformCornerRadius="18" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                    materialDesign:ButtonAssist.CornerRadius="10" Click="minApp">
+                    <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                    materialDesign:ButtonAssist.CornerRadius="10" Click="closebtn" >
+                    <materialDesign:PackIcon Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Button>
+            </StackPanel>
+            <TextBox x:Name="AuthorNameBox" materialDesign:HintAssist.Hint="Name Author" Margin="5" ></TextBox>
+            <TextBox x:Name="AuthorSurnameBox" materialDesign:HintAssist.Hint="Surname Author" Margin="5" ></TextBox>
+            <Button Margin="5" Content="Add"
+                    Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="AddAthorBTN"></Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" 
+                    materialDesign:ButtonAssist.CornerRadius="10" FontSize="17" Margin="5" Click="closebtn" HorizontalAlignment="Center" VerticalAlignment="Center">Back</Button>
+
+        </StackPanel>
+    </materialDesign:Card>
 </Window>

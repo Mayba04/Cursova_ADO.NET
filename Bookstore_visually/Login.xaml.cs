@@ -32,6 +32,9 @@ namespace Bookstore_visually
             model = new ViewModel();
             paletteHelper = new PaletteHelper();
             bookstoreDBContext = new BookstoreDBContext();
+
+            //test test = new test();
+            //test.Show();
         }
 
         private void toggleTheme(object sender, RoutedEventArgs e)

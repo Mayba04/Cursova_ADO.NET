@@ -49,5 +49,21 @@ namespace Bookstore_visually
                 MessageBox.Show("Enter the genre of the book!");
             }
         }
+
+        private void minApp(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            DragMove();
+        }
+
+        private void closeWind(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

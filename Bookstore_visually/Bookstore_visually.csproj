@@ -9,7 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="AddingBooks.xaml~RF943bb1.TMP" />
+    <None Remove="AdminPage.xaml~RF143d0e9.TMP" />
     <None Remove="logo.png" />
+    <None Remove="RegisterWindow.xaml~RF7a80d7.TMP" />
   </ItemGroup>
 
   <ItemGroup>

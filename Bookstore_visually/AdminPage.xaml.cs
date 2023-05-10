@@ -21,6 +21,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Windows.Forms;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using System.Net.Sockets;
+using Application = System.Windows.Application;
+using MaterialDesignThemes.Wpf;
 
 namespace Bookstore_visually
 {
@@ -31,14 +33,17 @@ namespace Bookstore_visually
     {
 
         IRepository<Book> repository = new Repository<Book>(new BookstoreDBContext());
-        BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
-
+        BookstoreDBContext bookstoreDBContext;
+        public bool IsDarkTheme { get; set; }
+        private readonly PaletteHelper paletteHelper;
         ViewModel model;
         public AdminPage()
         {
             InitializeComponent();
             model = new ViewModel();
             dataGrid.SelectionChanged += DataGrid_SelectionChanged;
+            paletteHelper = new PaletteHelper();
+            bookstoreDBContext = new BookstoreDBContext();
             this.DataContext = model;
             AdminCC.IsReadOnly = false;
             RefreshBook();
@@ -46,6 +51,7 @@ namespace Bookstore_visually
             RefreshAuthors();
             RefreshClient();
             RefreshReserved();
+            RefreshClient();
         }
 
         private void RefreshAll()
@@ -159,6 +165,8 @@ namespace Bookstore_visually
         {
             this.IsEnabled = true;
             RefreshBook();
+            RefreshAuthors();
+          
         }
 
         private void DeleteBookBTN(object sender, RoutedEventArgs e)
@@ -288,12 +296,6 @@ namespace Bookstore_visually
             }
         }
 
-        private void ExitBtn(object sender, RoutedEventArgs e)
-        {
-            Login loin = new Login();
-            loin.Show();
-            this.Close();
-        }
         //Order
         private void OrderAll_ButtonClick(object sender, RoutedEventArgs e)
         {
@@ -442,8 +444,8 @@ namespace Bookstore_visually
                      ClientName = r.Client.Name,
                      BookTitle = r.Book.Title,
                      ReservationDate = r.ReservationDate,
-                     CheckOutDate = r.CheckoutDate,
-                     DueDate = r.ReturnDate,
+                     ReceivingDate = r.CheckoutDate,
+                     ReturnDate = r.ReturnDate,
                      IsReturned = r.IsReturned
                  }).ToList();
         }
@@ -455,7 +457,20 @@ namespace Bookstore_visually
 
         private void ChangeReserveAdmin_BTN(object sender, RoutedEventArgs e)
         {
+            if (ReservDGAdmin.SelectedItem != null)
+            {
+                var selectedd = (dynamic)ReservDGAdmin.SelectedItem;
+                ChangeReserve changeReserve = new ChangeReserve(selectedd.Id);
+                this.IsEnabled = false;
+                changeReserve.Closed += ChangeReserve_Closed;
+                changeReserve.Show();
+            }
+        }
 
+        private void ChangeReserve_Closed(object? sender, EventArgs e)
+        {
+            this.IsEnabled = true;
+            RefreshReserved();
         }
 
         private void DeleteReserveAdmin_BTN(object sender, RoutedEventArgs e)
@@ -466,6 +481,45 @@ namespace Bookstore_visually
                 int id = selectedd.Id;
                 bookstoreDBContext.Remove(bookstoreDBContext.Reservations.Where(r => r.Id == id).FirstOrDefault());
             }
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            DragMove();
+        }
+
+        private void exitApp(object sender, RoutedEventArgs e)
+        {
+            Login loin = new Login();
+            loin.Show();
+            this.Close();
+        }
+
+        private void minApp(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void toggleTheme(object sender, RoutedEventArgs e)
+        {
+            ITheme theme = paletteHelper.GetTheme();
+            if (IsDarkTheme = theme.GetBaseTheme() == BaseTheme.Dark)
+            {
+                IsDarkTheme = false;
+                theme.SetBaseTheme(Theme.Light);
+            }
+            else
+            {
+                IsDarkTheme = true;
+                theme.SetBaseTheme(Theme.Dark);
+            }
+            paletteHelper.SetTheme(theme);
+        }
+
+        private void CloseWind(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

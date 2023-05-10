@@ -1,5 +1,6 @@
 ﻿using Bookstore;
 using Bookstore.Entities;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 using Path = System.IO.Path;
 using TextBox = System.Windows.Controls.TextBox;
@@ -27,17 +29,47 @@ namespace Bookstore_visually
     public partial class AddingBooks : Window
     {
         BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
+        public int minN { get; set; }
+        public int maxNY { get; set; }
+        public double maxNP { get; set; }
+        public int maxNQ { get; set; }
+       
 
         ViewModel model;
         public AddingBooks()
         {
             InitializeComponent();
             model = new ViewModel();
-          
             UpdateAuthors();
             UpdateGenre();
             AddAuthorsdataGrid.SelectedCellsChanged += AddAuthorsdataGrid_SelectedCellsChanged;
             AddBookdataGrid.SelectedCellsChanged += AddBookdataGrid_SelectedCellsChanged;
+            YearsNumeric();
+            PriceNumeric();
+            QuantityNumeric();
+            maxNP = 4000;
+            maxNQ = 999;
+            maxNY = 2023;
+        }
+
+        private void YearsNumeric()
+        {
+            List<int> numbers = Enumerable.Range(1900, 124).ToList();
+            YearBox.ItemsSource = numbers;
+           
+        }
+
+        private void PriceNumeric()
+        {
+            List<double> numbers = Enumerable.Range(0, 400001).Select(i => i / 100.0).ToList();
+            PriceBox.ItemsSource = numbers;
+        }
+
+        private void QuantityNumeric()
+        {
+            List<int> numbers = Enumerable.Range(0, 1000).ToList();
+            QuantitiBox.ItemsSource = numbers;
+
         }
 
         private void UpdateAuthors()
@@ -243,6 +275,116 @@ namespace Bookstore_visually
             {
                 Messagbox();
             }
+        }
+
+        private void exitApp(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+
+        private void minApp(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            DragMove();
+        }
+
+        private void closebtn(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void YearBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            string input = e.Text;
+            bool isNumber = false;
+            int decimalValue;
+            isNumber = int.TryParse(input, out decimalValue);
+
+            if (!isNumber)
+            {
+                // Введено не число, скасувати подію
+                e.Handled = true;
+                return;
+            }
+
+            int number = int.Parse(e.Text);
+            if (number < 1900)
+            {
+                e.Handled = true;
+                YearBox.Text = "1900";
+            }
+            if (number > (int)2023)
+            {
+                e.Handled = true;
+                YearBox.Text = "2023";
+            }
+        }
+
+
+        private void PriceBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            string input = e.Text;
+
+            bool isNumber = false;
+
+            decimal decimalValue;
+            isNumber = decimal.TryParse(input, out decimalValue);
+
+           
+
+            if (!isNumber)
+            {
+                // Введено не число, скасувати подію
+                e.Handled = true;
+                return;
+            }
+
+            decimal number = decimal.Parse(e.Text);
+            if (number < 0)
+            {
+                e.Handled = true;
+            }
+            if (number > (decimal)4000)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void QuantitiBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            string input = e.Text;
+
+            bool isNumber = false;
+
+            int decimalValue;
+            isNumber = int.TryParse(input, out decimalValue);
+
+
+
+            if (!isNumber)
+            {
+                // Введено не число, скасувати подію
+                e.Handled = true;
+                return;
+            }
+
+            int number = int.Parse(e.Text);
+            if (number < 0)
+            {
+                e.Handled = true;
+            }
+            if (number > (int)999)
+            {
+                e.Handled = true;
+            }
+
+
         }
     }
 }

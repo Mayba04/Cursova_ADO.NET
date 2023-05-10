@@ -5,56 +5,122 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bookstore_visually"
         mc:Ignorable="d"
-        
-        Title="AddingBooks" Height="550" Width="510">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="55"/>
-            <RowDefinition Height="55"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="55"/>
-            <RowDefinition Height="55"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-           
+           xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{x:Null}"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Title="AddingBooks" Height="650" Width="570">
+    <materialDesign:Card UniformCornerRadius="18" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                    materialDesign:ButtonAssist.CornerRadius="10" Click="minApp">
+                    <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                    materialDesign:ButtonAssist.CornerRadius="10" Click="exitApp" >
+                    <materialDesign:PackIcon Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Button>
+            </StackPanel>
 
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <Label  Content="Book" FontWeight="Bold" HorizontalAlignment="Center" Grid.Column="1"/>
-        <Label Margin="5,5,5,5" Grid.Row="1" Content="Title:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Name="TitleBox" Margin="5,5,5,5"  Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" BorderBrush="Black" ></TextBox>
-        <Label Margin="5,5,5,5" Grid.Row="2" Content="Publisher:"/>
-        <TextBox x:Name="PublisherBox" Margin="5,5,5,5" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="1" BorderBrush="Black" ></TextBox>
-        <Label Margin="5,5,5,5" Grid.Row="3" Content="Year:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox x:Name="YearBox"  Margin="5,5,5,5" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="1" BorderBrush="Black" ></TextBox>
-        <Label Margin="5,5,5,5" Grid.Row="4" Content="Price:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox x:Name="PriceBox" Margin="5,5,5,5" Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="1" BorderBrush="Black" ></TextBox>
-        <Label Margin="5,5,5,5" Grid.Row="5" Content="Quantity:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox x:Name="QuantitiBox" Margin="5,5,5,5" Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="1" BorderBrush="Black" ></TextBox>
-        <Label Grid.Row="6" Content="Authors"  FontWeight="Bold" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="54"/>
-        <DataGrid Name="AddAuthorsdataGrid" Grid.Row="7" Grid.RowSpan="2" Grid.Column="2" Margin="10,10,10,10" IsReadOnly="False"></DataGrid>
-        <Button Grid.Row="7" Grid.RowSpan="2" Grid.Column="3" Height="10" Width="20" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="6" FontWeight="Bold" Margin="5" Click="AddAuthors">...</Button>
-        <Label Margin="5,5,5,5" Grid.Row="7" Content="Name:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Margin="5,5,5,5" Name="AuthorNameBox"  Grid.Row="7" Grid.Column="1" BorderBrush="Black" Height="25.96" ></TextBox>
-        <Label Margin="5,5,5,5" Grid.Row="8" Content="Surname:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Margin="5,5,5,5" Name="AuthorSurnameBox" Grid.Row="8" Grid.Column="1" BorderBrush="Black" Height="25.96" ></TextBox>
-        <Label Grid.Row="9" Content="Genre" HorizontalAlignment="Center" FontWeight="Bold" Grid.Column="2" Margin="0,0,0,2" Width="42"/>
-        <DataGrid Name="AddBookdataGrid" Grid.Row="10" Grid.RowSpan="2" Grid.Column="2" Margin="10,10,10,10" IsReadOnly="False"></DataGrid>
-        <Button Grid.Row="10" Grid.Column="3" Grid.RowSpan="2" Height="11" Width="20" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="6" FontWeight="Bold" Margin="5" Click="AddGenre">...</Button>
-        <Label Grid.Row="10" Grid.RowSpan="2" Content="Name:" VerticalAlignment="Center" HorizontalAlignment="Center" Height="26" Width="44"/>
-        <TextBox Margin="5,5,5,5" Name="GenreNameBox" Grid.RowSpan="2" Grid.Row="10" Grid.Column="1" BorderBrush="Black" Height="25.96" />
-        <Button  Margin="24,5,95,5" Grid.Row="13" Click="Button_Click" Grid.Column="1">Add</Button>
-    </Grid>
+            <TextBox Height="40" VerticalScrollBarVisibility="Auto" Name="TitleBox"
+                     materialDesign:HintAssist.Hint="Enter Title" Margin="15,5,15,5"/>
+
+            <TextBox Height="40" VerticalScrollBarVisibility="Auto" Name="PublisherBox"
+                     materialDesign:HintAssist.Hint="Enter Publisher" Margin="15,5,15,5"/>
+
+            <StackPanel Orientation="Horizontal" Width="308" HorizontalAlignment="Center" >
+
+                <ComboBox Name="YearBox" Margin="15,5,15,5" Height="35"
+                  materialDesign:HintAssist.Hint="Years"
+                  MinWidth="72" IsEditable="True"
+                  ItemsSource="{Binding LongListToTestComboVirtualization}"
+                  Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
+                  PreviewTextInput="YearBox_PreviewTextInput"
+                  VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+
+                
+
+                <ComboBox Name="PriceBox" Margin="15,5,15,5" Height="35"
+                   materialDesign:HintAssist.Hint="Price"
+                   MinWidth="72" IsEditable="True"
+                   ItemsSource="{Binding LongListToTestComboVirtualization}"
+                   Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
+                   PreviewTextInput="PriceBox_PreviewTextInput"
+                   VerticalAlignment="Stretch" HorizontalAlignment="Center">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+
+                <ComboBox Name="QuantitiBox" Margin="15,5,15,5" Height="35"
+                  materialDesign:HintAssist.Hint="Quantiti"
+                  MinWidth="72" IsEditable="True"
+                  ItemsSource="{Binding LongListToTestComboVirtualization}"
+                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                  PreviewTextInput="QuantitiBox_PreviewTextInput"
+                  VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel>
+                        <TextBox Margin="5" Name="AuthorNameBox" Height="40" VerticalScrollBarVisibility="Auto"
+                     materialDesign:HintAssist.Hint="Name author " Width="200"  IsEnabled="False" HorizontalAlignment="Center" ></TextBox>
+
+                        <TextBox Margin="5" Name="AuthorSurnameBox" Height="40" VerticalScrollBarVisibility="Auto"
+                     materialDesign:HintAssist.Hint="Surname author " Width="200"  IsEnabled="False" HorizontalAlignment="Center" ></TextBox>
+                    </StackPanel>
+
+
+                    <DataGrid Name="AddAuthorsdataGrid" MaxHeight="115" MinHeight="105" MinWidth="225" MaxWidth="225"
+                              Margin="5" IsReadOnly="False"></DataGrid>
+                </StackPanel>
+                <Button  Style="{StaticResource MaterialDesignFlatButton}" Height="20" Width="45" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="6" FontWeight="Bold" Margin="5" Click="AddAuthors">
+                    <materialDesign:PackIcon Kind="DotsHorizontal" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                    <TextBox Margin="5" Name="GenreNameBox" Height="40" VerticalScrollBarVisibility="Auto"
+                     materialDesign:HintAssist.Hint="Genre" Width="200"  IsEnabled="False" HorizontalAlignment="Center" ></TextBox>
+
+                    <DataGrid Name="AddBookdataGrid" MaxHeight="110" MinHeight="100" MinWidth="220" MaxWidth="220"
+                              Margin="10,10,10,10" IsReadOnly="False"></DataGrid>
+
+                </StackPanel>
+                <Button  Style="{StaticResource MaterialDesignFlatButton}" Height="20" Width="45" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="6" FontWeight="Bold" Margin="5" Click="AddGenre">
+                    <materialDesign:PackIcon Kind="DotsHorizontal" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+            </StackPanel>
+
+            <Button Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="53" Width="300"
+                    materialDesign:ButtonAssist.CornerRadius="10" FontSize="18" Margin="10" Click="Button_Click">Add</Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="53" Width="300"
+                    materialDesign:ButtonAssist.CornerRadius="10" FontSize="18" Margin="10" Click="closebtn">Back</Button>
+
+        </StackPanel>
+    </materialDesign:Card>
 </Window>

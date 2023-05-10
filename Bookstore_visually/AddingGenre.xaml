@@ -5,19 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bookstore_visually"
         mc:Ignorable="d"
-        
-        Title="AddingGenre" Height="150" Width="300">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Label Margin="5" Content="Name:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox x:Name="GenreNameBox" Margin="5" Grid.Column="1" BorderBrush="Black" ></TextBox>
-        <Button Margin="5" Grid.Row="2" Grid.ColumnSpan="2" Content="Add" HorizontalAlignment="Center" VerticalAlignment="Center" Click="AddGenreBTN"></Button>
-    </Grid>
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{x:Null}"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Title="AddingGenre" Height="180" Width="300">
+    <materialDesign:Card UniformCornerRadius="18" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                    materialDesign:ButtonAssist.CornerRadius="10" Click="minApp">
+                    <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                    materialDesign:ButtonAssist.CornerRadius="10" Click="closeWind" >
+                    <materialDesign:PackIcon Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Button>
+            </StackPanel>
+            <TextBox x:Name="GenreNameBox" Margin="5" materialDesign:HintAssist.Hint="Genre" ></TextBox>
+            <Button Margin="5"  Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                    materialDesign:ButtonAssist.CornerRadius="10" Content="Add" HorizontalAlignment="Center" VerticalAlignment="Center" Click="AddGenreBTN"></Button>
+        </StackPanel>
+    </materialDesign:Card>
+
 </Window>

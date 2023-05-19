@@ -24,6 +24,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
 
 using MessageBox = System.Windows.MessageBox;
+using System.Windows.Forms;
+using Application = System.Windows.Application;
+using MaterialDesignThemes.Wpf;
 
 namespace Bookstore_visually
 {
@@ -35,28 +38,51 @@ namespace Bookstore_visually
         IRepository<Book> repository = new Repository<Book>(new BookstoreDBContext());
         IRepository<Order> repositoryO = new Repository<Order>(new BookstoreDBContext());
         ViewModel model;
+        public bool IsDarkTheme { get; set; }
+        private readonly PaletteHelper paletteHelper;
 
         BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
         private object Credential_user;
         private int idClient;
-        public BookstoreView(object credential)
+
+        public BookstoreView()
         {
-           
             InitializeComponent();
             model = new ViewModel();
+            paletteHelper = new PaletteHelper();
             this.DataContext = model;
-            Credential_user = credential;
-            //OrderBooksDataGrid.ItemsSource = repository.GetAll().ToList();
-           
-            idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Credentials)Credential_user).Id).Select(c => c.CredentialsId).FirstOrDefault();
+            idClient = 1;
             RefreshBook();
             RefreshOrderBooks();
             RefreshReserverBook();
             RefreshOrderDG();
+            QuantityNumeric();
+        }
 
-            //
+        public BookstoreView(object credential) : this()
+        {
+
+            Credential_user = credential;
+            idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Credentials)Credential_user).Id).Select(c => c.CredentialsId).FirstOrDefault();
 
         }
+
+
+        //public BookstoreView(object credential)
+        //{
+           
+        //    InitializeComponent();
+        //    model = new ViewModel();
+        //    this.DataContext = model;
+        //    Credential_user = credential;
+        //    //OrderBooksDataGrid.ItemsSource = repository.GetAll().ToList();
+           
+        //    idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Credentials)Credential_user).Id).Select(c => c.CredentialsId).FirstOrDefault();
+        //    RefreshBook();
+        //    RefreshOrderBooks();
+        //    RefreshReserverBook();
+        //    RefreshOrderDG();
+        //}
         //book
 
 
@@ -419,12 +445,12 @@ namespace Bookstore_visually
             RefreshOrderDG();
         }
 
-        private void ExitBtn_Click(object sender, RoutedEventArgs e)
-        {
-            Login login = new Login();
-            login.Show();
-            this.Close();
-        }
+        //private void ExitBtn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Login login = new Login();
+        //    login.Show();
+        //    this.Close();
+        //}
 
         private void Update_ButtonClick(object sender, RoutedEventArgs e)
         {
@@ -435,6 +461,79 @@ namespace Bookstore_visually
         {
             ReservDataGrid.ItemsSource = bookstoreDBContext.Reservations.Include(r => r.Client).Include(r => r.Book).Where(r => r.ClientId == idClient).Select(r => new { Id=r.Id, ClientName = r.Client.Name, 
                 BookTitle = r.Book.Title,ReservationDate = r.ReservationDate, CheckOutDate = r.CheckoutDate,DueDate = r.ReturnDate,IsReturned = r.IsReturned}).ToList();
+        }
+
+        private void CloseWind(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void exitApp(object sender, RoutedEventArgs e)
+        {
+            Login login = new Login();
+            login.Show();
+            this.Close();
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            DragMove();
+        }
+
+        private void toggleTheme(object sender, RoutedEventArgs e)
+        {
+            ITheme theme = paletteHelper.GetTheme();
+            if (IsDarkTheme = theme.GetBaseTheme() == BaseTheme.Dark)
+            {
+                IsDarkTheme = false;
+                theme.SetBaseTheme(Theme.Light);
+            }
+            else
+            {
+                IsDarkTheme = true;
+                theme.SetBaseTheme(Theme.Dark);
+            }
+            paletteHelper.SetTheme(theme);
+        }
+
+        private void minApp(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void QuantityBook_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            string input = e.Text;
+            bool isNumber = false;
+            int decimalValue;
+            isNumber = int.TryParse(input, out decimalValue);
+
+            if (!isNumber)
+            {
+                // Введено не число, скасувати подію
+                e.Handled = true;
+                return;
+            }
+
+            int number = int.Parse(e.Text);
+            if (number < 0)
+            {
+                e.Handled = true;
+                Quantity_Book.Text = "0";
+            }
+            if (number > (int)1000)
+            {
+                e.Handled = true;
+                Quantity_Book.Text = "1000";
+            }
+        }
+
+        private void QuantityNumeric()
+        {
+            List<int> numbers = Enumerable.Range(0, 1000).ToList();
+            Quantity_Book.ItemsSource = numbers;
+
         }
     }
 }

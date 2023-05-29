@@ -7,18 +7,17 @@ using System.Threading.Tasks;
 
 namespace Bookstore.Entities
 {
-    public class Client
+    public class Admin
     {
-        public int CredentialsId { get; set; }
+        public int Id { get; set; }
+
+        public string Login { get; set; }
+
+        public string Password { get; set; }
 
         public string Name { get; set; }
 
         [EmailAddress]
         public string Email { get; set; }
-
-        public ICollection<Order> Orders { get; set; }
-        public Credentials Credentials { get; set; }
-        public ICollection<Comment> Comments { get; set; }
-        public ICollection<Reservation> Reservations { get; set; }
     }
 }

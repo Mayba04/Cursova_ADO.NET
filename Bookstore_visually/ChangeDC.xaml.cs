@@ -37,18 +37,10 @@ namespace Bookstore_visually
             credentialsf = credential;
             clientf = client;
             LoginBox.Text = credential.Login;
-            PaswordBox.Text = credential.Password;
+            PasswordBox.Text = credential.Password;
             NameBox.Text = client.Name;
             EmailBox.Text = client.Email;
             Checked = false;
-            if (client.Status_admin)
-            {
-                RadioBTNTrue.IsChecked = true;
-            }
-            else
-            {
-                RadioBTNTrue.IsChecked = false;
-            }
             emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             RadioBTNTrue.Click += RadioBTNTrue_Click;
             RadioBTNFalse.Click += RadioBTNFalse_Click; ;
@@ -69,6 +61,7 @@ namespace Bookstore_visually
                 {
                     RadioBTNTrue.IsChecked = true;
                     Checked = true;
+
                     MessageBox.Show("Administrator rights will be granted when the changes are applied.", "Success");
                 }
                 else
@@ -82,24 +75,156 @@ namespace Bookstore_visually
 
         private void ChangeBtn(object sender, RoutedEventArgs e)
         {
-            if (Regex.IsMatch(EmailBox.Text, emailPattern))
+
+
+            if (Checked!=true)
             {
-                clientf.Email = EmailBox.Text;
-                clientf.Name = NameBox.Text;
-                clientf.Status_admin = Checked;
-                credentialsf.Login = LoginBox.Text;
-                credentialsf.Password = PaswordBox.Text;
-                MessageBox.Show("Applied");
+                if (Audit())
+                {
+                    clientf.Email = EmailBox.Text;
+                    clientf.Name = NameBox.Text;
+                    credentialsf.Login = LoginBox.Text;
+                    credentialsf.Password = PasswordBox.Text;
+          
+                    bookstoreDBContext.Clients.Update(clientf);
+                    bookstoreDBContext.Credentials.Update(credentialsf);
+                    bookstoreDBContext.SaveChanges();
+                    MessageBox.Show("Changed!");
+                }
             }
             else
             {
-                MessageBox.Show("The email was entered incorrectly. Please check the correctness of the input.");
-            }
-           
-            bookstoreDBContext.Clients.Update(clientf);
-            bookstoreDBContext.Credentials.Update(credentialsf);
-            bookstoreDBContext.SaveChanges();
+                if (Audit())
+                {
+                    Admin admin = new Admin();
+                    admin.Login = LoginBox.Text;
+                    admin.Password = PasswordBox.Text;
+                    admin.Email = EmailBox.Text;
+                    admin.Name = NameBox.Text;
+                    bookstoreDBContext.Administrators.Update(admin);
+                    bookstoreDBContext.Credentials.Remove(bookstoreDBContext.Credentials.Where(b => b.Id == credentialsf.Id).FirstOrDefault());
+                    bookstoreDBContext.Clients.Remove(bookstoreDBContext.Clients.Where(b => b.CredentialsId == clientf.CredentialsId).FirstOrDefault());
+                    bookstoreDBContext.SaveChanges();
+                    MessageBox.Show($"Changed! {admin.Login} saved and moved to administration");
+                    this.Close();
+                }
+            }           
         }
+
+
+        private bool Audit()
+        {
+            if (credentialsf.Login != LoginBox.Text)
+            {
+                if (string.IsNullOrEmpty(LoginBox.Text))
+                {
+                    MessageBox.Show("Enter your login");
+                    return false;
+                }
+
+                if (LoginBox.Text.Length < 4 || LoginBox.Text.Length > 20)
+                {
+                    MessageBox.Show("Login should be between 4 and 20 characters long");
+                    return false;
+                }
+
+                if (!char.IsUpper(LoginBox.Text[0]))
+                {
+                    MessageBox.Show("Login should start with an uppercase letter");
+                    return false;
+                }
+
+                if (!LoginBox.Text.All(c => char.IsLetterOrDigit(c) || c == '_'))
+                {
+                    MessageBox.Show("Login should only contain letters, digits, and underscores");
+                    return false;
+                }
+            }
+
+            if (credentialsf.Password != PasswordBox.Text)
+            {
+                if (string.IsNullOrEmpty(PasswordBox.Text))
+                {
+                    MessageBox.Show("Enter your password");
+                    return false;
+                }
+
+                if (!IsPasswordValid(PasswordBox.Text))
+                {
+                    MessageBox.Show("Password should be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one digit.");
+                    return false;
+                }
+            }
+            ///
+            if (clientf.Email != EmailBox.Text)
+            {
+                if (string.IsNullOrEmpty(EmailBox.Text))
+                {
+                    MessageBox.Show("Enter your email address");
+                    return false;
+                }
+
+                if (!IsValidEmail(EmailBox.Text))
+                {
+                    MessageBox.Show("Enter a valid email address");
+                    return false;
+                }
+                var user = bookstoreDBContext.Clients.FirstOrDefault(x => x.Email == EmailBox.Text);
+                var user2 = bookstoreDBContext.Administrators.FirstOrDefault(x => x.Email == EmailBox.Text);
+                if (user != null || user2 != null)
+                {
+                    MessageBox.Show("A user with this login already exists");
+                    return false;
+                }
+            }
+
+            if (string.IsNullOrEmpty(NameBox.Text))
+            {
+                MessageBox.Show("Enter your Name");
+                return false;
+            }
+
+            if (!ValidateName(NameBox.Text))
+            {
+                MessageBox.Show("Name should start with an uppercase letter and contain 4 to 20 characters (letters, numbers, spaces, dashes, underscores).");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsPasswordValid(string password)
+        {
+            var passwordRegex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$");
+            return passwordRegex.IsMatch(password);
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            string emailRegexPattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+            Regex regex = new Regex(emailRegexPattern);
+            return regex.IsMatch(email);
+        }
+
+        private bool ValidateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return false;
+
+            if (name.Length < 4 || name.Length > 20)
+                return false;
+
+            if (!char.IsUpper(name[0]))
+                return false;
+
+            var allowedCharacters = new Regex(@"^[a-zA-Z0-9\s_-]+$");
+            if (!allowedCharacters.IsMatch(name))
+                return false;
+
+            return true;
+        }
+
+
 
         private void closeWind(object sender, RoutedEventArgs e)
         {

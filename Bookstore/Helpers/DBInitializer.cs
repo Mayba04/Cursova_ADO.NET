@@ -23,7 +23,7 @@ namespace Bookstore.Helpers
                 new Genre() {Id = 1, Name = "Fiction"},
                 new Genre() {Id = 2, Name = "Non-fiction"},
                 new Genre() {Id = 3, Name = "Mystery"},
-                new Genre() {Id = 4, Name = "Fiction"},
+                new Genre() {Id = 4, Name = "Epos"},
                 new Genre() {Id = 5, Name = "Romance"},
                 new Genre() {Id = 6, Name = "Science Fiction"},
                 new Genre() {Id = 7, Name = "Fantasy"}
@@ -183,6 +183,22 @@ namespace Bookstore.Helpers
             );
         }
 
+        public static void SeedAdmin(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Admin>().HasData(
+                new Admin
+                {
+                    Id = 1,
+                    Login = "Admin",
+                    Password = "Admin123",
+                    Name = "Pavlo",
+                    Email = "pashamyba7@gmail.com"
+                }
+
+            );
+        }
+
+
         public static void SeedClients(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Client>().HasData(
@@ -190,18 +206,15 @@ namespace Bookstore.Helpers
                 {
                     CredentialsId = 1,
                     Name = "John Doe",
-                    Email = "john.doe@example.com",
-                    Status_admin = false,
+                    Email = "john.doe@example.com"
 
                 },
                 new Client
                 {
                     CredentialsId = 2,
                     Name = "Jane Smith",
-                    Email = "jane.smith@example.com",
-                    Status_admin = false,
-                }
-                
+                    Email = "jane.smith@example.com"
+                }     
             );
         }
 

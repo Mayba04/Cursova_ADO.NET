@@ -22,13 +22,14 @@ namespace Bookstore
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Admin> Administrators { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
 
             optionsBuilder.UseSqlServer(@"Data Source =DESKTOP-2SQGFV4\SQLEXPRESS;
-                                        Initial Catalog = BookstoreDB;
+                                        Initial Catalog = BookstoreDB1.0;
                                         Integrated Security = True; 
                                         Connect Timeout = 30; Encrypt = False;
                                         TrustServerCertificate = False;
@@ -60,7 +61,7 @@ namespace Bookstore
 
             modelBuilder.Entity<Client>().HasKey(c => c.CredentialsId);
             modelBuilder.Entity<Client>().HasOne(с => с.Credentials).WithOne(c => c.Client).HasForeignKey<Client>(c => c.CredentialsId);
-            modelBuilder.Entity<Client>().Property(c => c.Name).IsRequired().HasMaxLength(100).HasColumnName("FirstName");
+            modelBuilder.Entity<Client>().Property(c => c.Name).IsRequired().HasMaxLength(20);
             modelBuilder.Entity<Client>().Property(c => c.Email).IsRequired().HasMaxLength(100);
             modelBuilder.Entity<Client>().HasIndex(c => c.Email).IsUnique();
 
@@ -94,6 +95,7 @@ namespace Bookstore
             modelBuilder.SeedOrderBooks();
             modelBuilder.SeedComments();
             modelBuilder.SeedPhoto();
+            modelBuilder.SeedAdmin();
 
         }
 

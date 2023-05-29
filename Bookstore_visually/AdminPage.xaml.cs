@@ -385,7 +385,7 @@ namespace Bookstore_visually
 
         private void RefreshClient()
         {
-            var clientList = bookstoreDBContext.Clients.Include(c => c.Credentials).Select(c => new { CredentialsId = c.CredentialsId, Name = c.Name, Email = c.Email, Status_admin = c.Status_admin, Login = c.Credentials.Login, Password = c.Credentials.Password }).ToList();
+            var clientList = bookstoreDBContext.Clients.Include(c => c.Credentials).Select(c => new { CredentialsId = c.CredentialsId, Name = c.Name, Email = c.Email, Login = c.Credentials.Login, Password = c.Credentials.Password }).ToList();
             AdminCC.ItemsSource = clientList;
         }
 
@@ -419,13 +419,11 @@ namespace Bookstore_visually
             {
                 var selectedd = (dynamic)AdminCC.SelectedItem;
                 int id = selectedd.CredentialsId;
-                if (selectedd.Status_admin == false)
-                {
-                    ChangeDC changeDC = new ChangeDC(id);
-                    this.IsEnabled = false;
-                    changeDC.Closed += ChangeDC_Closed;
-                    changeDC.Show();
-                }
+                ChangeDC changeDC = new ChangeDC(id);
+                this.IsEnabled = false;
+                changeDC.Closed += ChangeDC_Closed;
+                changeDC.Show();
+                
                
             }
             
@@ -480,6 +478,9 @@ namespace Bookstore_visually
                 var selectedd = (dynamic)ReservDGAdmin.SelectedItem;
                 int id = selectedd.Id;
                 bookstoreDBContext.Remove(bookstoreDBContext.Reservations.Where(r => r.Id == id).FirstOrDefault());
+                bookstoreDBContext.SaveChanges();
+                RefreshReserved();
+                ///////////////////////////////////
             }
         }
 

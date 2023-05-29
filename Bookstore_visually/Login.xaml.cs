@@ -75,9 +75,9 @@ namespace Bookstore_visually
             {
                 ///MessageBox.Show("Welcome to the bookstore");
 
-                var Credentials = bookstoreDBContext.Credentials.FirstOrDefault(x => x.Login == login);
+                var admin = bookstoreDBContext.Administrators.FirstOrDefault(x => x.Login == login);
                 var user = bookstoreDBContext.Clients.FirstOrDefault(u => u.Credentials.Login == login);
-                if (user.Status_admin == true)
+                if (admin != null)
                 {
                     AdminPage adminPage = new AdminPage();
                     this.Close();
@@ -85,7 +85,7 @@ namespace Bookstore_visually
                 }
                 else
                 {
-                    BookstoreView bookstore = new BookstoreView(Credentials);
+                    BookstoreView bookstore = new BookstoreView(user);
                     this.Close();
                     bookstore.Show();
                 }
@@ -99,8 +99,9 @@ namespace Bookstore_visually
         private bool CheckUserCredentials(string login, string password)
         {
             var user = bookstoreDBContext.Credentials.FirstOrDefault(x => x.Login == login);
+            var admin = bookstoreDBContext.Administrators.FirstOrDefault(x => x.Login == login);
 
-            if (user != null && user.Password == password)
+            if (user != null && user.Password == password || admin != null && admin.Password == password)
             {
                 return true;
             }

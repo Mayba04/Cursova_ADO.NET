@@ -19,6 +19,40 @@ namespace Bookstore.Migrations
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Bookstore.Entities.Admin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Login")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Administrators");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "pashamyba7@gmail.com",
+                            Login = "Admin",
+                            Name = "Pavlo",
+                            Password = "Admin123"
+                        });
+                });
+
             modelBuilder.Entity("Bookstore.Entities.Authors", b =>
                 {
                     b.Property<int>("Id")
@@ -253,12 +287,8 @@ namespace Bookstore.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("FirstName");
-
-                    b.Property<bool>("Status_admin")
-                        .HasColumnType("bit");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("CredentialsId");
 
@@ -272,15 +302,13 @@ namespace Bookstore.Migrations
                         {
                             CredentialsId = 1,
                             Email = "john.doe@example.com",
-                            Name = "John Doe",
-                            Status_admin = false
+                            Name = "John Doe"
                         },
                         new
                         {
                             CredentialsId = 2,
                             Email = "jane.smith@example.com",
-                            Name = "Jane Smith",
-                            Status_admin = false
+                            Name = "Jane Smith"
                         });
                 });
 
@@ -317,7 +345,7 @@ namespace Bookstore.Migrations
                             Id = 1,
                             BookId = 1,
                             ClientId = 1,
-                            CreatedAt = new DateTime(2023, 5, 6, 20, 8, 43, 507, DateTimeKind.Local).AddTicks(8903),
+                            CreatedAt = new DateTime(2023, 5, 29, 14, 19, 5, 835, DateTimeKind.Local).AddTicks(7197),
                             Text = "Very cool book"
                         },
                         new
@@ -325,7 +353,7 @@ namespace Bookstore.Migrations
                             Id = 2,
                             BookId = 2,
                             ClientId = 2,
-                            CreatedAt = new DateTime(2023, 5, 6, 20, 8, 43, 507, DateTimeKind.Local).AddTicks(9154),
+                            CreatedAt = new DateTime(2023, 5, 29, 14, 19, 5, 835, DateTimeKind.Local).AddTicks(7416),
                             Text = "I advise you to read it"
                         });
                 });
@@ -402,7 +430,7 @@ namespace Bookstore.Migrations
                         new
                         {
                             Id = 4,
-                            Name = "Fiction"
+                            Name = "Epos"
                         },
                         new
                         {
@@ -454,7 +482,7 @@ namespace Bookstore.Migrations
                         {
                             Id = 1,
                             ClientId = 1,
-                            Date = new DateTime(2023, 5, 6, 20, 8, 43, 505, DateTimeKind.Local).AddTicks(5659),
+                            Date = new DateTime(2023, 5, 29, 14, 19, 5, 833, DateTimeKind.Local).AddTicks(5887),
                             Payment_status = false,
                             Price = 15.99m,
                             Quantity = 1
@@ -463,7 +491,7 @@ namespace Bookstore.Migrations
                         {
                             Id = 2,
                             ClientId = 2,
-                            Date = new DateTime(2023, 5, 6, 20, 8, 43, 507, DateTimeKind.Local).AddTicks(4725),
+                            Date = new DateTime(2023, 5, 29, 14, 19, 5, 835, DateTimeKind.Local).AddTicks(3152),
                             Payment_status = false,
                             Price = 10.99m,
                             Quantity = 1
@@ -472,7 +500,7 @@ namespace Bookstore.Migrations
                         {
                             Id = 3,
                             ClientId = 2,
-                            Date = new DateTime(2023, 5, 6, 20, 8, 43, 507, DateTimeKind.Local).AddTicks(4745),
+                            Date = new DateTime(2023, 5, 29, 14, 19, 5, 835, DateTimeKind.Local).AddTicks(3170),
                             Payment_status = false,
                             Price = 19.99m,
                             Quantity = 1

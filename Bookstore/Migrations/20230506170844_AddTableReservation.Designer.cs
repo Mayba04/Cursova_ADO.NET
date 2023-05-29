@@ -404,7 +404,7 @@ namespace Bookstore.Migrations
                         new
                         {
                             Id = 4,
-                            Name = "Fiction"
+                            Name = "Epos"
                         },
                         new
                         {

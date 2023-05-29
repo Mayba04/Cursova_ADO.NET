@@ -33,8 +33,8 @@
                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      materialDesign:TextFieldAssist.HasClearButton="True"/>
 
-            <TextBox Margin="0,25,0,0" x:Name="PaswordBox" Width="300" FontSize="14"
-                       materialDesign:HintAssist.Hint="Pasword" BorderThickness="2"
+            <TextBox Margin="0,25,0,0" x:Name="PasswordBox" Width="300" FontSize="14"
+                       materialDesign:HintAssist.Hint="Password" BorderThickness="2"
                      BorderBrush="{DynamicResource MaterialDesignDivider}"
                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      materialDesign:TextFieldAssist.HasClearButton="True"/>

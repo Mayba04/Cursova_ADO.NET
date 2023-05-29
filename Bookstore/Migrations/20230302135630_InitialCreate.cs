@@ -193,7 +193,7 @@ namespace Bookstore.Migrations
                     { 1, "Fiction" },
                     { 2, "Non-fiction" },
                     { 3, "Mystery" },
-                    { 4, "Fiction" },
+                    { 4, "Epos" },
                     { 5, "Romance" },
                     { 6, "Science Fiction" },
                     { 7, "Fantasy" }

@@ -52,13 +52,13 @@
                        Text="Log in to your existing account"/>
 
             <TextBox Margin=" 0 50 0 0" x:Name="textUsername" Width="300" FontSize="18"
-                       materialDesign:HintAssist.Hint="Enter Username" BorderThickness="2"
+                       materialDesign:HintAssist.Hint="Enter Login" BorderThickness="2"
                      BorderBrush="{DynamicResource MaterialDesignDivider}"
                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      materialDesign:TextFieldAssist.HasClearButton="True"/>
             <PasswordBox Margin="0 20 0 0" x:Name="txtPassword" Width="300" FontSize="18"
                      materialDesign:TextFieldAssist.HasClearButton="True"
-                     materialDesign:HintAssist.Hint="Enter Paaword" BorderThickness="2"
+                     materialDesign:HintAssist.Hint="Enter Password" BorderThickness="2"
                      BorderBrush="{DynamicResource MaterialDesignDivider}" 
                      Style="{StaticResource MaterialDesignOutlinedPasswordBox}"/>
 

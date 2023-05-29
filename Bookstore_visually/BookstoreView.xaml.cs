@@ -63,28 +63,9 @@ namespace Bookstore_visually
         {
 
             Credential_user = credential;
-            idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Credentials)Credential_user).Id).Select(c => c.CredentialsId).FirstOrDefault();
+            idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Client)Credential_user).CredentialsId).Select(c => c.CredentialsId).FirstOrDefault();
 
         }
-
-
-        //public BookstoreView(object credential)
-        //{
-           
-        //    InitializeComponent();
-        //    model = new ViewModel();
-        //    this.DataContext = model;
-        //    Credential_user = credential;
-        //    //OrderBooksDataGrid.ItemsSource = repository.GetAll().ToList();
-           
-        //    idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Credentials)Credential_user).Id).Select(c => c.CredentialsId).FirstOrDefault();
-        //    RefreshBook();
-        //    RefreshOrderBooks();
-        //    RefreshReserverBook();
-        //    RefreshOrderDG();
-        //}
-        //book
-
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
@@ -297,7 +278,7 @@ namespace Bookstore_visually
 
         private void OrderBooks_ButtonClick(object sender, RoutedEventArgs e)
         {
-            int idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Credentials)Credential_user).Id).Select(c => c.CredentialsId).FirstOrDefault(); // Id користувача який зайшов в програму 
+            int idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Client)Credential_user).CredentialsId).Select(c => c.CredentialsId).FirstOrDefault(); // Id користувача який зайшов в програму 
             //var book = OrderBooksDataGrid.SelectedItem;
 
             //перевірка чи вибрно об'єкт 

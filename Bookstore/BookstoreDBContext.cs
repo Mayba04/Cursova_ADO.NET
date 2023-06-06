@@ -15,6 +15,7 @@ namespace Bookstore
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Authors> Authors { get; set; }
         public DbSet<BookAuthor> BookAuthors { get; set; }
+        public DbSet<BookGenre> BookGenres { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Credentials> Credentials { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -29,7 +30,7 @@ namespace Bookstore
             base.OnConfiguring(optionsBuilder);
 
             optionsBuilder.UseSqlServer(@"Data Source =DESKTOP-2SQGFV4\SQLEXPRESS;
-                                        Initial Catalog = BookstoreDB1.0;
+                                        Initial Catalog = BookstoreDB1.1;
                                         Integrated Security = True; 
                                         Connect Timeout = 30; Encrypt = False;
                                         TrustServerCertificate = False;
@@ -47,7 +48,6 @@ namespace Bookstore
             modelBuilder.Entity<Genre>().HasIndex(g => g.Name).IsUnique();
 
             modelBuilder.Entity<Book>().HasKey(b => b.Id);
-            modelBuilder.Entity<Book>().HasOne(b => b.Genre).WithMany(g => g.Books).HasForeignKey(b => b.GenreId);
             modelBuilder.Entity<Book>().Property(b => b.Title).IsRequired();
             modelBuilder.Entity<Book>().Property(b => b.Publisher).IsRequired();
             modelBuilder.Entity<Book>().HasOne(b => b.CoverPhoto).WithOne(p => p.Book).HasForeignKey<Photo>(p => p.BookId);
@@ -73,6 +73,10 @@ namespace Bookstore
             modelBuilder.Entity<BookAuthor>().HasOne(a => a.Author).WithMany(a => a.BookAuthors).HasForeignKey(a => a.AuthorId);
             modelBuilder.Entity<BookAuthor>().HasOne(b => b.Book).WithMany(b => b.BookAuthors).HasForeignKey(b => b.BookId);
 
+            modelBuilder.Entity<BookGenre>().HasKey(ba => new { ba.GenreId, ba.BookId });
+            modelBuilder.Entity<BookGenre>().HasOne(a => a.Genre).WithMany(a => a.BookGenres).HasForeignKey(a => a.GenreId);
+            modelBuilder.Entity<BookGenre>().HasOne(b => b.Book).WithMany(b => b.BookGenres).HasForeignKey(b => b.BookId);
+
             modelBuilder.Entity<Comment>().HasKey(c => c.Id);
             modelBuilder.Entity<Comment>().HasOne(c => c.Book).WithMany(b => b.Comments).HasForeignKey(c => c.BookId);
             modelBuilder.Entity<Comment>().HasOne(c => c.Client).WithMany(c => c.Comments).HasForeignKey(c => c.ClientId);
@@ -96,6 +100,7 @@ namespace Bookstore
             modelBuilder.SeedComments();
             modelBuilder.SeedPhoto();
             modelBuilder.SeedAdmin();
+            modelBuilder.SeedBookGenres();
 
         }
 

@@ -51,11 +51,9 @@ namespace Bookstore_visually
             model = new ViewModel();
             paletteHelper = new PaletteHelper();
             this.DataContext = model;
-            idClient = 1;
             RefreshBook();
             RefreshOrderBooks();
             RefreshReserverBook();
-            RefreshOrderDG();
             QuantityNumeric();
         }
 
@@ -64,13 +62,12 @@ namespace Bookstore_visually
 
             Credential_user = credential;
             idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Client)Credential_user).CredentialsId).Select(c => c.CredentialsId).FirstOrDefault();
+            RefreshOrderDG();
 
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //dataGrid.ItemsSource = bookstoreDBContext.Books.ToList();
-            // dataGrid.ItemsSource = repository.GetAll().ToList();
             RefreshBook();
         }
 
@@ -84,7 +81,6 @@ namespace Bookstore_visually
                 CommentWindow comment = new CommentWindow(id, idClient);
                 comment.Closed += Comment_Closed;
                 comment.Show();
-                //int? id = ((Order)OrderDataGrid.SelectedItem).Id;
             }
         }
 
@@ -115,7 +111,6 @@ namespace Bookstore_visually
                     bookstoreDBContext.SaveChanges();
                     RefreshBook();
                     RefreshReserverBook();
-                    //надсилання даних на електрону адресу
                     MessageBox.Show("The book is reserved! All detailed information has been sent to your mailbox.");
                 }
                 else
@@ -129,7 +124,7 @@ namespace Bookstore_visually
         private void RefreshBook()
         {
             List<object> ff = new List<object>();
-            var book = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.Genre).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
+            var book = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.BookGenres).ThenInclude(ba=> ba.Genre).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
             ff.AddRange(book);
             model.AddCDGBook(ff);
         }
@@ -140,23 +135,20 @@ namespace Bookstore_visually
         {
             List<object> ff = new List<object>();
 
-            /*BooksSADataGrid.ItemsSource*/ 
-            var book = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(g=>g.Genre).
+            var book = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.BookGenres).ThenInclude(ba => ba.Genre).
                 Where(b => b.BookAuthors.Any(ba => ba.Author.Name.Contains(AuthorSearchTextBox.Text))).
-                Select(b=> new {Id = b.Id, Title=b.Title, Publisher=b.Publisher, Year=b.Year, Price=b.Price, Quantity=b.Quantity, Genre =b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name,AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname}).ToList();
+                Select(b=> new {Id = b.Id, Title=b.Title, Publisher=b.Publisher, Year=b.Year, Price=b.Price, Quantity=b.Quantity, Genre =b.BookGenres.FirstOrDefault().Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name,AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname}).ToList();
             ff.AddRange(book);
 
             model.AddCDGSBookAuthor(ff);
-        
         }
 
         private void TitleSearchButton_Click(object sender, RoutedEventArgs e)
         {
-            /*BooksSTDataGrid.ItemsSource*/
             List<object> ff = new List<object>();
-            var book = bookstoreDBContext.Books.Include(g => g.Genre).
+            var book = bookstoreDBContext.Books.Include(b => b.BookGenres).ThenInclude(ba => ba.Genre).
                Where(b => b.Title.Contains(TitleSearchTextBox.Text)).
-               Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name }).ToList();
+               Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name }).ToList();
             ff.AddRange(book);
             model.AddCDGSBookTitle(ff);
         }
@@ -164,34 +156,27 @@ namespace Bookstore_visually
         private void GenreSearchButton_Click(object sender, RoutedEventArgs e)
         {
             List<object> ff = new List<object>();
-            /*BooksSGDataGrid.ItemsSource*/ 
-            var book = bookstoreDBContext.Books.Include(g => g.Genre).
-               Where(g => g.Genre.Name.Contains(GenreSearchTextBox.Text)).
-               Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name }).ToList();
+            var book = bookstoreDBContext.Books.Include(b => b.BookGenres).ThenInclude(ba => ba.Genre).
+               Where(g => g.BookGenres.FirstOrDefault().Genre.Name.Contains(GenreSearchTextBox.Text)).
+               Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name }).ToList();
             ff.AddRange(book);
             model.AddCDGSBookGenre(ff);
         }
 
         //search
-        //novelity 
-
+        //novelity
         private void NewBooks_ButtonClick(object sender, RoutedEventArgs e)
         {
             List<object> ff = new List<object>();
-            /*NewBooksDataGrid.ItemsSource*/ 
-            var book = bookstoreDBContext.Books.Include(b => b.Genre).OrderByDescending(b => b.Id).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name }).Take(5).ToList();
-
+            var book = bookstoreDBContext.Books.Include(b => b.BookGenres).ThenInclude(ba => ba.Genre).OrderByDescending(b => b.Id).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name }).Take(5).ToList();
             ff.AddRange(book);
-
             model.AddCDGNewBook(ff);
-
         }
         //novelity 
         //MOst sold
         private void MostSoldBooks_ButtonClick(object sender, RoutedEventArgs e)
         {
             List<object> ff = new List<object>();
-            /*MostSlodBooksDataGrid.ItemsSource */
             var book = bookstoreDBContext.Books
                 .Include(b => b.OrderBooks).ThenInclude(ob => ob.Order).AsEnumerable().GroupBy(b => new { b.Id, b.Title })
                 .Select(g => new {
@@ -201,17 +186,14 @@ namespace Bookstore_visually
                 }).OrderByDescending(g => g.TotalSold).Take(5).ToList();
 
             ff.AddRange(book);
-
             model.AddCDGMostSold(ff);
         }
         //MOst sold
         //MOst popular Authors
         private void MostAuthorBooks_ButtonClick(object sender, RoutedEventArgs e)
         {
-            //MostAuthorBooksDataGrid.ItemsSource = bookstoreDBContext.BookAuthors .Include(ba => ba.Book).ThenInclude(b => b.OrderBooks).ThenInclude(ob => ob.Order).Include(ba => ba.Author).AsEnumerable()
-            //.GroupBy(ba => ba.Author).Select(g => new { Name = g.Key.Name, Surname = g.Key.Surname, TotalSold = g.SelectMany(ba => ba.Book.OrderBooks).Sum(ob => ob.Order.Quantity)}).OrderByDescending(a => a.TotalSold).Take(1);
             List<object> ff = new List<object>();
-            /*MostAuthorBooksDataGrid.ItemsSource*/ 
+
             var BookAuthor = bookstoreDBContext.BookAuthors.Include(ba => ba.Book).ThenInclude(b => b.OrderBooks).ThenInclude(ob => ob.Order).Include(ba => ba.Author).Where(ba => ba.Book.OrderBooks.Any(ob => ob.Order.Payment_status == true)).AsEnumerable()
             .GroupBy(ba => ba.Author).Select(g => new { Name = g.Key.Name, Surname = g.Key.Surname, TotalSold = g.SelectMany(ba => ba.Book.OrderBooks).Sum(ob => ob.Order.Quantity) }).OrderByDescending(a => a.TotalSold).Take(1);
             ff.AddRange(BookAuthor);
@@ -221,24 +203,17 @@ namespace Bookstore_visually
         //MOst popular Genre
         private void MostgenresBooks_ButtonClick(object sender, RoutedEventArgs e)
         {
-            //MostgenresBooksDataGrid.ItemsSource = bookstoreDBContext.Genres.Include(g => g.Books).ThenInclude(b => b.OrderBooks).ThenInclude(ob => ob.Order).AsEnumerable().
-            //Select(g => new {
-            //    Genre = g.Name,
-            //    TotalSold = g.Books.SelectMany(b => b.OrderBooks)
-            //.Sum(ob => ob.Order.Quantity)}).OrderByDescending(g => g.TotalSold).Take(1);
             List<object> ff = new List<object>();
 
-            /*MostgenresBooksDataGrid.ItemsSource*/ 
             var genre = bookstoreDBContext.Genres
-                .Include(g => g.Books)
+                .Include(g => g.BookGenres).
+                ThenInclude(bg => bg.Book)
                     .ThenInclude(b => b.OrderBooks)
                         .ThenInclude(ob => ob.Order)
                 .AsEnumerable()
-                .Select(g => new {
-                    Genre = g.Name,
-                    TotalSold = g.Books.SelectMany(b => b.OrderBooks)
-                        .Where(ob => ob.Order.Payment_status == true) // додати умову на статус
-                        .Sum(ob => ob.Order.Quantity)
+                .Select(g => new { Genre = g.Name,
+                    TotalSold = g.BookGenres.SelectMany(bg => bg.Book.OrderBooks).Where(ob => ob.Order.Payment_status == true)
+                    .Sum(ob => ob.Order.Quantity)
                 })
                 .OrderByDescending(g => g.TotalSold)
                 .Take(1);
@@ -256,12 +231,9 @@ namespace Bookstore_visually
         private void RefreshOrderDG()
         {
             OrderDataGrid.ItemsSource = null;
-            //OrderDataGrid.ItemsSource = bookstoreDBContext.Orders.Where(o => o.ClientId == idClient).ToList();
-
+          
             OrderDataGrid.ItemsSource = bookstoreDBContext.Orders.Where(o => o.ClientId == idClient).Include(o => o.OrderBooks).ThenInclude(ob => ob.Book).Include(o => o.Clients)
             .Select(o => new { Id = o.Id, Date = o.Date, Price = o.Price, Quantity = o.Quantity, Payment_status = o.Payment_status, BookTitle = o.OrderBooks.FirstOrDefault().Book.Title, ClientName = o.Clients.Name }).ToList();
-
-            //OrderDataGrid.ItemsSource = repositoryO.GetAll().Where(o => o.ClientId == idClient).ToList();
         }
 
 
@@ -269,9 +241,9 @@ namespace Bookstore_visually
         private void RefreshOrderBooks()
         {
             OrderBooksDataGrid.ItemsSource = bookstoreDBContext.Books.Include(b => b.BookAuthors).
-                ThenInclude(ba => ba.Author).Include(b => b.Genre).
+                ThenInclude(ba => ba.Author).Include(b => b.BookGenres).ThenInclude(ba => ba.Genre).
                 Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher,
-                    Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name,
+                    Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name,
                     AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, 
                     AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
         }
@@ -279,14 +251,7 @@ namespace Bookstore_visually
         private void OrderBooks_ButtonClick(object sender, RoutedEventArgs e)
         {
             int idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Client)Credential_user).CredentialsId).Select(c => c.CredentialsId).FirstOrDefault(); // Id користувача який зайшов в програму 
-            //var book = OrderBooksDataGrid.SelectedItem;
-
-            //перевірка чи вибрно об'єкт 
-            //перевірка чи достатньо в нас книжок 
-            // створення об'єкта Order
-            // добавлення замовлення
-            // видаленя екземпоярів book
-            // добавлення orderbook
+          
             int Quantity_B;
           
             if (OrderBooksDataGrid.SelectedItem != null)
@@ -301,7 +266,6 @@ namespace Bookstore_visually
                     {
                         Quantity_B = int.Parse(Quantity_Book.Text);
 
-                        //if (bookstoreDBContext.Books.Where(b => b.Id == ((Book)OrderBooksDataGrid.SelectedItem).Id).Select(b=>b.Quantity).FirstOrDefault() - Quantity_B >= 0)
                         if (book != null && book.Quantity - Quantity_B >= 0)
                         {
                             Order neworder =
@@ -309,7 +273,7 @@ namespace Bookstore_visually
                              {
                                  Date = DateTime.Now,
                                  ClientId = idClient,
-                                 Price = book.Price * Quantity_B, /*(bookstoreDBContext.Books.Where(b => b.Id == ((Book)OrderBooksDataGrid.SelectedItem).Id).Select(b => b.Price).FirstOrDefault()) * Quantity_B,*/
+                                 Price = book.Price * Quantity_B, 
                                  Quantity = Quantity_B,
                                  Clients = bookstoreDBContext.Clients.Where(i => i.CredentialsId == idClient).FirstOrDefault(),
                                  Payment_status=false,
@@ -320,7 +284,7 @@ namespace Bookstore_visually
 
                             if (dbBook != null)
                             {
-                                dbBook.Quantity = book.Quantity - Quantity_B; /*bookstoreDBContext.Books.Where(b => b.Id == ((Book)OrderBooksDataGrid.SelectedItem).Id).Select(b => b.Quantity).FirstOrDefault() - Quantity_B;*/
+                                dbBook.Quantity = book.Quantity - Quantity_B;
                                 bookstoreDBContext.SaveChanges();
                             }
 
@@ -330,16 +294,13 @@ namespace Bookstore_visually
                             OrderBook neworderbook =
                             new OrderBook()
                             {
-
                                 OrderId = latestOrder,
-                                BookId = book.Id, /* bookstoreDBContext.Books.Where(b => b.Id == ((Book)OrderBooksDataGrid.SelectedItem).Id).Select(b => b.Id).FirstOrDefault(),*/
+                                BookId = book.Id, 
                                 Order = bookstoreDBContext.Orders.Where(i => i.Id == latestOrder).FirstOrDefault(),
                                 Book = dbBook
                             };
-
                             bookstoreDBContext.OrderBooks.Add(neworderbook);
                             bookstoreDBContext.SaveChanges();
-
                         }
                         else
                         {
@@ -364,7 +325,6 @@ namespace Bookstore_visually
            //OrderBooksDataGrid.ItemsSource = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.Genre).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
            RefreshOrderBooks();
            RefreshOrderDG();
-
         }
 
       
@@ -377,7 +337,7 @@ namespace Bookstore_visually
             if (selectedRow.Payment_status != true)
             {
                 Order order = bookstoreDBContext.Orders.FirstOrDefault(b => b.Id == id);
-                //int? id = ((Order)OrderDataGrid.SelectedItem).Id;
+
                 var dbEntry = bookstoreDBContext.Orders.FirstOrDefault(x => x.Id == order.Id);
 
                 if (dbEntry != null)
@@ -395,22 +355,17 @@ namespace Bookstore_visually
                         paytypes = ""
                     };
                     string data = System.Text.Json.JsonSerializer.Serialize(Order);
-                    string data64 = LiqyPayHelper.CreateData(data); //Convert.ToBase64String(Encoding.UTF8.GetBytes(data));
+                    string data64 = LiqyPayHelper.CreateData(data); 
                     string privateKey = Bookstore.Config.LiqypayPrivateKey;
 
                     string signature_sourse = privateKey + data64 + privateKey;
                     var sha1 = SHA1.Create();
-                    string signature = LiqyPayHelper.CreateSign(data64, privateKey);//Convert.ToBase64String(Encoding.UTF8.GetBytes(Convert.ToHexString(sha1.ComputeHash(Encoding.UTF8.GetBytes(signature_sourse)))));
+                    string signature = LiqyPayHelper.CreateSign(data64, privateKey);
                     Payment payment = new Payment();
                     this.IsEnabled = false;
                     payment.Closed += Payment_Closed;
                     payment.Show();
                     payment.StartWebResourceRequest(Config.LiqyPatCheckoutURl, data64, signature);
-
-                    //Task task = new Task(()=>GetStatus());
-                    // task.Start();
-                    //task.Wait();
-
                 }
                 else { MessageBox.Show("Not selected order"); }
             }
@@ -425,13 +380,6 @@ namespace Bookstore_visually
             this.IsEnabled = true;
             RefreshOrderDG();
         }
-
-        //private void ExitBtn_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Login login = new Login();
-        //    login.Show();
-        //    this.Close();
-        //}
 
         private void Update_ButtonClick(object sender, RoutedEventArgs e)
         {
@@ -492,7 +440,6 @@ namespace Bookstore_visually
 
             if (!isNumber)
             {
-                // Введено не число, скасувати подію
                 e.Handled = true;
                 return;
             }

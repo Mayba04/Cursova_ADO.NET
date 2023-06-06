@@ -23,6 +23,9 @@ using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using System.Net.Sockets;
 using Application = System.Windows.Application;
 using MaterialDesignThemes.Wpf;
+using MessageBox = System.Windows.Forms.MessageBox;
+using System.Security.Policy;
+using System.Security.Cryptography.Pkcs;
 
 namespace Bookstore_visually
 {
@@ -37,7 +40,8 @@ namespace Bookstore_visually
         public bool IsDarkTheme { get; set; }
         private readonly PaletteHelper paletteHelper;
         ViewModel model;
-        public AdminPage()
+        Admin Admin_;
+        public AdminPage(Admin admin)
         {
             InitializeComponent();
             model = new ViewModel();
@@ -46,12 +50,8 @@ namespace Bookstore_visually
             bookstoreDBContext = new BookstoreDBContext();
             this.DataContext = model;
             AdminCC.IsReadOnly = false;
-            RefreshBook();
-            RefreshOrder();
-            RefreshAuthors();
-            RefreshClient();
-            RefreshReserved();
-            RefreshClient();
+            Admin_ = admin;
+            RefreshAll();
         }
 
         private void RefreshAll()
@@ -64,6 +64,8 @@ namespace Bookstore_visually
             RefreshComment();
             RefreshImage();
             RefreshBookInfo();
+            RefreshGenres();
+            RefreshAdministrators();
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -80,23 +82,18 @@ namespace Bookstore_visually
             {
                 var selectedRow = (dynamic)dataGrid.SelectedItem;
                 int id = selectedRow.Id;
-                var book = bookstoreDBContext.Books.Where(b => b.Id == id).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).FirstOrDefault();
-
-                //List<object> ff = new List<object>();
+                var book = bookstoreDBContext.Books.Where(b => b.Id == id).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).FirstOrDefault();
                 model.Books = $"Title: {book.Title}\nAuthor: {book.AuthorSurname} {book.AuthorName}\nPrice: {book.Price} UAH\nPublisher: {book.Publisher}\nYear of publication: {book.Year}";
-                //ff.Add(book);
-                //model.AddCDGBook(ff);
             }
-                
         }
 
         public void RefreshImage()
         {
             model.Image = null;
             if (dataGrid.SelectedItem != null)
-            {
-                
+            {  
                 var selectedRow = (dynamic)dataGrid.SelectedItem;
+                
                 int id = selectedRow.Id;
                 byte[] imageData = bookstoreDBContext.Photos.Where(p => p.BookId == id).Select(p => p.ImageData).FirstOrDefault();
                 if (imageData != null)
@@ -109,7 +106,7 @@ namespace Bookstore_visually
                         bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                         bitmapImage.EndInit();
 
-                        model.Image = bitmapImage;
+                         model.Image = bitmapImage;
                     }
                 }
             }
@@ -123,19 +120,27 @@ namespace Bookstore_visually
                 try
                 {
                     var selectedRow = (dynamic)dataGrid.SelectedItem;
-                    int id = selectedRow.Id;//bug
+                    int id = selectedRow.Id;
                     model.ClearComment();
                     var comment = bookstoreDBContext.Comments.Where(b => b.BookId == id).Select(c => new { ID = c.Id, Name = c.Client.Name, Date = c.CreatedAt, Text = c.Text }).ToList();
 
-                    foreach (var item in comment)
+                    if (comment.Count != 0)
                     {
-                        CommentInfo commentInfo = new CommentInfo();
-                        commentInfo.Name = item.Name;
-                        commentInfo.Date = item.Date.ToShortDateString();
-                        commentInfo.Text = item.Text;
-                        commentInfo.IdComment = item.ID;
+                        foreach (var item in comment)
+                        {
+                            CommentInfoBase commentInfo = new CommentInfoBase();
+                            commentInfo.Name = item.Name;
+                            commentInfo.Date = item.Date.ToShortDateString();
+                            commentInfo.Text = item.Text;
+                            commentInfo.IdComment = item.ID;
+                            model.AddComment(commentInfo);
+                        }
+                    }
+                    else
+                    {
+                        CommentInfoBase commentInfo = new CommentInfoBase();
+                        commentInfo.Name = "No comments yet";
                         model.AddComment(commentInfo);
-
                     }
                 }
                 catch (Exception)
@@ -155,10 +160,6 @@ namespace Bookstore_visually
             this.IsEnabled = false;
             addingBooks.Closed += AddingBooks_Closed;
             addingBooks.Show();
-            
-            //RefreshDataGrid();
-            //repository.Insert(newBook);
-            // repository.Save(); // зберігаємо зміни в базу даних
         }
 
         private void AddingBooks_Closed(object? sender, EventArgs e)
@@ -166,31 +167,31 @@ namespace Bookstore_visually
             this.IsEnabled = true;
             RefreshBook();
             RefreshAuthors();
-          
+            RefreshGenres();
         }
 
         private void DeleteBookBTN(object sender, RoutedEventArgs e)
         {
-            if (dataGrid.SelectedItems != null)
+            if (dataGrid.SelectedItem != null)
             {
                 if (System.Windows.Forms.MessageBox.Show("Are you sure you want to delete the book?\nAfter all, all the information associated with it will also be deleted!", "WARNING", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
-                    foreach (var book in dataGrid.SelectedItems)
+                    var selectedRow = (dynamic)dataGrid.SelectedItem;
+                    int id = selectedRow.Id;
+                    
+                    // bookstoreDBContext.Books.Remove(book as Book);
+                    bookstoreDBContext.Books.Remove(bookstoreDBContext.Books.Where(b => b.Id == id).FirstOrDefault());
+                    bookstoreDBContext.Photos.Remove(bookstoreDBContext.Photos.Where(p => p.BookId == id).FirstOrDefault());
+                    bookstoreDBContext.Comments.RemoveRange(bookstoreDBContext.Comments.Where(c => c.BookId == id).ToList());
+                    bookstoreDBContext.BookAuthors.RemoveRange(bookstoreDBContext.BookAuthors.Where(ba => ba.BookId == id).ToList());
+                    bookstoreDBContext.BookGenres.RemoveRange(bookstoreDBContext.BookGenres.Where(ba => ba.BookId == id).ToList());
+                    var idOrders = bookstoreDBContext.OrderBooks.Where(OB => OB.BookId == id).ToList();
+                    bookstoreDBContext.OrderBooks.RemoveRange(bookstoreDBContext.OrderBooks.Where(Ob => Ob.BookId == id).ToList());
+                    bookstoreDBContext.Reservations.RemoveRange(bookstoreDBContext.Reservations.Where(r=>r.BookId == id).ToList());
+                    
+                    foreach (var item in idOrders)
                     {
-                        // bookstoreDBContext.Books.Remove(book as Book);
-                        //repository.Delete(((Book)book).Id);
-                        bookstoreDBContext.Books.Remove(bookstoreDBContext.Books.Where(b => b.Id == ((Book)book).Id).FirstOrDefault());
-                        bookstoreDBContext.Photos.Remove(bookstoreDBContext.Photos.Where(p => p.BookId == ((Book)book).Id).FirstOrDefault());
-                        bookstoreDBContext.Comments.RemoveRange(bookstoreDBContext.Comments.Where(c => c.BookId == ((Book)book).Id).ToList());
-                        bookstoreDBContext.BookAuthors.RemoveRange(bookstoreDBContext.BookAuthors.Where(ba => ba.BookId == ((Book)book).Id).ToList());
-                        var idOrders = bookstoreDBContext.OrderBooks.Where(OB => OB.BookId == ((Book)book).Id).ToList();
-                        bookstoreDBContext.OrderBooks.RemoveRange(bookstoreDBContext.OrderBooks.Where(Ob => Ob.BookId == ((Book)book).Id).ToList());
-                        bookstoreDBContext.Reservations.RemoveRange(bookstoreDBContext.Reservations.Where(r=>r.BookId == ((Book)book).Id).ToList());
-                        foreach (var item in idOrders)
-                        {
-                            bookstoreDBContext.Orders.Remove(bookstoreDBContext.Orders.Where(O => O.Id == item.OrderId).FirstOrDefault());
-                        }
-
+                        bookstoreDBContext.Orders.Remove(bookstoreDBContext.Orders.Where(O => O.Id == item.OrderId).FirstOrDefault());
                     }
                     bookstoreDBContext.SaveChanges();
                     RefreshAll();
@@ -201,46 +202,30 @@ namespace Bookstore_visually
 
         private void RefreshBook()
         {
-            dataGrid.ItemsSource = repository.GetAll().ToList();
+            dataGrid.ItemsSource = bookstoreDBContext.Books.Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity }).ToList();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (dataGrid.SelectedItem != null)
             {
-                var selectedBook = (Book)dataGrid.SelectedItem;
-                UpdateBook(selectedBook);
-                RefreshComment();
-                RefreshImage();
-                RefreshBookInfo();
+                var selectedRow = (dynamic)dataGrid.SelectedItem;
+                int id = selectedRow.Id;
+                EditBook editBook = new EditBook(id);
+                this.IsEnabled = false;
+                editBook.Closed += EditBook_Closed;
+                editBook.Show();
             }
         }
 
-        private void UpdateBook(Book book)
+        private void EditBook_Closed(object? sender, EventArgs e)
         {
-            using (var context = new BookstoreDBContext())
-            {
-
-                var dbBook = context.Books.FirstOrDefault(b => b.Id == book.Id);
-
-                if (dbBook != null)
-                {
-                    dbBook.Title = book.Title;
-                    dbBook.Publisher = book.Publisher;
-                    dbBook.Year = book.Year;
-                    dbBook.Price = book.Price;
-                    dbBook.GenreId = book.GenreId;
-                    dbBook.Quantity = book.Quantity;
-
-                    context.SaveChanges();
-                }
-            }
+            this.IsEnabled = true;
+            RefreshBook();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //dataGrid.ItemsSource = bookstoreDBContext.Books.ToList();
-            // dataGrid.ItemsSource = repository.GetAll().ToList();
             RefreshBook();
         }
 
@@ -250,11 +235,14 @@ namespace Bookstore_visually
             {
                 var selectedRow = (dynamic)CommentBox.SelectedItem;
                 int id = selectedRow.IdComment;
-                bookstoreDBContext.Comments.Remove(bookstoreDBContext.Comments.Where(b => b.Id == id).FirstOrDefault());
-                bookstoreDBContext.SaveChanges();
-                RefreshComment();
-                RefreshImage();
-                RefreshBookInfo();
+                if (id > 0)
+                {
+                    bookstoreDBContext.Comments.Remove(bookstoreDBContext.Comments.Where(b => b.Id == id).FirstOrDefault());
+                    bookstoreDBContext.SaveChanges();
+                    RefreshComment();
+                    RefreshImage();
+                    RefreshBookInfo();
+                }
             }
         }
 
@@ -262,10 +250,9 @@ namespace Bookstore_visually
         {
             if (dataGrid.SelectedItem != null)
             {
-                var selectedBook = (Book)dataGrid.SelectedItem;
-               
-              
-                
+                    var selectedRow = (dynamic)dataGrid.SelectedItem;
+                    int id = selectedRow.Id;
+                    
                     OpenFileDialog fileDialog = new OpenFileDialog();
                     fileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png";
                     if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -275,15 +262,13 @@ namespace Bookstore_visually
                         using (var context = new BookstoreDBContext())
                         {
 
-                            var photo2 = bookstoreDBContext.Photos.Where(p => p.BookId == selectedBook.Id).FirstOrDefault();
+                            var photo2 = bookstoreDBContext.Photos.Where(p => p.BookId == id).FirstOrDefault();
 
                             if (photo2 != null)
                             {
                                 photo2.Name = Path.GetFileName(filePath);
                                 photo2.ImageData = File.ReadAllBytes(filePath);
 
-                               
-                                
                                 context.Photos.Update(photo2);
                                 context.SaveChanges();
                                 RefreshComment();
@@ -367,6 +352,7 @@ namespace Bookstore_visually
                         }
                         bookstoreDBContext.OrderBooks.RemoveRange(orderId);
                         bookstoreDBContext.Books.Remove(bookstoreDBContext.Books.Where(b => b.Id == bookid.BookId).FirstOrDefault());
+                        bookstoreDBContext.BookGenres.Remove(bookstoreDBContext.BookGenres.Where(bg => bg.BookId == bookid.BookId).FirstOrDefault());
                     }
                     bookstoreDBContext.BookAuthors.RemoveRange(idB);
                     bookstoreDBContext.Authors.Remove(bookstoreDBContext.Authors.Where(a => a.Id == id).FirstOrDefault());
@@ -374,7 +360,6 @@ namespace Bookstore_visually
                     bookstoreDBContext.SaveChanges();
                     RefreshAll();
                 }
-               
             }
         }
 
@@ -433,6 +418,7 @@ namespace Bookstore_visually
         {
             this.IsEnabled = true;
             RefreshClient();
+            RefreshAdministrators();
         }
 
         private void RefreshReserved()
@@ -521,6 +507,101 @@ namespace Bookstore_visually
         private void CloseWind(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void AddGenreBTN(object sender, RoutedEventArgs e)
+        {
+            AddingGenre addingGenre = new AddingGenre();
+            addingGenre.Closed += AddingGenre_Closed;
+            this.IsEnabled = false;
+            addingGenre.Show();
+        }
+
+        private void AddingGenre_Closed(object? sender, EventArgs e)
+        {
+            this.IsEnabled = true;
+            RefreshGenres();
+        }
+
+        private void RefreshGenres()
+        {
+            GenreDG.ItemsSource = bookstoreDBContext.Genres.Select(a => new { Id = a.Id, GenreName = a.Name }).ToList();
+        }
+
+        private void GetGenreAllBTN(object sender, RoutedEventArgs e)
+        {
+            RefreshGenres();
+        }
+
+        private void DeleteGenreBTN(object sender, RoutedEventArgs e)
+        {
+            if (GenreDG.SelectedItem != null)
+            {
+                if (System.Windows.Forms.MessageBox.Show("Are you sure you want to delete the genre?\nAfter all, all the information associated with it will also be deleted!", "WARNING", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    var selectedRow = (dynamic)GenreDG.SelectedItem;
+                    int id = selectedRow.Id;
+                    var idB = bookstoreDBContext.Books.Where(b => b.BookGenres.FirstOrDefault().GenreId == id).ToList();
+
+                    foreach (var book in idB)
+                    {
+                        bookstoreDBContext.Books.Remove(bookstoreDBContext.Books.Where(b => b.Id == ((Book)book).Id).FirstOrDefault());
+                        bookstoreDBContext.Photos.Remove(bookstoreDBContext.Photos.Where(p => p.BookId == ((Book)book).Id).FirstOrDefault());
+                        bookstoreDBContext.Comments.RemoveRange(bookstoreDBContext.Comments.Where(c => c.BookId == ((Book)book).Id).ToList());
+                        bookstoreDBContext.BookAuthors.RemoveRange(bookstoreDBContext.BookAuthors.Where(ba => ba.BookId == ((Book)book).Id).ToList());
+                        var idOrders = bookstoreDBContext.OrderBooks.Where(OB => OB.BookId == ((Book)book).Id).ToList();
+                        bookstoreDBContext.OrderBooks.RemoveRange(bookstoreDBContext.OrderBooks.Where(Ob => Ob.BookId == ((Book)book).Id).ToList());
+                        bookstoreDBContext.Reservations.RemoveRange(bookstoreDBContext.Reservations.Where(r => r.BookId == ((Book)book).Id).ToList());
+                        foreach (var item in idOrders)
+                        {
+                            bookstoreDBContext.Orders.Remove(bookstoreDBContext.Orders.Where(O => O.Id == item.OrderId).FirstOrDefault());
+                        }
+                        bookstoreDBContext.Genres.Remove(bookstoreDBContext.Genres.Where(g => g.Id == id).FirstOrDefault());
+                    }
+
+                    bookstoreDBContext.SaveChanges();
+                    RefreshAll();
+                }
+
+            }
+        }
+
+        private void RefreshAdministrators()
+        {
+            AdminDG.ItemsSource = bookstoreDBContext.Administrators.Select(a => new { Id = a.Id, Name = a.Name, Email = a.Email }).ToList();
+        }
+
+        private void DeleteAdministratorBTN(object sender, RoutedEventArgs e)
+        {
+            if (AdminDG.ItemsSource != null)
+            {
+                var selectedRow = (dynamic)AdminDG.SelectedItem;
+                int id = selectedRow.Id;
+                var admin = bookstoreDBContext.Administrators.Where(a => a.Id == id).FirstOrDefault();
+                if (Admin_.Status_Admin == true)
+                {
+                    if (admin.Status_Admin != true)
+                    {
+                        bookstoreDBContext.Remove(admin);
+                        bookstoreDBContext.SaveChanges();
+                        MessageBox.Show("The administrator has been removed !");
+                        RefreshAdministrators();
+                    }
+                    else 
+                    {
+                        MessageBox.Show("This administrator cannot be removed");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("You do not have rights to remove administrators!");
+                }
+            }
+        }
+
+        private void GetAdministratorAllBTN(object sender, RoutedEventArgs e)
+        {
+            RefreshAdministrators();
         }
     }
 }

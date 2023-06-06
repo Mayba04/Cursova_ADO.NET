@@ -77,7 +77,7 @@ namespace Bookstore_visually
 
             //Delegate SourceChanged event
             WebView.SourceChanged += UrlChange;
-            WebView.DataContextChanged += WebView_DataContextChanged; ;
+            WebView.DataContextChanged += WebView_DataContextChanged; 
           
         }
 

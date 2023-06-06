@@ -17,6 +17,8 @@ namespace Bookstore.Entities
 
         public string Name { get; set; }
 
+        public bool Status_Admin { get; set; }
+
         [EmailAddress]
         public string Email { get; set; }
     }

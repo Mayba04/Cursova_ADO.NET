@@ -61,8 +61,7 @@ namespace Bookstore_visually
 
         public void UpdateBook()
         {
-            //Book book = bookstoreDBContext.Books.FirstOrDefault(b => b.Id == ID);
-            var book = bookstoreDBContext.Books.Where(b=>b.Id == ID).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).FirstOrDefault();
+            var book = bookstoreDBContext.Books.Where(b=>b.Id == ID).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).FirstOrDefault();
 
             List<object> ff = new List<object>();
             model.Books = $"Title: {book.Title}\nAuthor: {book.AuthorSurname} {book.AuthorName}\nPrice: {book.Price} UAH\nPublisher: {book.Publisher}\nYear of publication: {book.Year}";
@@ -77,7 +76,7 @@ namespace Bookstore_visually
             
             foreach (var item in comment)
             {
-                CommentInfo commentInfo = new CommentInfo();
+                CommentInfoBase commentInfo = new CommentInfoBase();
                 commentInfo.Name = item.Name;
                 commentInfo.Date = item.Date.ToShortDateString();
                 commentInfo.Text = item.Text;

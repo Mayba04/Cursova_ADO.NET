@@ -17,45 +17,108 @@
 
     <materialDesign:Card Width="900"  UniformCornerRadius="15" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
         <StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
-                    materialDesign:ButtonAssist.CornerRadius="10" Click="minApp">
-                    <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </Button>
-                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
-                    materialDesign:ButtonAssist.CornerRadius="10" Click="CloseWind" >
-                    <materialDesign:PackIcon Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Button>
-            </StackPanel>
-            <materialDesign:PopupBox HorizontalAlignment="Right" Margin="0,2,2,0"
-                                         PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="25" VerticalAlignment="Top">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="16 10 0 6">
-                        <TextBlock VerticalAlignment="Center" Text="DarkMode"></TextBlock>
-                        <ToggleButton Cursor="Hand" ToolTip="Enable Dark Mode" Margin="12 0 0 0" x:Name="themeToggle"
-                                      IsChecked="{Binding IsDarkTheme}" Click="toggleTheme"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <materialDesign:PopupBox HorizontalAlignment="Left" Margin="0,2,2,0" 
+                                         PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="25" VerticalAlignment="Center">
+                    <StackPanel>
+
+                        <Button Content="Darkmode On/Off" x:Name="themeToggle" Click="toggleTheme"  Margin="0 8 0 0"></Button>
+                        <Button ToolTip="Having Trouble Logging In" Margin="0 8 0 0" Content="Help Me"/>
+                        <Button x:Name="btn_Exit" ToolTip="Close" Margin="0 8 0 0" Content="Exit" Click="exitApp"/>
                     </StackPanel>
-                    <Button ToolTip="Having Trouble Logging In" Margin="0 8 0 0" Content="Help Me"/>
-                    <Button x:Name="btn_Exit" ToolTip="Close" Margin="0 8 0 0" Content="Exit" Click="exitApp"/>
+                </materialDesign:PopupBox>
 
-
-
+                <StackPanel Grid.Column="1"  Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                        materialDesign:ButtonAssist.CornerRadius="10" Click="minApp" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+                    <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                        materialDesign:ButtonAssist.CornerRadius="10" Click="CloseWind" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                        <materialDesign:PackIcon Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                     </Button>
+                    
                 </StackPanel>
-
-            </materialDesign:PopupBox>
-
+            </Grid>
+            
             <TabControl TabStripPlacement="Left" >
+                <TabItem Header="Order" HorizontalAlignment="Left">
+                    <TabControl>
+                        <TabItem Header="Order">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button  Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40"
+                                             HorizontalAlignment="Center" Click="DeleteOrderBTN" Margin="6" ToolTip="Deleting an order" >
+                                        <materialDesign:PackIcon Kind="DeleteForever"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Button>
+                                    <Button  Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" HorizontalAlignment="Right" ToolTip="Refresh order" Click="OrderAll_ButtonClick" Margin="6">
+                                        <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Button>
+                                </StackPanel>
+                                <DataGrid x:Name="AdminOrder" Margin="10" ></DataGrid>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Reserved">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Button  Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" Margin="10" HorizontalAlignment="Center" ToolTip="Refresh reserved books" Click="UpdateReserveAdmin_BTN" VerticalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Button>
+                                    <Button  Style="{StaticResource MaterialDesignFlatButton}" Width="120" Height="40" Margin="10" HorizontalAlignment="Center" ToolTip="Edit reserved" Click="ChangeReserveAdmin_BTN" VerticalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="Pencil" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Button>
+                                    <Button  Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" Margin="10" HorizontalAlignment="Center" ToolTip="Delete reserved" Click="DeleteReserveAdmin_BTN" VerticalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="DeleteForever"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Button>
+                                </StackPanel>
+                                <DataGrid x:Name="ReservDGAdmin" Margin="10" ></DataGrid>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+                </TabItem>
+                <TabItem Header="Client" HorizontalAlignment="Left">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Width="60" Height="40" HorizontalAlignment="Left" ToolTip="Delete Client" Click="DeleteClientBTN">
+                                <materialDesign:PackIcon Kind="DeleteForever"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Width="60" Height="40" HorizontalAlignment="Left" ToolTip="Refresh client" Click="GetClientAllBTN">
+                                <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Width="60" Height="40" HorizontalAlignment="Left" ToolTip="Edit client" Click="UpdateClientBTN">
+                                <materialDesign:PackIcon Kind="Pencil" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Button>
+                        </StackPanel>
+                        <DataGrid Name="AdminCC" Margin="10" IsReadOnly="False" ></DataGrid>
+                    </StackPanel>
+                </TabItem>
                 <TabItem Header="Book" HorizontalAlignment="Left" >
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10">
-                            <Button Content="Add Book" Width="100" Margin="5" Click="Button_Click_3"/>
-                            <Button Content="Delete Book" Width="110" Margin="5" Click="DeleteBookBTN" />
-                            <Button Content="Update Book" Width="115" Margin="5" Click="Button_Click" />
-                            <Button Content="GetAll Book" Width="108" Margin="5" Click="Button_Click_1"/>
-                            <Button Content="Delete Comment" Width="140" Margin="5" Click="DeleteCommentBTN"/>
-                            <Button Content="Add photo" Width="100" Margin="5" Click="AddPhotoBTN"/>
+                        <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Add book" Width="60" Margin="5" Click="Button_Click_3">
+                                <materialDesign:PackIcon Kind="BookPlus"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Delete book" Width="60" Margin="5" Click="DeleteBookBTN">
+                                <materialDesign:PackIcon Kind="BookRemove"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Edit book" Width="60" Margin="5" Click="Button_Click">
+                                <materialDesign:PackIcon Kind="NotebookEdit" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Refresh book" Width="60" Margin="5" Click="Button_Click_1">
+                                <materialDesign:PackIcon Kind="Refresh" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Delete Comment" Width="60" Margin="5" Click="DeleteCommentBTN">
+                                <materialDesign:PackIcon Kind="CommentRemove" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Add photo" Width="60" Margin="5" Click="AddPhotoBTN">
+                                <materialDesign:PackIcon Kind="ImageMultiple" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
 
                         </StackPanel>
                         <DataGrid Name="dataGrid" Margin="10" IsReadOnly="False"></DataGrid>
@@ -89,52 +152,52 @@
                                 </ListBox>
                             </materialDesign:Card>
                         </StackPanel>
-
                     </StackPanel>
-                  
-                </TabItem>
-                <TabItem Header="Order" HorizontalAlignment="Left">
-                    <TabControl>
-                        <TabItem Header="Order">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Width="120" Height="40" HorizontalAlignment="Center" Content="Delete Order" Click="DeleteOrderBTN" Margin="6"/>
-                                    <Button Width="120" Height="40" HorizontalAlignment="Right" Content="OrderAll" Click="OrderAll_ButtonClick" Margin="6"/>
-                                </StackPanel>
-                                <DataGrid x:Name="AdminOrder" Margin="10" ></DataGrid>
-                            </StackPanel>
 
-                        </TabItem>
-                        <TabItem Header="Reserved">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Button Width="120" Height="40" Margin="10" HorizontalAlignment="Center" Content="Update" Click="UpdateReserveAdmin_BTN" VerticalAlignment="Center"></Button>
-                                    <Button Width="120" Height="40" Margin="10" HorizontalAlignment="Center" Content="Change" Click="ChangeReserveAdmin_BTN" VerticalAlignment="Center"></Button>
-                                    <Button Width="120" Height="40" Margin="10" HorizontalAlignment="Center" Content="Delete" Click="DeleteReserveAdmin_BTN" VerticalAlignment="Center"></Button>
-                                </StackPanel>
-                                <DataGrid x:Name="ReservDGAdmin" Margin="10" ></DataGrid>
-                            </StackPanel>
-                        </TabItem>
-                    </TabControl>
                 </TabItem>
                 <TabItem Header="Author" HorizontalAlignment="Left" >
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button Width="120" Height="40" Content="Delete Author" Click="DeleteAuthorBTN" Margin="6"/>
-                            <Button Width="120" Height="40" Content="Author All" Click="GetAuthorAllBTN" Margin="6"/>
-                            <Button Width="120" Height="40" Content="Add Author" Click="AddAuthorBTN" Margin="6"/>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" ToolTip="Delete Author" Click="DeleteAuthorBTN" Margin="6">
+                                <materialDesign:PackIcon Kind="DeleteForever"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" ToolTip="Refresh Author" Click="GetAuthorAllBTN" Margin="6">
+                                <materialDesign:PackIcon Kind="Refresh" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" ToolTip="Add Author" Click="AddAuthorBTN" Margin="6">
+                                <materialDesign:PackIcon Kind="PlusBox" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Button>
                         </StackPanel>
                         <DataGrid x:Name="AdminAuthor" Margin="10"></DataGrid>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="Client" HorizontalAlignment="Left">
+                <TabItem Header="Genre" HorizontalAlignment="Left" >
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button Margin="5" Width="120" Height="40" HorizontalAlignment="Left" Content="Delete Client" Click="DeleteClientBTN" />
-                            <Button Margin="5" Width="120" Height="40" HorizontalAlignment="Left" Content="Client All" Click="GetClientAllBTN"  />
-                            <Button Margin="5" Width="120" Height="40" HorizontalAlignment="Left" Content="Client Update" Click="UpdateClientBTN" />
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" ToolTip="Delete Genre" Click="DeleteGenreBTN" Margin="6">
+                                <materialDesign:PackIcon Kind="DeleteForever"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" ToolTip="Refresh Genre" Click="GetGenreAllBTN" Margin="6">
+                                <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" ToolTip="Add Genre" Click="AddGenreBTN" Margin="6">
+                                <materialDesign:PackIcon Kind="PlusBox"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
                         </StackPanel>
-                        <DataGrid Name="AdminCC" Margin="10" IsReadOnly="False" ></DataGrid>
+                        <DataGrid x:Name="GenreDG" Margin="10"></DataGrid>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Administrators" HorizontalAlignment="Left" >
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" ToolTip="Delete Administrator" Click="DeleteAdministratorBTN" Margin="6">
+                                <materialDesign:PackIcon Kind="DeleteForever"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" ToolTip="Refresh Administrators" Click="GetAdministratorAllBTN" Margin="6">
+                                <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                        </StackPanel>
+                        <DataGrid x:Name="AdminDG" Margin="10"></DataGrid>
                     </StackPanel>
                 </TabItem>
             </TabControl>

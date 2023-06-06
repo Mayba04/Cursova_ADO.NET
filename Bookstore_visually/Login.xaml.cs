@@ -73,13 +73,11 @@ namespace Bookstore_visually
 
             if (isValidUser)
             {
-                ///MessageBox.Show("Welcome to the bookstore");
-
                 var admin = bookstoreDBContext.Administrators.FirstOrDefault(x => x.Login == login);
                 var user = bookstoreDBContext.Clients.FirstOrDefault(u => u.Credentials.Login == login);
                 if (admin != null)
                 {
-                    AdminPage adminPage = new AdminPage();
+                    AdminPage adminPage = new AdminPage(admin);
                     this.Close();
                     adminPage.Show();
                 }

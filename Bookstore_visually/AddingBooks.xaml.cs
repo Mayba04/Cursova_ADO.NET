@@ -29,12 +29,6 @@ namespace Bookstore_visually
     public partial class AddingBooks : Window
     {
         BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
-        public int minN { get; set; }
-        public int maxNY { get; set; }
-        public double maxNP { get; set; }
-        public int maxNQ { get; set; }
-       
-
         ViewModel model;
         public AddingBooks()
         {
@@ -47,9 +41,6 @@ namespace Bookstore_visually
             YearsNumeric();
             PriceNumeric();
             QuantityNumeric();
-            maxNP = 4000;
-            maxNQ = 999;
-            maxNY = 2023;
         }
 
         private void YearsNumeric()
@@ -79,7 +70,7 @@ namespace Bookstore_visually
 
         private void UpdateGenre()
         {
-            AddBookdataGrid.ItemsSource = bookstoreDBContext.Genres.Select(g => new { Id = g.Id, Name = g.Name }).ToList();
+            AddBookdataGrid.ItemsSource = bookstoreDBContext.Genres.Select(g => new { Id = g.Id, GenreName = g.Name }).ToList();
         }
 
         private void AddAuthorsdataGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
@@ -109,7 +100,7 @@ namespace Bookstore_visually
             {
                 var selectedRow = (dynamic)AddBookdataGrid.SelectedItem;
                 int id = selectedRow.Id;
-                GenreNameBox.Text = selectedRow.Name;
+                GenreNameBox.Text = selectedRow.GenreName;
             }
         }
 
@@ -190,45 +181,59 @@ namespace Bookstore_visually
                                                 quantiti = int.Parse(QuantitiBox.Text);
                                                 var IdAuthor = bookstoreDBContext.Authors.Where(a => a.Name == AuthorNameBox.Text && a.Surname == AuthorSurnameBox.Text).FirstOrDefault();
                                                 var idGenre = bookstoreDBContext.Genres.Where(g => g.Name == GenreNameBox.Text).FirstOrDefault();
-
-                                                Book newBook =
-                                                    new Book()
-                                                    {
-                                                        Title = TitleBox.Text,
-                                                        Publisher = PublisherBox.Text,
-                                                        Year = year,
-                                                        Price = price,
-                                                        Quantity = quantiti,
-                                                        GenreId = idGenre.Id,
-                                                        BookAuthors = (ICollection<BookAuthor>)new List<BookAuthor>(),
-                                                        Genre = bookstoreDBContext.Genres.Where(i => i.Id == idGenre.Id).FirstOrDefault(),
-                                                        OrderBooks = (ICollection<OrderBook>)new List<OrderBook>()
-                                                    };
-                                                bookstoreDBContext.Books.Add(newBook);
-
-                                                bookstoreDBContext.SaveChanges();
-
-
-                                                Photo photo = new Photo()
+                                                var IsChekedBook = bookstoreDBContext.Books.Where(b => b.Title == TitleBox.Text && b.Publisher == PublisherBox.Text && b.Year == year && b.Price == price && b.Quantity == quantiti
+                                                && b.BookGenres.FirstOrDefault().GenreId == idGenre.Id && b.BookAuthors.FirstOrDefault().AuthorId == IdAuthor.Id).FirstOrDefault();
+                                                if (IsChekedBook == null)
                                                 {
-                                                    Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"),
-                                                    ImageData = File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"),
-                                                    BookId = bookstoreDBContext.Books.OrderByDescending(o => o.Id).Select(o => o.Id).FirstOrDefault()
-                                                };
-                                                bookstoreDBContext.Photos.Add(photo);
-                                                bookstoreDBContext.SaveChanges();
+                                                    Book newBook =
+                                                        new Book()
+                                                        {
+                                                            Title = TitleBox.Text,
+                                                            Publisher = PublisherBox.Text,
+                                                            Year = year,
+                                                            Price = price,
+                                                            Quantity = quantiti,
+                                                            BookAuthors = (ICollection<BookAuthor>)new List<BookAuthor>(),
+                                                            OrderBooks = (ICollection<OrderBook>)new List<OrderBook>()
+                                                        };
+                                                    bookstoreDBContext.Books.Add(newBook);
+                                                    bookstoreDBContext.SaveChanges();
 
-                                                BookAuthor book = new BookAuthor()
-                                                { 
-                                                    AuthorId = IdAuthor.Id,
-                                                    BookId= bookstoreDBContext.Books.OrderByDescending(o => o.Id).Select(o => o.Id).FirstOrDefault()
-                                                };
+                                                    BookGenre genreBook = new BookGenre()
+                                                    {
+                                                        GenreId = idGenre.Id,
+                                                        BookId = bookstoreDBContext.Books.OrderByDescending(o => o.Id).Select(o => o.Id).FirstOrDefault()
+                                                    };
 
-                                                bookstoreDBContext.BookAuthors.Add(book);
-                                                bookstoreDBContext.SaveChanges();
+                                                    bookstoreDBContext.BookGenres.Add(genreBook);
+                                                    bookstoreDBContext.SaveChanges();
 
-                                                MessageBox.Show("Added successfully!");
-                                                ClearAll();
+
+                                                    Photo photo = new Photo()
+                                                    {
+                                                        Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"),
+                                                        ImageData = File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"),
+                                                        BookId = bookstoreDBContext.Books.OrderByDescending(o => o.Id).Select(o => o.Id).FirstOrDefault()
+                                                    };
+                                                    bookstoreDBContext.Photos.Add(photo);
+                                                    bookstoreDBContext.SaveChanges();
+
+                                                    BookAuthor book = new BookAuthor()
+                                                    {
+                                                        AuthorId = IdAuthor.Id,
+                                                        BookId = bookstoreDBContext.Books.OrderByDescending(o => o.Id).Select(o => o.Id).FirstOrDefault()
+                                                    };
+
+                                                    bookstoreDBContext.BookAuthors.Add(book);
+                                                    bookstoreDBContext.SaveChanges();
+
+                                                    MessageBox.Show("Added successfully!");
+                                                    ClearAll();
+                                                }
+                                                else
+                                                {
+                                                    MessageBox.Show("Such a book already exists!");
+                                                }
                                             }
                                             catch (Exception ex)
                                             {

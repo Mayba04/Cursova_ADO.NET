@@ -38,6 +38,7 @@ namespace Bookstore_visually
                     genre1.Name = GenreNameBox.Text;
                     bookstoreDBContext.Genres.Add(genre1);
                     bookstoreDBContext.SaveChanges();
+                    MessageBox.Show("Added");
                 }
                 else
                 {

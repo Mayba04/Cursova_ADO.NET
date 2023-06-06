@@ -11,6 +11,7 @@ using System.Net;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Bookstore.Helpers
 {
@@ -43,7 +44,7 @@ namespace Bookstore.Helpers
                     Year = 1925,
                     Price = 12.99m,
                     Quantity = 20,
-                    GenreId = 1,
+                    ///GenreId = 1,
                 },
                 new Book
                 {
@@ -53,7 +54,7 @@ namespace Bookstore.Helpers
                     Year = 1997,
                     Price = 10.99m,
                     Quantity = 19,
-                    GenreId = 1
+                    //GenreId = 1
                 },
                 new Book
                 {
@@ -63,7 +64,7 @@ namespace Bookstore.Helpers
                     Year = 2003,
                     Price = 19.99m,
                     Quantity = 18,
-                    GenreId = 3
+                    //GenreId = 3
                 },
                 new Book
                 {
@@ -73,7 +74,7 @@ namespace Bookstore.Helpers
                     Year = 1934,
                     Price = 8.99m,
                     Quantity = 15,
-                    GenreId = 3
+                    ///GenreId = 3
                 },
                 new Book
                 {
@@ -83,7 +84,7 @@ namespace Bookstore.Helpers
                     Year = 1813,
                     Price = 6.99m,
                     Quantity = 10,
-                    GenreId = 4
+                    //GenreId = 4
                 },
                 new Book
                 {
@@ -93,7 +94,7 @@ namespace Bookstore.Helpers
                     Year = 1954,
                     Price = 15.99m,
                     Quantity = 13,
-                    GenreId = 6
+                    ///GenreId = 6
                 },
                 new Book
                 {
@@ -103,7 +104,7 @@ namespace Bookstore.Helpers
                     Year = 1951,
                     Price = 12.99m,
                     Quantity = 11,
-                    GenreId = 5
+                    ///GenreId = 5
                 }
 
             });
@@ -157,8 +158,22 @@ namespace Bookstore.Helpers
                 new BookAuthor() {BookId = 3, AuthorId = 2},
                 new BookAuthor() {BookId = 4, AuthorId = 2},
                 new BookAuthor() {BookId = 5, AuthorId = 1},
-                new BookAuthor() {BookId = 5, AuthorId = 3},
-                new BookAuthor() {BookId = 6, AuthorId = 3}
+                new BookAuthor() {BookId = 6, AuthorId = 3},
+                new BookAuthor() {BookId = 7, AuthorId = 3}
+            });
+        }
+
+        public static void SeedBookGenres(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<BookGenre>().HasData(new BookGenre[]
+            {
+                new BookGenre() {BookId = 1, GenreId = 1},
+                new BookGenre() {BookId = 2, GenreId = 1},
+                new BookGenre() {BookId = 3, GenreId = 3},
+                new BookGenre() {BookId = 4, GenreId = 3},
+                new BookGenre() {BookId = 5, GenreId = 4},
+                new BookGenre() {BookId = 6, GenreId = 6},
+                new BookGenre() {BookId = 7, GenreId = 6}
             });
         }
 
@@ -176,8 +191,6 @@ namespace Bookstore.Helpers
                     Id = 2,
                     Login = "user2",
                     Password = "password2"
-
-
                 }
                
             );
@@ -192,7 +205,8 @@ namespace Bookstore.Helpers
                     Login = "Admin",
                     Password = "Admin123",
                     Name = "Pavlo",
-                    Email = "pashamyba7@gmail.com"
+                    Email = "pashamyba7@gmail.com",
+                    Status_Admin = true,
                 }
 
             );
@@ -251,7 +265,14 @@ namespace Bookstore.Helpers
         {
             modelBuilder.Entity<Photo>().HasData(new Photo[]
             {
-                new Photo() {Id = 1, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\images.png"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\images.png"), BookId=1 }
+                new Photo() {Id = 1, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\images.png"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\images.png"), BookId=1 },
+                new Photo() {Id = 2, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=2 },
+                new Photo() {Id = 3, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=3 },
+                new Photo() {Id = 4, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=4 },
+                new Photo() {Id = 5, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=5 },
+                new Photo() {Id = 6, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=6 },
+                new Photo() {Id = 7, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=7 },
+            
             });
         }
     }

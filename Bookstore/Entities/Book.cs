@@ -14,12 +14,11 @@ namespace Bookstore.Entities
         public int Year { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
-        public Genre Genre { get; set; }
-        public int GenreId { get; set; }
         public ICollection<BookAuthor> BookAuthors { get; set; }
         public ICollection<OrderBook> OrderBooks { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public Photo CoverPhoto { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
+        public ICollection<BookGenre> BookGenres { get; set; }
     }
 }

@@ -17,9 +17,8 @@ namespace Bookstore_visually
         private ObservableCollection<object> CDGMPAuthor;
         private ObservableCollection<object> CDGMPGenre;
 
-        private ObservableCollection<CommentInfo> commentInfos;
+        private ObservableCollection<CommentInfoBase> commentInfos;
 
-        public bool IsDarkTheme { get; set; }
 
         public string Books { get; set; }
 
@@ -35,7 +34,7 @@ namespace Bookstore_visually
             CDGMostSold = new ObservableCollection<object>();
             CDGMPAuthor = new ObservableCollection<object>();
             CDGMPGenre = new ObservableCollection<object>();
-            commentInfos = new ObservableCollection<CommentInfo>();
+            commentInfos = new ObservableCollection<CommentInfoBase>();
         }
 
         public IEnumerable<object> ClientDataGridDatabook => CDGBook;
@@ -46,7 +45,7 @@ namespace Bookstore_visually
         public IEnumerable<object> CDGDMostSold => CDGMostSold;
         public IEnumerable<object> CDGDMPAuthor => CDGMPAuthor;
         public IEnumerable<object> CDGDMPGenre => CDGMPGenre;
-        public IEnumerable<CommentInfo> CommentsInfo => commentInfos;
+        public IEnumerable<CommentInfoBase> CommentsInfo => commentInfos;
 
 
         public void AddCDGBook(List<object> list)
@@ -122,7 +121,7 @@ namespace Bookstore_visually
             }
         }
 
-        public void AddComment(CommentInfo info)
+        public void AddComment(CommentInfoBase info)
         {
             commentInfos.Add(info);
         }
@@ -131,18 +130,5 @@ namespace Bookstore_visually
         {
             commentInfos.Clear();
         }
-
-
-
     }
-
-    [AddINotifyPropertyChangedInterface]
-    public class CommentInfo
-    {
-        public string Name { get; set; }
-        public string Date { get; set; }
-        public string Text { get; set; }
-        public int IdComment { get; set; }
-    }
-
 }

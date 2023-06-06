@@ -27,7 +27,6 @@ namespace Bookstore_visually
         BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
         Credentials credentialsf;
         Client clientf;
-        string emailPattern;
         bool Checked;
         public ChangeDC(int id)
         {
@@ -41,7 +40,6 @@ namespace Bookstore_visually
             NameBox.Text = client.Name;
             EmailBox.Text = client.Email;
             Checked = false;
-            emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             RadioBTNTrue.Click += RadioBTNTrue_Click;
             RadioBTNFalse.Click += RadioBTNFalse_Click; ;
             RadioBTNTrue.IsThreeState = true;

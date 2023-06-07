@@ -15,7 +15,6 @@ namespace Bookstore_visually
             byte[] dt = Encoding.UTF8.GetBytes(mydata);
             byte[] res = sha1.ComputeHash(dt);
             return Convert.ToBase64String(res);
-
         }
 
         public static string CreateData(string data)

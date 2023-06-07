@@ -54,7 +54,6 @@
                                     <TextBlock DockPanel.Dock="Left" Margin="5,0,5,0" Text="{Binding Name}" MaxWidth="155" TextTrimming="CharacterEllipsis" FontWeight="Bold"></TextBlock>
                                     <TextBlock DockPanel.Dock="Left">  <Run Text="{Binding Text}"></Run></TextBlock>
                                     <TextBlock DockPanel.Dock="Right"  Margin="5,0,5,0" ><Run Text="{Binding Date}"></Run></TextBlock>
-                                    <TextBlock DockPanel.Dock="Left"  Margin="5,0,5,0" ><Run Text="{Binding IdComment}"></Run></TextBlock>
                                 </DockPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -66,11 +65,22 @@
 
             <TextBox Name="TextBox"  materialDesign:HintAssist.Hint="Comment" 
                 materialDesign:HintAssist.HelperText="Insert your comment here" BorderBrush="Black" Margin="20,0,20,0" ></TextBox>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Margin="5" Content="Send" HorizontalAlignment="Center"
                       Style="{StaticResource MaterialDesignFlatMidBgButton}"
                     materialDesign:ShadowAssist.ShadowDepth="Depth0"
                     materialDesign:ButtonAssist.CornerRadius="10"
                     VerticalAlignment="Bottom" Click="SendCommentBtn_Click"></Button>
+
+                <Button Click="DeleteComment_Btn_Clik"  Margin="5" ToolTip="Delet comment" HorizontalAlignment="Center"
+                      Style="{StaticResource MaterialDesignFlatButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                    materialDesign:ButtonAssist.CornerRadius="10"
+                    VerticalAlignment="Bottom" Width="60" Height="40" >
+                    <materialDesign:PackIcon Kind="DeleteForever"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+            </StackPanel>
         </StackPanel>
     </materialDesign:Card>
    

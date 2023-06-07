@@ -19,51 +19,57 @@
 
     <materialDesign:Card Width="750"  UniformCornerRadius="15" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
         <StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
-                    materialDesign:ButtonAssist.CornerRadius="10" Click="minApp">
-                    <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </Button>
-                <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
-                    materialDesign:ButtonAssist.CornerRadius="10" Click="CloseWind" >
-                    <materialDesign:PackIcon Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Button>
-            </StackPanel>
-            <materialDesign:PopupBox HorizontalAlignment="Right" Margin="0,2,2,0"
-                                         PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="25" VerticalAlignment="Top">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="16 10 0 6">
-                        <TextBlock VerticalAlignment="Center" Text="DarkMode"></TextBlock>
-                        <ToggleButton Cursor="Hand" ToolTip="Enable Dark Mode" Margin="12 0 0 0" x:Name="themeToggle"
-                                      IsChecked="{Binding IsDarkTheme}" Click="toggleTheme"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <materialDesign:PopupBox HorizontalAlignment="Left" Margin="0,2,2,0" 
+                                         PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="25" VerticalAlignment="Center">
+                    <StackPanel>
+
+                        <Button Content="Darkmode On/Off" x:Name="themeToggle" Click="toggleTheme"  Margin="0 8 0 0"></Button>
+                        <Button Margin="0 8 0 0" Content="Help Me" Click="Help_Button"/>
+                        <Button x:Name="btn_Exit" ToolTip="Exit" Margin="0 8 0 0" Content="Exit" Click="exitApp"/>
                     </StackPanel>
-                    <Button ToolTip="Having Trouble Logging In" Margin="0 8 0 0" Content="Help Me"/>
-                    <Button x:Name="btn_Exit" ToolTip="Close" Margin="0 8 0 0" Content="Exit" Click="exitApp"/>
+                </materialDesign:PopupBox>
 
-
-
+                <StackPanel Grid.Column="1"  Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                        materialDesign:ButtonAssist.CornerRadius="10" Click="minApp">
+                        <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+                    <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
+                        materialDesign:ButtonAssist.CornerRadius="10" Click="CloseWind" >
+                        <materialDesign:PackIcon Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Button>
                 </StackPanel>
-
-            </materialDesign:PopupBox>
+            </Grid>
 
             <TabControl Grid.ColumnSpan="2" TabStripPlacement="Left"  >
                 <TabItem Header="Book ">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
-                            <Button  Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                            <Button  Style="{StaticResource MaterialDesignFlatButton}"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                     materialDesign:ButtonAssist.CornerRadius="10"
+                                     ToolTip="Refresh Book" Margin="5" Width="60" Height="40" Click="Button_Click_1">
+                                <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                            <Button  Style="{StaticResource MaterialDesignFlatButton}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
                                         materialDesign:ButtonAssist.CornerRadius="10"
-                                     Content="GetAll Book" Margin="5" Width="110" Click="Button_Click_1"/>
-                            <Button  Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                                     ToolTip="Write a comment" Margin="5" Width="60" Height="40" Click="WriteCommentBtn_Click">
+                                <materialDesign:PackIcon Kind="CommentEdit" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                            <Button  Style="{StaticResource MaterialDesignFlatButton}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
                                         materialDesign:ButtonAssist.CornerRadius="10"
-                                     Content="Write a comment" Margin="5" Width="143" Click="WriteCommentBtn_Click"/>
-                            <Button  Style="{StaticResource MaterialDesignFlatMidBgButton}"
-                                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10"
-                                     Content="Reserve a book" Margin="5" Width="129" Click="ReserveBookBtn_Click"/>
+                                     ToolTip="Reserve a book" Margin="5" Width="60" Height="40" Click="ReserveBookBtn_Click">
+                                <materialDesign:PackIcon Kind="CalendarStar" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
                         </StackPanel>
                         <DataGrid x:Name="Book" ItemsSource="{Binding ClientDataGridDatabook}" Margin="10" ></DataGrid>
                     </StackPanel>
@@ -71,37 +77,52 @@
                 <TabItem Header="Search">
                     <TabControl>
                         <TabItem Header="Book title">
-                            <StackPanel>
-                                <Grid>
-                                    <TextBox x:Name="TitleSearchTextBox" Width="480" materialDesign:HintAssist.Hint="Title" VerticalAlignment="Center" FontSize="16" HorizontalAlignment="Left"/>
-                                    <Button x:Name="TitleSearchButton" Content="Search" Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                            <StackPanel  Margin="10,5,10,5">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="TitleSearchTextBox" Width="450" materialDesign:HintAssist.Hint="Title" VerticalAlignment="Center" Margin="5" FontSize="16" HorizontalAlignment="Left"/>
+                                    <Button x:Name="TitleSearchButton" ToolTip="Title Search" Style="{StaticResource MaterialDesignFlatMidBgButton}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10" Click="TitleSearchButton_Click" HorizontalAlignment="Right"/>
-                                </Grid>
+                                        materialDesign:ButtonAssist.CornerRadius="10" Margin="5" Click="TitleSearchButton_Click" HorizontalAlignment="Right">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="CardSearch"  Height="40" Width="35" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <TextBlock Text=" Search" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
                                 <DataGrid ItemsSource="{Binding CDGDSBookTitle}" Margin="10" ></DataGrid>
                             </StackPanel>
 
 
                         </TabItem>
                         <TabItem Header="Author">
-                            <StackPanel>
-                                <Grid>
-                                    <TextBox x:Name="AuthorSearchTextBox"  Width="480" materialDesign:HintAssist.Hint="Author" VerticalAlignment="Center" FontSize="16" HorizontalAlignment="Left" />
-                                    <Button x:Name="AuthorSearchButton" Content="Search" Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                            <StackPanel  Margin="10,5,10,5">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="AuthorSearchTextBox"  Width="450" Margin="5" materialDesign:HintAssist.Hint="Author" VerticalAlignment="Center" FontSize="16" HorizontalAlignment="Left" />
+                                    <Button x:Name="AuthorSearchButton" Margin="5" ToolTip="Search by author " Style="{StaticResource MaterialDesignFlatMidBgButton}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10" Click="AuthorSearchButton_Click" HorizontalAlignment="Right"/>
-                                </Grid>
+                                        materialDesign:ButtonAssist.CornerRadius="10" Click="AuthorSearchButton_Click" HorizontalAlignment="Right">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="CardSearch"  Height="40" Width="35" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <TextBlock Text=" Search" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
                                 <DataGrid ItemsSource="{Binding CDGDSBookAuthor}" Margin="10"></DataGrid>
                             </StackPanel>
                         </TabItem>
                         <TabItem Header="Genre">
-                            <StackPanel>
-                                <Grid>
-                                    <TextBox x:Name="GenreSearchTextBox"  Width="480" materialDesign:HintAssist.Hint="Genre" VerticalAlignment="Center" FontSize="16" HorizontalAlignment="Left" />
-                                    <Button x:Name="GenreSearchButton" Content="Search" Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                            <StackPanel Margin="10,5,10,5" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="GenreSearchTextBox"  Margin="5" Width="450" materialDesign:HintAssist.Hint="Genre" VerticalAlignment="Center" FontSize="16" HorizontalAlignment="Left" />
+                                    <Button x:Name="GenreSearchButton"  Margin="5" ToolTip="Search by genre" Style="{StaticResource MaterialDesignFlatMidBgButton}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10" Click="GenreSearchButton_Click" HorizontalAlignment="Right"/>
-                                </Grid>
+                                        materialDesign:ButtonAssist.CornerRadius="10" Click="GenreSearchButton_Click" HorizontalAlignment="Right">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="CardSearch"  Height="40" Width="35" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <TextBlock Text=" Search" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
                                 <DataGrid ItemsSource="{Binding CDGDSBookGenre}" Margin="10"></DataGrid>
                             </StackPanel>
                         </TabItem>
@@ -111,52 +132,73 @@
                     <StackPanel>
 
                         <Grid>
-                            <TextBlock Text="New Books" FontSize="24" Margin="10"/>
-                            <Button FontSize="19" HorizontalAlignment="Center" Content="New Books" Click="NewBooks_ButtonClick"
+                            <TextBlock Text="Novelty" FontSize="24" Margin="10"/>
+                            <Button FontSize="19" Height="40" HorizontalAlignment="Center" ToolTip="Refresh Books" Click="NewBooks_ButtonClick"
                                     Style="{StaticResource MaterialDesignFlatMidBgButton}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10"  VerticalAlignment="Center"></Button>
+                                        materialDesign:ButtonAssist.CornerRadius="10"  VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="NewBox"  Height="40" Width="35" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Text=" Books" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
                         </Grid>
                         <DataGrid Grid.Row="1" ItemsSource="{Binding CDGDNewBooks}" Margin="10"></DataGrid>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="The most sold">
-                    <StackPanel>
-                        <Grid>
 
-                            <TextBlock Text="Most sold" FontSize="24" Margin="10"/>
-                            <Button  HorizontalAlignment="Center"
-                                  Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                <TabItem Header="The most popular">
+                    <TabControl>
+                        <TabItem Header="Sold">
+                            <StackPanel>
+                                <Grid>
+                                    <TextBlock Text="The most popular books sold" FontSize="24" Margin="10" HorizontalAlignment="Left"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button  HorizontalAlignment="Center"
+                                      Style="{StaticResource MaterialDesignFlatButton}"
+                                            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                            materialDesign:ButtonAssist.CornerRadius="10" Width="60" Height="50" ToolTip="Refresh most Sold" Click="MostSoldBooks_ButtonClick" >
+                                            <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                                <DataGrid Grid.Row="1" ItemsSource="{Binding CDGDMostSold}" Margin="10,10,10,10" Grid.ColumnSpan="3"></DataGrid>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Authors">
+                            <StackPanel>
+                                <Grid>
+                                    <TextBlock Text="Most popular authors" FontSize="24" Margin="10,10,10,10" Grid.ColumnSpan="2"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Margin="71,0,0,0">
+                                        <Button HorizontalAlignment="Right"  Style="{StaticResource MaterialDesignFlatButton}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10" Content="Most Sold" Click="MostSoldBooks_ButtonClick" ></Button>
+                                        materialDesign:ButtonAssist.CornerRadius="10"  Width="60" Height="50" ToolTip="Refresh most popular authors" Click="MostAuthorBooks_ButtonClick" >
+                                            <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                                <DataGrid  ItemsSource="{Binding CDGDMPAuthor}" Margin="10"></DataGrid>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Genres">
+                            <StackPanel>
+                                <Grid>
+                                    <TextBlock Text="Most popular genres" FontSize="24" Margin="10"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button  HorizontalAlignment="Right"  Style="{StaticResource MaterialDesignFlatButton}"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                        materialDesign:ButtonAssist.CornerRadius="10"  Width="60" Height="50"  ToolTip="Refresh most popular genres" Click="MostgenresBooks_ButtonClick" VerticalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                                <DataGrid ItemsSource="{Binding CDGDMPGenre}" Margin="10"></DataGrid>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+                </TabItem>
 
-                        </Grid>
-                        <DataGrid Grid.Row="1" ItemsSource="{Binding CDGDMostSold}" Margin="10,10,10,10" Grid.ColumnSpan="3"></DataGrid>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Header="The most authors">
-                    <StackPanel>
-                        <Grid>
-                            <TextBlock Text="Most popular authors" FontSize="24" Margin="10"/>
-                            <Button HorizontalAlignment="Right"  Style="{StaticResource MaterialDesignFlatMidBgButton}"
-                                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10" Content="Most popular authors" Click="MostAuthorBooks_ButtonClick" ></Button>
 
-                        </Grid>
-                        <DataGrid  ItemsSource="{Binding CDGDMPAuthor}" Margin="10"></DataGrid>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Header="The most genres">
-                    <StackPanel>
-                        <Grid>
-                            <TextBlock Text="Most popular genres" FontSize="24" Margin="10"/>
-                            <Button  HorizontalAlignment="Right"  Style="{StaticResource MaterialDesignFlatMidBgButton}"
-                                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10" Content="Most popular genres" Click="MostgenresBooks_ButtonClick"></Button>
-                        </Grid>
-                        <DataGrid ItemsSource="{Binding CDGDMPGenre}" Margin="10"></DataGrid>
-                    </StackPanel>
-                </TabItem>
                 <TabItem Header="My books">
                     <Grid>
                         <TabControl>
@@ -177,50 +219,62 @@
                                                 </ItemsPanelTemplate>
                                             </ComboBox.ItemsPanel>
                                         </ComboBox>
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5">
                                             <Button  Style="{StaticResource MaterialDesignFlatMidBgButton}"
                                                     materialDesign:ShadowAssist.ShadowDepth="Depth0"
                                                     materialDesign:ButtonAssist.CornerRadius="10"
-                                                     HorizontalAlignment="Center" Content="Order" Click="OrderBooks_ButtonClick" Margin="0,0,20,0"></Button>
+                                                     HorizontalAlignment="Center" Content="Order" Click="OrderBooks_ButtonClick"></Button>
                                         </StackPanel>
                                     </Grid>
                                     <DataGrid Grid.Row="1" x:Name="OrderBooksDataGrid" Margin="10"></DataGrid>
                                 </StackPanel>
                             </TabItem>
                             <TabItem Header="Order">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="9*"/>
-                                        <ColumnDefinition Width="259*"/>
-                                        <ColumnDefinition Width="14*"/>
-                                        <ColumnDefinition Width="506*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Text="Order" FontSize="24" Margin="1,10,10,10" Grid.ColumnSpan="2" Grid.Column="1"/>
-                                    <Button  Style="{StaticResource MaterialDesignFlatMidBgButton}"
-                                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10" HorizontalAlignment="Left" Content="Payment" Click="Payment_ButtonClick" Grid.Column="3" VerticalAlignment="Center"></Button>
-                                    <Button  Style="{StaticResource MaterialDesignFlatMidBgButton}"
-                                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10" HorizontalAlignment="Center" Content="Order" Click="Order_ButtonClick"  Grid.Column="3" VerticalAlignment="Center"></Button>
-                                    <DataGrid x:Name="OrderDataGrid" Grid.Row="1" Margin="1,10,10,10" Grid.ColumnSpan="3" Grid.Column="1" ></DataGrid>
-                                </Grid>
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="Order" FontSize="24" Margin="10,10,10,10" />
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5" >
+                                            <Button  Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                                            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                            materialDesign:ButtonAssist.CornerRadius="10" HorizontalAlignment="Right" Content="Payment" Click="Payment_ButtonClick"  VerticalAlignment="Center" Margin="5"></Button>
+
+                                            <Button  Style="{StaticResource MaterialDesignFlatButton}"
+                                            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                            materialDesign:ButtonAssist.CornerRadius="10" HorizontalAlignment="Right" ToolTip="Delete Order" Click="DeleteOrder_ButtonClick" VerticalAlignment="Center">
+                                                <materialDesign:PackIcon Kind="DeleteForever"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Button>
+
+                                            <Button  Style="{StaticResource MaterialDesignFlatButton}"
+                                            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                            materialDesign:ButtonAssist.CornerRadius="10" HorizontalAlignment="Right" ToolTip="Refresh Order" Click="Order_ButtonClick" VerticalAlignment="Center">
+                                                <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                    <DataGrid x:Name="OrderDataGrid" Margin="1,10,10,10"></DataGrid>
+                                </StackPanel>
                             </TabItem>
-                            <TabItem Header="reserv book">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Text="Reserved books" FontSize="24" Margin="1,10,10,10" Grid.ColumnSpan="2" Grid.Column="1"/>
-                                    <Button  Style="{StaticResource MaterialDesignFlatMidBgButton}"
-                                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                        materialDesign:ButtonAssist.CornerRadius="10" HorizontalAlignment="Center" Content="Update" Click="Update_ButtonClick"  Grid.Column="3" VerticalAlignment="Center"></Button>
+                            <TabItem Header="Reserv book">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBlock Text="Reserved books" FontSize="24" Margin="1,10,10,10" Grid.ColumnSpan="2" Grid.Column="1"/>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button  Style="{StaticResource MaterialDesignFlatButton}"
+                                            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                            materialDesign:ButtonAssist.CornerRadius="10" HorizontalAlignment="Right" ToolTip="Delete reserv book" Click="DeleteReservbook_ButtonClick" Margin="5" VerticalAlignment="Center">
+                                                <materialDesign:PackIcon Kind="DeleteForever"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Button>
+
+                                        <Button  Style="{StaticResource MaterialDesignFlatButton}"
+                                            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                            materialDesign:ButtonAssist.CornerRadius="10" HorizontalAlignment="Right" ToolTip="Refresh reserv book" Click="Update_ButtonClick" Margin="5" VerticalAlignment="Center">
+                                            <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Button>
+                                        </StackPanel>
+                                    </Grid>
                                     <DataGrid x:Name="ReservDataGrid" Grid.Row="1" Margin="10"   ></DataGrid>
-                                </Grid>
+                                </StackPanel>
                             </TabItem>
                         </TabControl>
                     </Grid>

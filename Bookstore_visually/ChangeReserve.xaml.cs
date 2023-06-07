@@ -188,6 +188,11 @@ namespace Bookstore_visually
                     reservation.IsReturned = bool.Parse(IsReturn.IsChecked.ToString());
                     bookstoreDBContext.Reservations.Update(reservation);
                     bookstoreDBContext.SaveChanges();
+                    var book = bookstoreDBContext.Books.Where(b => b.Id == reservation.BookId).FirstOrDefault();
+                    book.Quantity++;
+                    bookstoreDBContext.Update(book);
+                    bookstoreDBContext.SaveChanges();
+
                     MessageBox.Show("Changed successfully");
                 }
                 else

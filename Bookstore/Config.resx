@@ -121,12 +121,12 @@
     <value>https://www.liqpay.ua/api/3/checkout</value>
   </data>
   <data name="LiqypayPrivateKey" xml:space="preserve">
-    <value>sandbox_2J8xkWsY2qH7VGoiQ7W9YnoGwM7pU19wEz11tdkj</value>
+    <value>sandbox_3Sb02IvkSvwCuKPHtTdSxcVs1Om2m6mKLORAm2SJ</value>
   </data>
   <data name="LiqyPayRequestURL" xml:space="preserve">
     <value>https://www.liqpay.ua/api/request</value>
   </data>
   <data name="LiqyPublicKey" xml:space="preserve">
-    <value>sandbox_i77331972584</value>
+    <value>sandbox_i44975687731</value>
   </data>
 </root>

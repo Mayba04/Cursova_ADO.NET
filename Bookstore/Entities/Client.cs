@@ -16,6 +16,10 @@ namespace Bookstore.Entities
         [EmailAddress]
         public string Email { get; set; }
 
+        [MaxLength(13)] 
+        [Required]
+        public string PhoneNumber { get; set; }
+
         public ICollection<Order> Orders { get; set; }
         public Credentials Credentials { get; set; }
         public ICollection<Comment> Comments { get; set; }

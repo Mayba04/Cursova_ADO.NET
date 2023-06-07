@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using System.Net;
 using MaterialDesignThemes.Wpf;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace Bookstore_visually
 {
@@ -248,6 +249,24 @@ namespace Bookstore_visually
         private void minApp(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+        }
+
+        private void Help_Button(object sender, RoutedEventArgs e)
+        {
+            string url = "https://docs.google.com/document/d/1sQKBGx-NLaHek8adIyP6l707hsCWU9U_f0UxksTkG5g/edit?usp=sharing";
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

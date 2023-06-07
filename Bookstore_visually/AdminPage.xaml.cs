@@ -26,6 +26,7 @@ using MaterialDesignThemes.Wpf;
 using MessageBox = System.Windows.Forms.MessageBox;
 using System.Security.Policy;
 using System.Security.Cryptography.Pkcs;
+using System.Diagnostics;
 
 namespace Bookstore_visually
 {
@@ -294,10 +295,30 @@ namespace Bookstore_visually
             {
                 var selectedRow = (dynamic)AdminOrder.SelectedItem;
                 int id = selectedRow.Id;
-                bookstoreDBContext.Orders.Remove(bookstoreDBContext.Orders.Where(b => b.Id == id).FirstOrDefault());
-                bookstoreDBContext.OrderBooks.Remove(bookstoreDBContext.OrderBooks.Where(b => b.OrderId == id).FirstOrDefault());
-                bookstoreDBContext.SaveChanges();
+              
+              
+
+                var order = bookstoreDBContext.Orders.Where(o => o.Id == id).FirstOrDefault();
+                if (order.Payment_status == false)
+                {
+                    bookstoreDBContext.Remove(order);
+                    var orderb = bookstoreDBContext.OrderBooks.FirstOrDefault(o => o.OrderId == order.Id);
+                    var book = bookstoreDBContext.Books.Where(b => b.Id == orderb.BookId).FirstOrDefault();
+                    bookstoreDBContext.OrderBooks.Remove(orderb);
+                    bookstoreDBContext.SaveChanges();
+                    book.Quantity += (int)order.Quantity;
+                    bookstoreDBContext.Update(book);
+                    bookstoreDBContext.SaveChanges();
+                    RefreshBook();
+                }
+                else
+                {
+                    bookstoreDBContext.Orders.Remove(bookstoreDBContext.Orders.Where(b => b.Id == id).FirstOrDefault());
+                    bookstoreDBContext.OrderBooks.Remove(bookstoreDBContext.OrderBooks.Where(b => b.OrderId == id).FirstOrDefault());
+                    bookstoreDBContext.SaveChanges();
+                }
                 RefreshOrder();
+
             }
         }
 
@@ -427,9 +448,9 @@ namespace Bookstore_visually
                      Id = r.Id,
                      ClientName = r.Client.Name,
                      BookTitle = r.Book.Title,
-                     ReservationDate = r.ReservationDate,
-                     ReceivingDate = r.CheckoutDate,
-                     ReturnDate = r.ReturnDate,
+                     ReservationDate = r.ReservationDate.ToShortDateString(),
+                     ReceivingDate = r.CheckoutDate.ToShortDateString(),
+                     ReturnDate = r.ReturnDate.ToShortDateString(),
                      IsReturned = r.IsReturned
                  }).ToList();
         }
@@ -444,10 +465,17 @@ namespace Bookstore_visually
             if (ReservDGAdmin.SelectedItem != null)
             {
                 var selectedd = (dynamic)ReservDGAdmin.SelectedItem;
-                ChangeReserve changeReserve = new ChangeReserve(selectedd.Id);
-                this.IsEnabled = false;
-                changeReserve.Closed += ChangeReserve_Closed;
-                changeReserve.Show();
+                if (selectedd.IsReturned != true)
+                {
+                    ChangeReserve changeReserve = new ChangeReserve(selectedd.Id);
+                    this.IsEnabled = false;
+                    changeReserve.Closed += ChangeReserve_Closed;
+                    changeReserve.Show();
+                }
+                else
+                {
+                    MessageBox.Show("The book is returned!");
+                }
             }
         }
 
@@ -455,6 +483,7 @@ namespace Bookstore_visually
         {
             this.IsEnabled = true;
             RefreshReserved();
+            RefreshBook();
         }
 
         private void DeleteReserveAdmin_BTN(object sender, RoutedEventArgs e)
@@ -463,10 +492,30 @@ namespace Bookstore_visually
             {
                 var selectedd = (dynamic)ReservDGAdmin.SelectedItem;
                 int id = selectedd.Id;
-                bookstoreDBContext.Remove(bookstoreDBContext.Reservations.Where(r => r.Id == id).FirstOrDefault());
-                bookstoreDBContext.SaveChanges();
+                var reservation = bookstoreDBContext.Reservations.Where(r => r.Id == id).FirstOrDefault();
+               
+
+                if (reservation.IsReturned != true && reservation.CheckoutDate.Year <= 1)
+                {
+                    bookstoreDBContext.Remove(reservation);
+                    bookstoreDBContext.SaveChanges();
+                    var book = bookstoreDBContext.Books.Where(b => b.Id == reservation.BookId).FirstOrDefault();
+                    book.Quantity++;
+                    bookstoreDBContext.Update(book);
+                    bookstoreDBContext.SaveChanges();
+                    RefreshBook();
+                }
+                else if (reservation.IsReturned == true && reservation.CheckoutDate.Year >= 1 && reservation.ReturnDate.Year >=1)
+                {
+                    bookstoreDBContext.Remove(reservation);
+                    bookstoreDBContext.SaveChanges();
+                }
+                else
+                {
+                    MessageBox.Show("The book has been taken or already returned!");
+                }
+              
                 RefreshReserved();
-                ///////////////////////////////////
             }
         }
 
@@ -602,6 +651,24 @@ namespace Bookstore_visually
         private void GetAdministratorAllBTN(object sender, RoutedEventArgs e)
         {
             RefreshAdministrators();
+        }
+
+        private void Help_Button(object sender, RoutedEventArgs e)
+        {
+            string url = "https://docs.google.com/document/d/1sQKBGx-NLaHek8adIyP6l707hsCWU9U_f0UxksTkG5g/edit?usp=sharing";
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

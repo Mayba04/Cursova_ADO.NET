@@ -241,22 +241,31 @@ namespace Bookstore_visually
             decimal decimalValue;
             isNumber = decimal.TryParse(input, out decimalValue);
 
-
-
-            if (!isNumber)
+            if (!isNumber && input != ",")
             {
                 e.Handled = true;
                 return;
             }
 
-            decimal number = decimal.Parse(e.Text);
-            if (number < 0)
+            bool hasDecimalSeparator = PriceBox.Text.Contains(",");
+
+            if (input == "," && hasDecimalSeparator)
             {
                 e.Handled = true;
+                return;
             }
-            if (number > (decimal)4000)
+
+            if (input != ",")
             {
-                e.Handled = true;
+                decimal number = decimal.Parse(e.Text);
+                if (number < 0)
+                {
+                    e.Handled = true;
+                }
+                if (number > (decimal)4000)
+                {
+                    e.Handled = true;
+                }
             }
         }
 
@@ -268,8 +277,6 @@ namespace Bookstore_visually
 
             int decimalValue;
             isNumber = int.TryParse(input, out decimalValue);
-
-
 
             if (!isNumber)
             {

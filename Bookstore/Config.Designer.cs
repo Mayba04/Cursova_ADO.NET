@@ -51,7 +51,7 @@ namespace Bookstore {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -70,7 +70,7 @@ namespace Bookstore {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to sandbox_2J8xkWsY2qH7VGoiQ7W9YnoGwM7pU19wEz11tdkj.
+        ///   Looks up a localized string similar to sandbox_3Sb02IvkSvwCuKPHtTdSxcVs1Om2m6mKLORAm2SJ.
         /// </summary>
         public static string LiqypayPrivateKey {
             get {
@@ -86,9 +86,9 @@ namespace Bookstore {
                 return ResourceManager.GetString("LiqyPayRequestURL", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Looks up a localized string similar to sandbox_i77331972584.
+        ///   Looks up a localized string similar to sandbox_i44975687731.
         /// </summary>
         public static string LiqyPublicKey {
             get {

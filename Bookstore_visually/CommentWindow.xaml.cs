@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Application = System.Windows.Application;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace Bookstore_visually
 {
@@ -41,7 +42,7 @@ namespace Bookstore_visually
             this.DataContext = model;
             UpdateBook();
             UpdateComment();
-            //model.Image = bookstoreDBContext.Photos.Where(p => p.BookId == ID).Select(p => p.ImageData).FirstOrDefault();
+           
             byte[] imageData = bookstoreDBContext.Photos.Where(p => p.BookId == ID).Select(p => p.ImageData).FirstOrDefault();
             if (imageData != null)
             {
@@ -80,6 +81,7 @@ namespace Bookstore_visually
                 commentInfo.Name = item.Name;
                 commentInfo.Date = item.Date.ToShortDateString();
                 commentInfo.Text = item.Text;
+                commentInfo.IdComment = item.ID;
                 model.AddComment(commentInfo);
 
             }
@@ -121,6 +123,29 @@ namespace Bookstore_visually
         {
             base.OnMouseLeftButtonDown(e);
             DragMove();
+        }
+
+        private void DeleteComment_Btn_Clik(object sender, RoutedEventArgs e)
+        {
+            if (CommentBox.SelectedItem != null)
+            {
+                var comment = (dynamic)CommentBox.SelectedItem;
+                string n = comment.Name;
+                string t = comment.Text;
+                int id = comment.IdComment;
+                var coomentdb = bookstoreDBContext.Comments.Include(c=>c.Client).Where(c => c.Text == t && c.Client.Name == n && c.Id == id && c.ClientId == IdClient).FirstOrDefault();
+                if (coomentdb != null)
+                {
+                    bookstoreDBContext.Remove(coomentdb);
+                    bookstoreDBContext.SaveChanges();
+                    UpdateComment();
+                    MessageBox.Show("Comment deleted!");
+                } 
+                else
+                {
+                    MessageBox.Show("You cannot delete comments that are not your own");
+                }
+            }
         }
     }
 }

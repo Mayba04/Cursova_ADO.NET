@@ -20,6 +20,9 @@ using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 using Path = System.IO.Path;
 using TextBox = System.Windows.Controls.TextBox;
+using System.Resources;
+using Octopus.Client.Model;
+using Octopus.Client.Extensibility;
 
 namespace Bookstore_visually
 {
@@ -208,11 +211,10 @@ namespace Bookstore_visually
                                                     bookstoreDBContext.BookGenres.Add(genreBook);
                                                     bookstoreDBContext.SaveChanges();
 
-
                                                     Photo photo = new Photo()
                                                     {
-                                                        Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"),
-                                                        ImageData = File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"),
+                                                        Name = Path.GetFileName("Image\\genericBookCover.jpg"),
+                                                        ImageData = File.ReadAllBytes("Image\\genericBookCover.jpg"),
                                                         BookId = bookstoreDBContext.Books.OrderByDescending(o => o.Id).Select(o => o.Id).FirstOrDefault()
                                                     };
                                                     bookstoreDBContext.Photos.Add(photo);
@@ -313,7 +315,6 @@ namespace Bookstore_visually
 
             if (!isNumber)
             {
-                // Введено не число, скасувати подію
                 e.Handled = true;
                 return;
             }
@@ -341,23 +342,31 @@ namespace Bookstore_visually
             decimal decimalValue;
             isNumber = decimal.TryParse(input, out decimalValue);
 
-           
-
-            if (!isNumber)
+            if (!isNumber && input != ",")
             {
-                // Введено не число, скасувати подію
                 e.Handled = true;
                 return;
             }
 
-            decimal number = decimal.Parse(e.Text);
-            if (number < 0)
+            bool hasDecimalSeparator = PriceBox.Text.Contains(",");
+
+            if (input == "," && hasDecimalSeparator)
             {
                 e.Handled = true;
+                return;
             }
-            if (number > (decimal)4000)
+
+            if (input != ",")
             {
-                e.Handled = true;
+                decimal number = decimal.Parse(e.Text);
+                if (number < 0)
+                {
+                    e.Handled = true;
+                }
+                if (number > (decimal)4000)
+                {
+                    e.Handled = true;
+                }
             }
         }
 
@@ -374,7 +383,6 @@ namespace Bookstore_visually
 
             if (!isNumber)
             {
-                // Введено не число, скасувати подію
                 e.Handled = true;
                 return;
             }
@@ -388,8 +396,6 @@ namespace Bookstore_visually
             {
                 e.Handled = true;
             }
-
-
         }
     }
 }

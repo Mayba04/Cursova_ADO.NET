@@ -9,9 +9,6 @@ namespace Cursova_ADO.NET
     {
         static void Main(string[] args)
         {
-            BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
-
-            IRepository<Book> repository = new Repository<Book>(new BookstoreDBContext());
 
         }
     }

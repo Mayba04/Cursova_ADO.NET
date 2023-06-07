@@ -17,6 +17,10 @@ namespace Bookstore.Entities
 
         public string Name { get; set; }
 
+        [MaxLength(13)]
+        [Required]
+        public string PhoneNumber { get; set; }
+
         public bool Status_Admin { get; set; }
 
         [EmailAddress]

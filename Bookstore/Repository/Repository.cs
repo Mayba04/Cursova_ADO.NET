@@ -60,8 +60,5 @@ namespace Bookstore.Repository
         {
             context.SaveChanges();
         }
-
-       
-
     }
 }

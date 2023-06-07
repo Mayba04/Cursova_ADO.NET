@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -119,6 +120,24 @@ namespace Bookstore_visually
         private void minApp(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+        }
+
+        private void Help_Button(object sender, RoutedEventArgs e)
+        {
+            string url = "https://docs.google.com/document/d/1sQKBGx-NLaHek8adIyP6l707hsCWU9U_f0UxksTkG5g/edit?usp=sharing"; 
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

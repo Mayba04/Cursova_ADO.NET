@@ -86,9 +86,6 @@ namespace Bookstore_visually
             throw new NotImplementedException();
         }
 
-
-
-
         //source change event delegate
         void UrlChange(object sender, EventArgs e)
         {

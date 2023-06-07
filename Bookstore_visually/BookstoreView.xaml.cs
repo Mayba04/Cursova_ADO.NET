@@ -27,6 +27,7 @@ using MessageBox = System.Windows.MessageBox;
 using System.Windows.Forms;
 using Application = System.Windows.Application;
 using MaterialDesignThemes.Wpf;
+using System.IO;
 
 namespace Bookstore_visually
 {
@@ -36,7 +37,7 @@ namespace Bookstore_visually
     public partial class BookstoreView : Window
     {
         IRepository<Book> repository = new Repository<Book>(new BookstoreDBContext());
-        IRepository<Order> repositoryO = new Repository<Order>(new BookstoreDBContext());
+       
         ViewModel model;
         public bool IsDarkTheme { get; set; }
         private readonly PaletteHelper paletteHelper;
@@ -45,25 +46,23 @@ namespace Bookstore_visually
         private object Credential_user;
         private int idClient;
 
-        public BookstoreView()
+        public BookstoreView(object credential)
         {
             InitializeComponent();
             model = new ViewModel();
             paletteHelper = new PaletteHelper();
             this.DataContext = model;
+            Credential_user = credential;
+            idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Client)Credential_user).CredentialsId).Select(c => c.CredentialsId).FirstOrDefault();
+            RefreshOrderDG();
             RefreshBook();
             RefreshOrderBooks();
             RefreshReserverBook();
             QuantityNumeric();
-        }
-
-        public BookstoreView(object credential) : this()
-        {
-
-            Credential_user = credential;
-            idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Client)Credential_user).CredentialsId).Select(c => c.CredentialsId).FirstOrDefault();
-            RefreshOrderDG();
-
+            RefreshNewBooks();
+            RefreshMostgenresBooks();
+            RefreshMostAuthorBooks();
+            RefreshMostSoldBooks();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -110,6 +109,7 @@ namespace Bookstore_visually
                     bookstoreDBContext.Reservations.Add(reservation);
                     bookstoreDBContext.SaveChanges();
                     RefreshBook();
+                    RefreshOrderBooks();
                     RefreshReserverBook();
                     MessageBox.Show("The book is reserved! All detailed information has been sent to your mailbox.");
                 }
@@ -117,7 +117,6 @@ namespace Bookstore_visually
                 {
                     MessageBox.Show("There are no books available!");
                 }
-                
             }
         }
 
@@ -134,13 +133,16 @@ namespace Bookstore_visually
         private void AuthorSearchButton_Click(object sender, RoutedEventArgs e)
         {
             List<object> ff = new List<object>();
+            string[] words = AuthorSearchTextBox.Text.Split(new[] { ' ' }, 2);
+            {
+                var book = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.BookGenres).ThenInclude(ba => ba.Genre)
+                    .Where(b => b.BookAuthors.Any(ba => ba.Author.Name.Contains(words.Count() > 0 ? words[0] : AuthorSearchTextBox.Text)) || b.BookAuthors.Any(ba => ba.Author.Surname.Contains(words.Count() > 1 ? words[1] : AuthorSearchTextBox.Text)))
+                    .Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname })
+                    .ToList();
 
-            var book = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.BookGenres).ThenInclude(ba => ba.Genre).
-                Where(b => b.BookAuthors.Any(ba => ba.Author.Name.Contains(AuthorSearchTextBox.Text))).
-                Select(b=> new {Id = b.Id, Title=b.Title, Publisher=b.Publisher, Year=b.Year, Price=b.Price, Quantity=b.Quantity, Genre =b.BookGenres.FirstOrDefault().Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name,AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname}).ToList();
-            ff.AddRange(book);
-
-            model.AddCDGSBookAuthor(ff);
+                ff.AddRange(book);
+                model.AddCDGSBookAuthor(ff);
+            }
         }
 
         private void TitleSearchButton_Click(object sender, RoutedEventArgs e)
@@ -167,8 +169,26 @@ namespace Bookstore_visually
         //novelity
         private void NewBooks_ButtonClick(object sender, RoutedEventArgs e)
         {
+            RefreshNewBooks();
+        }
+
+        private void RefreshNewBooks()
+        {
             List<object> ff = new List<object>();
-            var book = bookstoreDBContext.Books.Include(b => b.BookGenres).ThenInclude(ba => ba.Genre).OrderByDescending(b => b.Id).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name }).Take(5).ToList();
+            var book = bookstoreDBContext.Books.
+                Include(b => b.BookGenres).
+                    ThenInclude(ba => ba.Genre).
+                        OrderByDescending(b => b.Id).
+                            Select(b => new 
+                            { 
+                                Id = b.Id, 
+                                Title = b.Title, 
+                                Publisher = b.Publisher, 
+                                Year = b.Year, 
+                                Price = b.Price, 
+                                Quantity = b.Quantity, 
+                                Genre = b.BookGenres.FirstOrDefault().Genre.Name 
+                            }).Take(5).ToList();
             ff.AddRange(book);
             model.AddCDGNewBook(ff);
         }
@@ -176,14 +196,24 @@ namespace Bookstore_visually
         //MOst sold
         private void MostSoldBooks_ButtonClick(object sender, RoutedEventArgs e)
         {
+            RefreshMostSoldBooks();
+        }
+
+        private void RefreshMostSoldBooks()
+        {
             List<object> ff = new List<object>();
             var book = bookstoreDBContext.Books
-                .Include(b => b.OrderBooks).ThenInclude(ob => ob.Order).AsEnumerable().GroupBy(b => new { b.Id, b.Title })
-                .Select(g => new {
-                    Id = g.Key.Id,
-                    Title = g.Key.Title,
-                    TotalSold = g.Sum(ob => ob.OrderBooks.Sum(o => o.Order.Quantity))
-                }).OrderByDescending(g => g.TotalSold).Take(5).ToList();
+                .Include(b => b.OrderBooks).
+                    ThenInclude(ob => ob.Order).
+                        Where(ba => ba.OrderBooks.Any(ob => ob.Order.Payment_status == true)).AsEnumerable().
+                            GroupBy(b => new { b.Id, b.Title, b.Publisher })
+                            .Select(g => new 
+                            {
+                                Id = g.Key.Id,
+                                Title = g.Key.Title,
+                                Publisher = g.Key.Publisher,
+                                TotalSold = g.Sum(ob => ob.OrderBooks.Sum(o => o.Order.Quantity)),
+                            }).OrderByDescending(g => g.TotalSold).Take(5).ToList();
 
             ff.AddRange(book);
             model.AddCDGMostSold(ff);
@@ -192,16 +222,36 @@ namespace Bookstore_visually
         //MOst popular Authors
         private void MostAuthorBooks_ButtonClick(object sender, RoutedEventArgs e)
         {
+            RefreshMostAuthorBooks();
+        }
+
+        private void RefreshMostAuthorBooks()
+        {
             List<object> ff = new List<object>();
 
-            var BookAuthor = bookstoreDBContext.BookAuthors.Include(ba => ba.Book).ThenInclude(b => b.OrderBooks).ThenInclude(ob => ob.Order).Include(ba => ba.Author).Where(ba => ba.Book.OrderBooks.Any(ob => ob.Order.Payment_status == true)).AsEnumerable()
-            .GroupBy(ba => ba.Author).Select(g => new { Name = g.Key.Name, Surname = g.Key.Surname, TotalSold = g.SelectMany(ba => ba.Book.OrderBooks).Sum(ob => ob.Order.Quantity) }).OrderByDescending(a => a.TotalSold).Take(1);
+            var BookAuthor = bookstoreDBContext.BookAuthors.
+                Include(ba => ba.Book).
+                    ThenInclude(b => b.OrderBooks).
+                        ThenInclude(ob => ob.Order).
+                            Include(ba => ba.Author).
+                                Where(ba => ba.Book.OrderBooks.Any(ob => ob.Order.Payment_status == true)).AsEnumerable()
+                                    .GroupBy(ba => ba.Author).Select(g => new 
+                                    { 
+                                        Name = g.Key.Name, 
+                                        Surname = g.Key.Surname, 
+                                        TotalSold = g.SelectMany(ba => ba.Book.OrderBooks).Sum(ob => ob.Order.Quantity) 
+                                    }).Where(a => a.TotalSold > 0).OrderByDescending(a => a.TotalSold).Take(5);
             ff.AddRange(BookAuthor);
             model.AddCDGMPAuthor(ff);
         }
         //MOst popular Authors
         //MOst popular Genre
         private void MostgenresBooks_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            RefreshMostgenresBooks();
+        }
+
+        private void RefreshMostgenresBooks()
         {
             List<object> ff = new List<object>();
 
@@ -210,13 +260,14 @@ namespace Bookstore_visually
                 ThenInclude(bg => bg.Book)
                     .ThenInclude(b => b.OrderBooks)
                         .ThenInclude(ob => ob.Order)
-                .AsEnumerable()
-                .Select(g => new { Genre = g.Name,
-                    TotalSold = g.BookGenres.SelectMany(bg => bg.Book.OrderBooks).Where(ob => ob.Order.Payment_status == true)
-                    .Sum(ob => ob.Order.Quantity)
-                })
-                .OrderByDescending(g => g.TotalSold)
-                .Take(1);
+                            .AsEnumerable().Select(g => new 
+                            {
+                                Genre = g.Name,
+                                TotalSold = g.BookGenres.
+                                    SelectMany(bg => bg.Book.OrderBooks).
+                                        Where(ob => ob.Order.Payment_status == true)
+                                            .Sum(ob => ob.Order.Quantity)
+                            }).Where(g => g.TotalSold > 0).OrderByDescending(g => g.TotalSold).Take(5);
             ff.AddRange(genre);
             model.AddCDGMPGenre(ff);
         }
@@ -288,7 +339,6 @@ namespace Bookstore_visually
                                 bookstoreDBContext.SaveChanges();
                             }
 
-                            OrderBooksDataGrid.ItemsSource = repository.GetAll().ToList();
 
                             int latestOrder = bookstoreDBContext.Orders.OrderByDescending(o => o.Id).Select(o=> o.Id).FirstOrDefault();
                             OrderBook neworderbook =
@@ -301,6 +351,8 @@ namespace Bookstore_visually
                             };
                             bookstoreDBContext.OrderBooks.Add(neworderbook);
                             bookstoreDBContext.SaveChanges();
+
+                            MessageBox.Show("Order added");
                         }
                         else
                         {
@@ -321,14 +373,10 @@ namespace Bookstore_visually
             {
                 MessageBox.Show("Select a book !");
             }
-            //OrderBooksDataGrid.ItemsSource = bookstoreDBContext.Books.ToList();
-           //OrderBooksDataGrid.ItemsSource = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.Genre).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
            RefreshOrderBooks();
            RefreshOrderDG();
-        }
-
-      
-        
+           RefreshBook();
+        } 
 
         private void Payment_ButtonClick(object sender, RoutedEventArgs e)
         {
@@ -339,6 +387,7 @@ namespace Bookstore_visually
                 Order order = bookstoreDBContext.Orders.FirstOrDefault(b => b.Id == id);
 
                 var dbEntry = bookstoreDBContext.Orders.FirstOrDefault(x => x.Id == order.Id);
+                var dbClient = bookstoreDBContext.Clients.FirstOrDefault(c => c.CredentialsId == dbEntry.ClientId);
 
                 if (dbEntry != null)
                 {
@@ -349,10 +398,12 @@ namespace Bookstore_visually
                         action = "pay",
                         amount = dbEntry.Price,
                         currency = "UAH",
-                        description = "Pay book whit order " + dbEntry.Id,
+                        description = "Pay book whit order " + dbEntry.Id + $",Client phone: ({dbClient.PhoneNumber})",
                         order_id = dbEntry.Id,
                         language = "uk",
-                        paytypes = ""
+                        paytypes = "",
+                        phone = dbClient.PhoneNumber
+
                     };
                     string data = System.Text.Json.JsonSerializer.Serialize(Order);
                     string data64 = LiqyPayHelper.CreateData(data); 
@@ -379,6 +430,9 @@ namespace Bookstore_visually
         {
             this.IsEnabled = true;
             RefreshOrderDG();
+            RefreshMostgenresBooks();
+            RefreshMostAuthorBooks();
+            RefreshMostSoldBooks();
         }
 
         private void Update_ButtonClick(object sender, RoutedEventArgs e)
@@ -388,8 +442,19 @@ namespace Bookstore_visually
 
         private void RefreshReserverBook()
         {
-            ReservDataGrid.ItemsSource = bookstoreDBContext.Reservations.Include(r => r.Client).Include(r => r.Book).Where(r => r.ClientId == idClient).Select(r => new { Id=r.Id, ClientName = r.Client.Name, 
-                BookTitle = r.Book.Title,ReservationDate = r.ReservationDate, CheckOutDate = r.CheckoutDate,DueDate = r.ReturnDate,IsReturned = r.IsReturned}).ToList();
+            ReservDataGrid.ItemsSource = bookstoreDBContext.Reservations.
+                Include(r => r.Client).
+                    Include(r => r.Book).
+                        Where(r => r.ClientId == idClient).Select(r => new 
+                        {
+                            Id=r.Id, 
+                            ClientName = r.Client.Name, 
+                            BookTitle = r.Book.Title,
+                            ReservationDate = r.ReservationDate.ToShortDateString(), 
+                            CheckOutDate = r.CheckoutDate.ToShortDateString(),
+                            ReturnDate = r.ReturnDate.ToShortDateString(),
+                            IsReturned = r.IsReturned
+                        }).ToList();
         }
 
         private void CloseWind(object sender, RoutedEventArgs e)
@@ -462,6 +527,81 @@ namespace Bookstore_visually
             List<int> numbers = Enumerable.Range(0, 1000).ToList();
             Quantity_Book.ItemsSource = numbers;
 
+        }
+
+        private void DeleteOrder_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (OrderDataGrid.SelectedItem != null)
+            {
+                var selectedRow = (dynamic)OrderDataGrid.SelectedItem;
+                int id = selectedRow.Id;
+                var order = bookstoreDBContext.Orders.Where(o => o.Id == id).FirstOrDefault();
+                if (order.Payment_status != true)
+                {
+                    bookstoreDBContext.Remove(order);
+                    var orderb = bookstoreDBContext.OrderBooks.FirstOrDefault(o => o.OrderId == order.Id);
+                    var book = bookstoreDBContext.Books.Where(b => b.Id == orderb.BookId).FirstOrDefault();
+                    bookstoreDBContext.OrderBooks.Remove(orderb);
+                    bookstoreDBContext.SaveChanges();
+
+                    book.Quantity += (int)order.Quantity;
+                    bookstoreDBContext.Update(book);
+                    bookstoreDBContext.SaveChanges();
+
+                    RefreshOrderDG();
+                    RefreshBook();
+                    RefreshOrderBooks();
+                }
+                else
+                {
+                    MessageBox.Show("This order has already been paid for!");
+                }
+            }
+           
+        }
+
+        private void DeleteReservbook_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (ReservDataGrid.SelectedItem != null)
+            {
+                var selectedRow = (dynamic)ReservDataGrid.SelectedItem;
+                int id = selectedRow.Id;
+                var reservation = bookstoreDBContext.Reservations.Where(o => o.Id == id).FirstOrDefault();
+                if (reservation.IsReturned != true && reservation.CheckoutDate.Year <= 1)
+                {
+                    bookstoreDBContext.Remove(reservation);
+                    bookstoreDBContext.SaveChanges();
+                    var book = bookstoreDBContext.Books.Where(b => b.Id == reservation.BookId).FirstOrDefault();
+                    book.Quantity++;
+                    bookstoreDBContext.Update(book);
+                    bookstoreDBContext.SaveChanges();
+                    RefreshReserverBook();
+                    RefreshBook();
+                    RefreshOrderBooks();
+                }
+                else
+                {
+                    MessageBox.Show("You have taken the book, so it is not possible to remove the reservation!");
+                }
+            }
+        }
+
+        private void Help_Button(object sender, RoutedEventArgs e)
+        {
+            string url = "https://docs.google.com/document/d/1sQKBGx-NLaHek8adIyP6l707hsCWU9U_f0UxksTkG5g/edit?usp=sharing";
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

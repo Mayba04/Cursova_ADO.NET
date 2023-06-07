@@ -27,8 +27,8 @@
                     <StackPanel>
 
                         <Button Content="Darkmode On/Off" x:Name="themeToggle" Click="toggleTheme"  Margin="0 8 0 0"></Button>
-                        <Button ToolTip="Having Trouble Logging In" Margin="0 8 0 0" Content="Help Me"/>
-                        <Button x:Name="btn_Exit" ToolTip="Close" Margin="0 8 0 0" Content="Exit" Click="exitApp"/>
+                        <Button Margin="0 8 0 0" Content="Help Me" Click="Help_Button"/>
+                        <Button x:Name="btn_Exit" ToolTip="Exit" Margin="0 8 0 0" Content="Exit" Click="exitApp"/>
                     </StackPanel>
                 </materialDesign:PopupBox>
 

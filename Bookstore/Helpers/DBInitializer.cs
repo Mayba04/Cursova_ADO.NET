@@ -206,6 +206,7 @@ namespace Bookstore.Helpers
                     Password = "Admin123",
                     Name = "Pavlo",
                     Email = "pashamyba7@gmail.com",
+                    PhoneNumber = "+38012345678",
                     Status_Admin = true,
                 }
 
@@ -220,14 +221,15 @@ namespace Bookstore.Helpers
                 {
                     CredentialsId = 1,
                     Name = "John Doe",
-                    Email = "john.doe@example.com"
-
+                    Email = "john.doe@example.com",
+                    PhoneNumber = "+380111111111",
                 },
                 new Client
                 {
                     CredentialsId = 2,
                     Name = "Jane Smith",
-                    Email = "jane.smith@example.com"
+                    Email = "jane.smith@example.com",
+                    PhoneNumber = "+38022222222",
                 }     
             );
         }
@@ -265,13 +267,13 @@ namespace Bookstore.Helpers
         {
             modelBuilder.Entity<Photo>().HasData(new Photo[]
             {
-                new Photo() {Id = 1, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\images.png"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\images.png"), BookId=1 },
-                new Photo() {Id = 2, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=2 },
-                new Photo() {Id = 3, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=3 },
-                new Photo() {Id = 4, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=4 },
-                new Photo() {Id = 5, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=5 },
-                new Photo() {Id = 6, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=6 },
-                new Photo() {Id = 7, Name = Path.GetFileName("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("D:\\ШАГ\\ADO.NET\\Cursova_ADO.NET\\Bookstore\\Image\\genericBookCover.jpg"), BookId=7 },
+                new Photo() {Id = 1, Name = Path.GetFileName("Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("Image\\genericBookCover.jpg"), BookId=1 },
+                new Photo() {Id = 2, Name = Path.GetFileName("Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("Image\\genericBookCover.jpg"), BookId=2 },
+                new Photo() {Id = 3, Name = Path.GetFileName("Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("Image\\genericBookCover.jpg"), BookId=3 },
+                new Photo() {Id = 4, Name = Path.GetFileName("Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("Image\\genericBookCover.jpg"), BookId=4 },
+                new Photo() {Id = 5, Name = Path.GetFileName("Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("Image\\genericBookCover.jpg"), BookId=5 },
+                new Photo() {Id = 6, Name = Path.GetFileName("Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("Image\\genericBookCover.jpg"), BookId=6 },
+                new Photo() {Id = 7, Name = Path.GetFileName("Image\\genericBookCover.jpg"), ImageData=File.ReadAllBytes("Image\\genericBookCover.jpg"), BookId=7 },
             
             });
         }

@@ -1,5 +1,6 @@
 ﻿using Bookstore;
 using Bookstore.Entities;
+using Microsoft.VisualBasic.ApplicationServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,7 @@ namespace Bookstore_visually
             PasswordBox.Text = credential.Password;
             NameBox.Text = client.Name;
             EmailBox.Text = client.Email;
+            PhoneTextBox.Text = clientf.PhoneNumber;
             Checked = false;
             RadioBTNTrue.Click += RadioBTNTrue_Click;
             RadioBTNFalse.Click += RadioBTNFalse_Click; ;
@@ -74,7 +76,6 @@ namespace Bookstore_visually
         private void ChangeBtn(object sender, RoutedEventArgs e)
         {
 
-
             if (Checked!=true)
             {
                 if (Audit())
@@ -83,11 +84,12 @@ namespace Bookstore_visually
                     clientf.Name = NameBox.Text;
                     credentialsf.Login = LoginBox.Text;
                     credentialsf.Password = PasswordBox.Text;
-          
+                    clientf.PhoneNumber = PhoneTextBox.Text;
+
                     bookstoreDBContext.Clients.Update(clientf);
                     bookstoreDBContext.Credentials.Update(credentialsf);
                     bookstoreDBContext.SaveChanges();
-                    MessageBox.Show("Changed!");
+                    MessageBox.Show("Saved!");
                 }
             }
             else
@@ -99,11 +101,12 @@ namespace Bookstore_visually
                     admin.Password = PasswordBox.Text;
                     admin.Email = EmailBox.Text;
                     admin.Name = NameBox.Text;
+                    admin.PhoneNumber = PhoneTextBox.Text;
                     bookstoreDBContext.Administrators.Update(admin);
                     bookstoreDBContext.Credentials.Remove(bookstoreDBContext.Credentials.Where(b => b.Id == credentialsf.Id).FirstOrDefault());
                     bookstoreDBContext.Clients.Remove(bookstoreDBContext.Clients.Where(b => b.CredentialsId == clientf.CredentialsId).FirstOrDefault());
                     bookstoreDBContext.SaveChanges();
-                    MessageBox.Show($"Changed! {admin.Login} saved and moved to administration");
+                    MessageBox.Show($"Saved! {admin.Login} saved and moved to administration");
                     this.Close();
                 }
             }           
@@ -167,6 +170,7 @@ namespace Bookstore_visually
                     MessageBox.Show("Enter a valid email address");
                     return false;
                 }
+
                 var user = bookstoreDBContext.Clients.FirstOrDefault(x => x.Email == EmailBox.Text);
                 var user2 = bookstoreDBContext.Administrators.FirstOrDefault(x => x.Email == EmailBox.Text);
                 if (user != null || user2 != null)
@@ -187,6 +191,32 @@ namespace Bookstore_visually
                 MessageBox.Show("Name should start with an uppercase letter and contain 4 to 20 characters (letters, numbers, spaces, dashes, underscores).");
                 return false;
             }
+
+
+            if (string.IsNullOrEmpty(PhoneTextBox.Text))
+            {
+                MessageBox.Show("Enter your Phone");
+                return false;
+            }
+
+
+            if (!ValidatePhone(PhoneTextBox.Text))
+            {
+                MessageBox.Show("The phone number is incorrect, example: +380123456789");
+                return false;
+            }
+
+            if (clientf.PhoneNumber != PhoneTextBox.Text)
+            {
+                var phone = bookstoreDBContext.Clients.FirstOrDefault(x => x.PhoneNumber == PhoneTextBox.Text);
+                var phone2 = bookstoreDBContext.Administrators.FirstOrDefault(x => x.PhoneNumber == PhoneTextBox.Text);
+                if (phone != null || phone2 != null)
+                {
+                    MessageBox.Show("A user with this phone number already exists");
+                    return false;
+                }
+            }
+           
 
             return true;
         }
@@ -222,6 +252,12 @@ namespace Bookstore_visually
             return true;
         }
 
+        private bool ValidatePhone(string phone)
+        {
+            Regex regex = new Regex(@"^\+380\d{9}$");
+            return regex.IsMatch(phone);
+        }
+
 
 
         private void closeWind(object sender, RoutedEventArgs e)
@@ -233,7 +269,6 @@ namespace Bookstore_visually
         {
             this.WindowState = WindowState.Minimized;
         }
-
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {

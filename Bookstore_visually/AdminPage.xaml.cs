@@ -391,7 +391,7 @@ namespace Bookstore_visually
 
         private void RefreshClient()
         {
-            var clientList = bookstoreDBContext.Clients.Include(c => c.Credentials).Select(c => new { CredentialsId = c.CredentialsId, Name = c.Name, Email = c.Email, Login = c.Credentials.Login, Password = c.Credentials.Password }).ToList();
+            var clientList = bookstoreDBContext.Clients.Include(c => c.Credentials).Select(c => new { CredentialsId = c.CredentialsId, Name = c.Name, Email = c.Email, Login = c.Credentials.Login, Password = c.Credentials.Password, Phone = c.PhoneNumber }).ToList();
             AdminCC.ItemsSource = clientList;
         }
 
@@ -617,7 +617,7 @@ namespace Bookstore_visually
 
         private void RefreshAdministrators()
         {
-            AdminDG.ItemsSource = bookstoreDBContext.Administrators.Select(a => new { Id = a.Id, Name = a.Name, Email = a.Email }).ToList();
+            AdminDG.ItemsSource = bookstoreDBContext.Administrators.Select(a => new { Id = a.Id, Name = a.Name, Email = a.Email, Phone = a.PhoneNumber }).ToList();
         }
 
         private void DeleteAdministratorBTN(object sender, RoutedEventArgs e)

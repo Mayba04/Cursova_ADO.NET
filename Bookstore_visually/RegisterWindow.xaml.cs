@@ -117,6 +117,7 @@ namespace Bookstore_visually
             CreateAccount.IsEnabled = true;
             NameTextBox.IsEnabled = true;
             EmailTextBox.IsEnabled = true;
+            PhoneTextBox.IsEnabled = true;
         }
 
         private bool IsPasswordValid(string password)
@@ -149,8 +150,14 @@ namespace Bookstore_visually
 
             return true;
         }
+        
+        private bool ValidatePhone(string phone)
+        {
+            Regex regex = new Regex(@"^\+380\d{9}$");
+            return regex.IsMatch(phone); 
+        }
 
-        private void CreateAccount_Click(object sender, RoutedEventArgs e)
+    private void CreateAccount_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(EmailTextBox.Text))
             {
@@ -184,12 +191,34 @@ namespace Bookstore_visually
                 return;
             }
 
+            if (string.IsNullOrEmpty(PhoneTextBox.Text))
+            {
+                MessageBox.Show("Enter your Phone");
+                return;
+            }
+
+
+            if (!ValidatePhone(PhoneTextBox.Text))
+            {
+                MessageBox.Show("The phone number is incorrect, example: +380123456789");
+                return;
+            }
+
+            var phone = bookstoreDBContext.Clients.FirstOrDefault(x => x.PhoneNumber == PhoneTextBox.Text);
+            var phone2 = bookstoreDBContext.Administrators.FirstOrDefault(x => x.PhoneNumber == PhoneTextBox.Text);
+            if (phone != null || phone2 != null)
+            {
+                MessageBox.Show("A user with this phone number already exists");
+                return;
+            }
+
             var latestCredentials = bookstoreDBContext.Credentials.OrderByDescending(c => c.Id).FirstOrDefault();
             var newClient = new Client
             {
                 CredentialsId = latestCredentials.Id,
                 Name = NameTextBox.Text,
                 Email = EmailTextBox.Text,
+                PhoneNumber = PhoneTextBox.Text
             };
 
             bookstoreDBContext.Clients.Add(newClient);

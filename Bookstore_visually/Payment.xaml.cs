@@ -77,14 +77,8 @@ namespace Bookstore_visually
 
             //Delegate SourceChanged event
             WebView.SourceChanged += UrlChange;
-            WebView.DataContextChanged += WebView_DataContextChanged; 
-          
         }
 
-        private void WebView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         //source change event delegate
         void UrlChange(object sender, EventArgs e)

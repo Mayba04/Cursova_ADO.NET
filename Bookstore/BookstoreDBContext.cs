@@ -1,6 +1,8 @@
 ﻿using Bookstore.Entities;
 using Bookstore.Helpers;
 using Microsoft.EntityFrameworkCore;
+
+using Microsoft.IdentityModel.Protocols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,16 +31,8 @@ namespace Bookstore
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlServer(@"Data Source =DESKTOP-2SQGFV4\SQLEXPRESS;
-                                        Initial Catalog = BookstoreDB1.1;
-                                        Integrated Security = True; 
-                                        Connect Timeout = 30; Encrypt = False;
-                                        TrustServerCertificate = False;
-                                        ApplicationIntent = ReadWrite;
-                                        MultiSubnetFailover = False;");
-            //BookstoreDB.mssql.somee.com
-            //Integrated Security = False;
-            //User ID = PashaMayba_SQLLogin_1; Password = lbfic9ljyq;
+            string DatbaseLine = Config.Databaseline1;
+            optionsBuilder.UseSqlServer($@"{DatbaseLine}");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

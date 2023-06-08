@@ -1135,7 +1135,7 @@ namespace Bookstore.Helpers
                 new BookAuthor() {BookId = 47, AuthorId = 44},
                 new BookAuthor() {BookId = 48, AuthorId = 45},
                 new BookAuthor() {BookId = 49, AuthorId = 46},
-                //new BookAuthor() {BookId = 50, AuthorId = 47},
+                new BookAuthor() {BookId = 50, AuthorId = 47},
                 //new BookAuthor() {BookId = 51, AuthorId = 48},
                 //new BookAuthor() {BookId = 52, AuthorId = 49},
                 //new BookAuthor() {BookId = 53, AuthorId = 50},
@@ -1222,7 +1222,7 @@ namespace Bookstore.Helpers
                 new BookGenre() {BookId = 47, GenreId = 18},
                 new BookGenre() {BookId = 48, GenreId = 13},
                 new BookGenre() {BookId = 49, GenreId = 4},
-                //new BookGenre() {BookId = 50, GenreId = 3},
+                new BookGenre() {BookId = 50, GenreId = 3},
                 //new BookGenre() {BookId = 51, GenreId = 17},
                 //new BookGenre() {BookId = 52, GenreId = 19},
                 //new BookGenre() {BookId = 53, GenreId = 4},
@@ -1262,14 +1262,14 @@ namespace Bookstore.Helpers
                 new Credentials
                 {
                     Id = 1,
-                    Login = "user1",
-                    Password = "password1"
+                    Login = "User1",
+                    Password = "Password1"
                 },
                 new Credentials
                 {
                     Id = 2,
-                    Login = "user2",
-                    Password = "password2"
+                    Login = "User2",
+                    Password = "Password2"
                 }
                
             );
@@ -1308,7 +1308,7 @@ namespace Bookstore.Helpers
                     CredentialsId = 2,
                     Name = "Jane Smith",
                     Email = "jane.smith@example.com",
-                    PhoneNumber = "+38022222222",
+                    PhoneNumber = "+380222222222",
                 }     
             );
         }
@@ -1317,9 +1317,11 @@ namespace Bookstore.Helpers
         {
             modelBuilder.Entity<Order>().HasData(
 
-            new Order { Id = 1, Date = DateTime.Now, ClientId = 1, Price = 15.99m, Quantity = 1, Payment_status = false },
-            new Order { Id = 2, Date = DateTime.Now, ClientId = 2, Price = 10.99m, Quantity = 1, Payment_status = false },
-            new Order { Id = 3, Date = DateTime.Now, ClientId = 2, Price = 19.99m, Quantity = 1, Payment_status = false }
+            new Order { Id = 1, Date = DateTime.Now, ClientId = 1, Price = 15.99m, Quantity = 1, Payment_status = true },
+            new Order { Id = 2, Date = DateTime.Now, ClientId = 2, Price = 10.99m, Quantity = 1, Payment_status = true },
+            new Order { Id = 3, Date = DateTime.Now, ClientId = 2, Price = 19.99m, Quantity = 1, Payment_status = true },
+            new Order { Id = 4, Date = DateTime.Now, ClientId = 1, Price = 8.99m, Quantity = 1, Payment_status = true },
+            new Order { Id = 5, Date = DateTime.Now, ClientId = 1, Price = 6.99m, Quantity = 1, Payment_status = true }
             ); ;
         }
 
@@ -1328,11 +1330,13 @@ namespace Bookstore.Helpers
             modelBuilder.Entity<OrderBook>().HasData(
         
             new OrderBook { OrderId = 1, BookId = 6  },
-            new OrderBook { OrderId = 2, BookId = 2 },
-            new OrderBook { OrderId = 2, BookId = 3 }
+            new OrderBook { OrderId = 2, BookId = 3 },
+            new OrderBook { OrderId = 3, BookId = 2 },
+            new OrderBook { OrderId = 4, BookId = 4 },
+            new OrderBook { OrderId = 5, BookId = 5 }
             );
         }
-
+        
         public static void SeedComments (this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Comment>().HasData(new Comment[]

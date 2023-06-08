@@ -29,14 +29,14 @@ namespace Bookstore {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Config() {
+        public Config() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Bookstore.Config", typeof(Config).Assembly);
@@ -57,6 +57,24 @@ namespace Bookstore {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Data Source = BookstoreDB1.mssql.somee.com; Integrated Security = False; User ID = PashaMayba_SQLLogin_1; Password = lbfic9ljyq; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False;.
+        /// </summary>
+        public static string DataBaseLine {
+            get {
+                return ResourceManager.GetString("DataBaseLine", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Data Source =DESKTOP-2SQGFV4\SQLEXPRESS; Initial Catalog = BookstoreDB1.1; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False;.
+        /// </summary>
+        public static string Databaseline1 {
+            get {
+                return ResourceManager.GetString("Databaseline1", resourceCulture);
             }
         }
 

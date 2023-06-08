@@ -4,14 +4,16 @@ using Bookstore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bookstore.Migrations
 {
     [DbContext(typeof(BookstoreDBContext))]
-    partial class BookstoreDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230608152207_DBHost2")]
+    partial class DBHost2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1621,7 +1623,7 @@ namespace Bookstore.Migrations
                             Id = 1,
                             BookId = 1,
                             ClientId = 1,
-                            CreatedAt = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(5381),
+                            CreatedAt = new DateTime(2023, 6, 8, 18, 22, 6, 653, DateTimeKind.Local).AddTicks(6820),
                             Text = "Very cool book"
                         },
                         new
@@ -1629,7 +1631,7 @@ namespace Bookstore.Migrations
                             Id = 2,
                             BookId = 2,
                             ClientId = 2,
-                            CreatedAt = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(5626),
+                            CreatedAt = new DateTime(2023, 6, 8, 18, 22, 6, 653, DateTimeKind.Local).AddTicks(7196),
                             Text = "I advise you to read it"
                         });
                 });
@@ -1830,8 +1832,8 @@ namespace Bookstore.Migrations
                         {
                             Id = 1,
                             ClientId = 1,
-                            Date = new DateTime(2023, 6, 8, 18, 33, 32, 896, DateTimeKind.Local).AddTicks(465),
-                            Payment_status = true,
+                            Date = new DateTime(2023, 6, 8, 18, 22, 6, 651, DateTimeKind.Local).AddTicks(2535),
+                            Payment_status = false,
                             Price = 15.99m,
                             Quantity = 1
                         },
@@ -1839,8 +1841,8 @@ namespace Bookstore.Migrations
                         {
                             Id = 2,
                             ClientId = 2,
-                            Date = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(709),
-                            Payment_status = true,
+                            Date = new DateTime(2023, 6, 8, 18, 22, 6, 653, DateTimeKind.Local).AddTicks(2424),
+                            Payment_status = false,
                             Price = 10.99m,
                             Quantity = 1
                         },
@@ -1848,27 +1850,9 @@ namespace Bookstore.Migrations
                         {
                             Id = 3,
                             ClientId = 2,
-                            Date = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(731),
-                            Payment_status = true,
+                            Date = new DateTime(2023, 6, 8, 18, 22, 6, 653, DateTimeKind.Local).AddTicks(2445),
+                            Payment_status = false,
                             Price = 19.99m,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ClientId = 1,
-                            Date = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(734),
-                            Payment_status = true,
-                            Price = 8.99m,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ClientId = 1,
-                            Date = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(736),
-                            Payment_status = true,
-                            Price = 6.99m,
                             Quantity = 1
                         });
                 });
@@ -1896,22 +1880,12 @@ namespace Bookstore.Migrations
                         new
                         {
                             OrderId = 2,
-                            BookId = 3
-                        },
-                        new
-                        {
-                            OrderId = 3,
                             BookId = 2
                         },
                         new
                         {
-                            OrderId = 4,
-                            BookId = 4
-                        },
-                        new
-                        {
-                            OrderId = 5,
-                            BookId = 5
+                            OrderId = 2,
+                            BookId = 3
                         });
                 });
 

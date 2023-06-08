@@ -380,50 +380,54 @@ namespace Bookstore_visually
 
         private void Payment_ButtonClick(object sender, RoutedEventArgs e)
         {
-            var selectedRow = (dynamic)OrderDataGrid.SelectedItem;
-            int id = selectedRow.Id;
-            if (selectedRow.Payment_status != true)
+            if (OrderDataGrid.SelectedItem != null)
             {
-                Order order = bookstoreDBContext.Orders.FirstOrDefault(b => b.Id == id);
-
-                var dbEntry = bookstoreDBContext.Orders.FirstOrDefault(x => x.Id == order.Id);
-                var dbClient = bookstoreDBContext.Clients.FirstOrDefault(c => c.CredentialsId == dbEntry.ClientId);
-
-                if (dbEntry != null)
+                var selectedRow = (dynamic)OrderDataGrid.SelectedItem;
+                int id = selectedRow.Id;
+                if (selectedRow.Payment_status != true)
                 {
-                    var Order = new
+                    Order order = bookstoreDBContext.Orders.FirstOrDefault(b => b.Id == id);
+
+                    var dbEntry = bookstoreDBContext.Orders.FirstOrDefault(x => x.Id == order.Id);
+                    var dbClient = bookstoreDBContext.Clients.FirstOrDefault(c => c.CredentialsId == dbEntry.ClientId);
+
+                    if (dbEntry != null)
                     {
-                        version = 3,
-                        public_key = Config.LiqyPublicKey,
-                        action = "pay",
-                        amount = dbEntry.Price,
-                        currency = "UAH",
-                        description = "Pay book whit order " + dbEntry.Id + $",Client phone: ({dbClient.PhoneNumber})",
-                        order_id = dbEntry.Id,
-                        language = "uk",
-                        paytypes = "",
-                        phone = dbClient.PhoneNumber
+                        var Order = new
+                        {
+                            version = 3,
+                            public_key = Config.LiqyPublicKey,
+                            action = "pay",
+                            amount = dbEntry.Price,
+                            currency = "UAH",
+                            description = "Pay book whit order " + dbEntry.Id + $",Client phone: ({dbClient.PhoneNumber})",
+                            order_id = dbEntry.Id,
+                            language = "uk",
+                            paytypes = "",
+                            phone = dbClient.PhoneNumber
 
-                    };
-                    string data = System.Text.Json.JsonSerializer.Serialize(Order);
-                    string data64 = LiqyPayHelper.CreateData(data); 
-                    string privateKey = Bookstore.Config.LiqypayPrivateKey;
+                        };
+                        string data = System.Text.Json.JsonSerializer.Serialize(Order);
+                        string data64 = LiqyPayHelper.CreateData(data);
+                        string privateKey = Bookstore.Config.LiqypayPrivateKey;
 
-                    string signature_sourse = privateKey + data64 + privateKey;
-                    var sha1 = SHA1.Create();
-                    string signature = LiqyPayHelper.CreateSign(data64, privateKey);
-                    Payment payment = new Payment();
-                    this.IsEnabled = false;
-                    payment.Closed += Payment_Closed;
-                    payment.Show();
-                    payment.StartWebResourceRequest(Config.LiqyPatCheckoutURl, data64, signature);
+                        string signature_sourse = privateKey + data64 + privateKey;
+                        var sha1 = SHA1.Create();
+                        string signature = LiqyPayHelper.CreateSign(data64, privateKey);
+                        Payment payment = new Payment();
+                        this.IsEnabled = false;
+                        payment.Closed += Payment_Closed;
+                        payment.Show();
+                        payment.StartWebResourceRequest(Config.LiqyPatCheckoutURl, data64, signature);
+                    }
+                    else { MessageBox.Show("Not selected order"); }
                 }
-                else { MessageBox.Show("Not selected order"); }
+                else
+                {
+                    MessageBox.Show("The book has already been paid for");
+                }
             }
-            else
-            {
-                MessageBox.Show("The book has already been paid for");
-            }
+           
         }
 
         private void Payment_Closed(object? sender, EventArgs e)
@@ -536,7 +540,7 @@ namespace Bookstore_visually
                 var selectedRow = (dynamic)OrderDataGrid.SelectedItem;
                 int id = selectedRow.Id;
                 var order = bookstoreDBContext.Orders.Where(o => o.Id == id).FirstOrDefault();
-                if (order.Payment_status != true)
+                if (order.Payment_status != true && selectedRow.Payment_status != true)
                 {
                     bookstoreDBContext.Remove(order);
                     var orderb = bookstoreDBContext.OrderBooks.FirstOrDefault(o => o.OrderId == order.Id);

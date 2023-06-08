@@ -4,14 +4,16 @@ using Bookstore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bookstore.Migrations
 {
     [DbContext(typeof(BookstoreDBContext))]
-    partial class BookstoreDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230608142449_DBHost")]
+    partial class DBHost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1269,11 +1271,6 @@ namespace Bookstore.Migrations
                         {
                             AuthorId = 46,
                             BookId = 49
-                        },
-                        new
-                        {
-                            AuthorId = 47,
-                            BookId = 50
                         });
                 });
 
@@ -1536,11 +1533,6 @@ namespace Bookstore.Migrations
                         {
                             GenreId = 4,
                             BookId = 49
-                        },
-                        new
-                        {
-                            GenreId = 3,
-                            BookId = 50
                         });
                 });
 
@@ -1584,7 +1576,7 @@ namespace Bookstore.Migrations
                             CredentialsId = 2,
                             Email = "jane.smith@example.com",
                             Name = "Jane Smith",
-                            PhoneNumber = "+380222222222"
+                            PhoneNumber = "+38022222222"
                         });
                 });
 
@@ -1621,7 +1613,7 @@ namespace Bookstore.Migrations
                             Id = 1,
                             BookId = 1,
                             ClientId = 1,
-                            CreatedAt = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(5381),
+                            CreatedAt = new DateTime(2023, 6, 8, 17, 24, 48, 740, DateTimeKind.Local).AddTicks(5445),
                             Text = "Very cool book"
                         },
                         new
@@ -1629,7 +1621,7 @@ namespace Bookstore.Migrations
                             Id = 2,
                             BookId = 2,
                             ClientId = 2,
-                            CreatedAt = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(5626),
+                            CreatedAt = new DateTime(2023, 6, 8, 17, 24, 48, 740, DateTimeKind.Local).AddTicks(5668),
                             Text = "I advise you to read it"
                         });
                 });
@@ -1658,14 +1650,14 @@ namespace Bookstore.Migrations
                         new
                         {
                             Id = 1,
-                            Login = "User1",
-                            Password = "Password1"
+                            Login = "user1",
+                            Password = "password1"
                         },
                         new
                         {
                             Id = 2,
-                            Login = "User2",
-                            Password = "Password2"
+                            Login = "user2",
+                            Password = "password2"
                         });
                 });
 
@@ -1830,8 +1822,8 @@ namespace Bookstore.Migrations
                         {
                             Id = 1,
                             ClientId = 1,
-                            Date = new DateTime(2023, 6, 8, 18, 33, 32, 896, DateTimeKind.Local).AddTicks(465),
-                            Payment_status = true,
+                            Date = new DateTime(2023, 6, 8, 17, 24, 48, 736, DateTimeKind.Local).AddTicks(7386),
+                            Payment_status = false,
                             Price = 15.99m,
                             Quantity = 1
                         },
@@ -1839,8 +1831,8 @@ namespace Bookstore.Migrations
                         {
                             Id = 2,
                             ClientId = 2,
-                            Date = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(709),
-                            Payment_status = true,
+                            Date = new DateTime(2023, 6, 8, 17, 24, 48, 739, DateTimeKind.Local).AddTicks(9391),
+                            Payment_status = false,
                             Price = 10.99m,
                             Quantity = 1
                         },
@@ -1848,27 +1840,9 @@ namespace Bookstore.Migrations
                         {
                             Id = 3,
                             ClientId = 2,
-                            Date = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(731),
-                            Payment_status = true,
+                            Date = new DateTime(2023, 6, 8, 17, 24, 48, 739, DateTimeKind.Local).AddTicks(9413),
+                            Payment_status = false,
                             Price = 19.99m,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ClientId = 1,
-                            Date = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(734),
-                            Payment_status = true,
-                            Price = 8.99m,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ClientId = 1,
-                            Date = new DateTime(2023, 6, 8, 18, 33, 32, 898, DateTimeKind.Local).AddTicks(736),
-                            Payment_status = true,
-                            Price = 6.99m,
                             Quantity = 1
                         });
                 });
@@ -1896,22 +1870,12 @@ namespace Bookstore.Migrations
                         new
                         {
                             OrderId = 2,
-                            BookId = 3
-                        },
-                        new
-                        {
-                            OrderId = 3,
                             BookId = 2
                         },
                         new
                         {
-                            OrderId = 4,
-                            BookId = 4
-                        },
-                        new
-                        {
-                            OrderId = 5,
-                            BookId = 5
+                            OrderId = 2,
+                            BookId = 3
                         });
                 });
 

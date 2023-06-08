@@ -45,7 +45,7 @@ namespace Bookstore
         {
             modelBuilder.Entity<Genre>().HasKey(g => g.Id);
             modelBuilder.Entity<Genre>().Property(g => g.Name).IsRequired();
-            modelBuilder.Entity<Genre>().HasIndex(g => g.Name).IsUnique();
+            //modelBuilder.Entity<Genre>().HasIndex(g => g.Name).IsUnique();
 
             modelBuilder.Entity<Book>().HasKey(b => b.Id);
             modelBuilder.Entity<Book>().Property(b => b.Title).IsRequired();
@@ -92,6 +92,7 @@ namespace Bookstore
             modelBuilder.SeedGenres();
             modelBuilder.SeedAuthors();
             modelBuilder.SeedBooks();
+            modelBuilder.SeedBookGenres();
             modelBuilder.SeedBookAuthors();
             modelBuilder.SeedCredentials();
             modelBuilder.SeedClients();
@@ -100,7 +101,7 @@ namespace Bookstore
             modelBuilder.SeedComments();
             modelBuilder.SeedPhoto();
             modelBuilder.SeedAdmin();
-            modelBuilder.SeedBookGenres();
+            
 
         }
 

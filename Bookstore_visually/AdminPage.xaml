@@ -95,7 +95,7 @@
                                 <materialDesign:PackIcon Kind="Pencil" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Button>
                         </StackPanel>
-                        <DataGrid Name="AdminCC" Margin="10" IsReadOnly="False" ></DataGrid>
+                        <DataGrid Name="AdminCC" Height="350" Margin="10" IsReadOnly="False" ></DataGrid>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Book" HorizontalAlignment="Left" >
@@ -121,7 +121,7 @@
                             </Button>
 
                         </StackPanel>
-                        <DataGrid Name="dataGrid" Margin="10" IsReadOnly="False"></DataGrid>
+                        <DataGrid Name="dataGrid" Height="350" Margin="10" IsReadOnly="False"></DataGrid>
 
                         <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" >
                             <materialDesign:Card VerticalAlignment="Center" Margin="25,5,25,5" Height="176" Width="350">
@@ -168,7 +168,7 @@
                                 <materialDesign:PackIcon Kind="PlusBox" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Button>
                         </StackPanel>
-                        <DataGrid x:Name="AdminAuthor" Margin="10"></DataGrid>
+                        <DataGrid x:Name="AdminAuthor" Height="350" Margin="10"></DataGrid>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Genre" HorizontalAlignment="Left" >
@@ -184,7 +184,7 @@
                                 <materialDesign:PackIcon Kind="PlusBox"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Button>
                         </StackPanel>
-                        <DataGrid x:Name="GenreDG" Margin="10"></DataGrid>
+                        <DataGrid x:Name="GenreDG" Height="350" Margin="10"></DataGrid>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Administrators" HorizontalAlignment="Left" >
@@ -197,7 +197,7 @@
                                 <materialDesign:PackIcon Kind="Refresh"  Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Button>
                         </StackPanel>
-                        <DataGrid x:Name="AdminDG" Margin="10"></DataGrid>
+                        <DataGrid x:Name="AdminDG" Height="350" Margin="10"></DataGrid>
                     </StackPanel>
                 </TabItem>
             </TabControl>

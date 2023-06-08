@@ -44,9 +44,9 @@
                     </Button>
                 </StackPanel>
             </Grid>
-          
 
-            <Image Margin="0 60 0 5" Source="logo.png" Height="100"/>
+
+            <Image Margin="0 60 0 5" Source="Image\logo.png" Height="100"/>
             <TextBlock Margin="0 25 0 5" HorizontalAlignment="Center" FontSize="25" FontWeight="Bold" Text="Welcom Back!"/>
 
             <TextBlock FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" 

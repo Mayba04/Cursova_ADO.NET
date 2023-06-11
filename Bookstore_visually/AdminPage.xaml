@@ -48,7 +48,7 @@
             </Grid>
             
             <TabControl TabStripPlacement="Left" >
-                <TabItem Header="Order" HorizontalAlignment="Left">
+                <TabItem Header="All Order" HorizontalAlignment="Left">
                     <TabControl>
                         <TabItem Header="Order">
                             <StackPanel>
@@ -198,6 +198,45 @@
                             </Button>
                         </StackPanel>
                         <DataGrid x:Name="AdminDG" Height="550" Margin="10"></DataGrid>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Settings" HorizontalAlignment="Left">
+                    <StackPanel>
+                        <TextBox Margin="0,15,0,0" x:Name="LoginBox" Width="300" FontSize="14"
+                       materialDesign:HintAssist.Hint="Login" BorderThickness="2"
+                     BorderBrush="{DynamicResource MaterialDesignDivider}"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     materialDesign:TextFieldAssist.HasClearButton="True"/>
+
+                        <TextBox Margin="0,25,0,0" x:Name="PasswordBox" Width="300" FontSize="14"
+                       materialDesign:HintAssist.Hint="Password" BorderThickness="2"
+                     BorderBrush="{DynamicResource MaterialDesignDivider}"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     materialDesign:TextFieldAssist.HasClearButton="True"/>
+
+                        <TextBox Margin="0,25,0,0" x:Name="EmailBox" Width="300" FontSize="14"
+                       materialDesign:HintAssist.Hint="Email" BorderThickness="2"
+                     BorderBrush="{DynamicResource MaterialDesignDivider}"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     materialDesign:TextFieldAssist.HasClearButton="True"/>
+
+                        <TextBox Margin="0,25,0,0" x:Name="NameBox" Width="300" FontSize="14"
+                       materialDesign:HintAssist.Hint="Name" BorderThickness="2"
+                     BorderBrush="{DynamicResource MaterialDesignDivider}"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     materialDesign:TextFieldAssist.HasClearButton="True"/>
+
+                        <TextBox Margin="0,25,0,0" x:Name="PhoneTextBox" Width="300" FontSize="14"
+                       materialDesign:HintAssist.Hint="Phone" BorderThickness="2"
+                     BorderBrush="{DynamicResource MaterialDesignDivider}"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     materialDesign:TextFieldAssist.HasClearButton="True"
+                     />
+
+                        <Button Margin="5"  Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                    materialDesign:ButtonAssist.CornerRadius="10" Content="Change" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ChangeBtn"></Button>
+
                     </StackPanel>
                 </TabItem>
             </TabControl>

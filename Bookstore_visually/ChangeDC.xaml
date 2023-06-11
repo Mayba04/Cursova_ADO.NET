@@ -51,8 +51,8 @@
                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      materialDesign:TextFieldAssist.HasClearButton="True"/>
 
-            <TextBox Margin="0,25,0,0" x:Name="PhoneTextBox" Width="300" FontSize="18"
-                       materialDesign:HintAssist.Hint="Enter Phone" BorderThickness="2"
+            <TextBox Margin="0,25,0,0" x:Name="PhoneTextBox" Width="300" FontSize="14"
+                       materialDesign:HintAssist.Hint="Phone" BorderThickness="2"
                      BorderBrush="{DynamicResource MaterialDesignDivider}"
                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      materialDesign:TextFieldAssist.HasClearButton="True"

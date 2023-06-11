@@ -140,6 +140,18 @@ namespace Bookstore_visually
                     MessageBox.Show("Login should only contain letters, digits, and underscores");
                     return false;
                 }
+
+                if (credentialsf.Login != LoginBox.Text)
+                {
+                    var sLoginDb = bookstoreDBContext.Credentials.Where(c => c.Login == LoginBox.Text).FirstOrDefault();
+                    var sLoginDb2 = bookstoreDBContext.Administrators.Where(c => c.Login == LoginBox.Text).FirstOrDefault();
+                    if (sLoginDb != null || sLoginDb2 != null)
+                    {
+                        MessageBox.Show("Such a login already exists");
+                        return false;
+                    }
+                }
+
             }
 
             if (credentialsf.Password != PasswordBox.Text)
@@ -156,7 +168,7 @@ namespace Bookstore_visually
                     return false;
                 }
             }
-            ///
+           
             if (clientf.Email != EmailBox.Text)
             {
                 if (string.IsNullOrEmpty(EmailBox.Text))

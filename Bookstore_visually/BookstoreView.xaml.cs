@@ -28,6 +28,7 @@ using System.Windows.Forms;
 using Application = System.Windows.Application;
 using MaterialDesignThemes.Wpf;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Bookstore_visually
 {
@@ -45,6 +46,8 @@ namespace Bookstore_visually
         BookstoreDBContext bookstoreDBContext = new BookstoreDBContext();
         private object Credential_user;
         private int idClient;
+        Credentials credentialsf;
+        Client clientf;
 
         public BookstoreView(object credential)
         {
@@ -53,7 +56,9 @@ namespace Bookstore_visually
             paletteHelper = new PaletteHelper();
             this.DataContext = model;
             Credential_user = credential;
-            idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Client)Credential_user).CredentialsId).Select(c => c.CredentialsId).FirstOrDefault();
+            clientf = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Client)Credential_user).CredentialsId).FirstOrDefault();
+            idClient = clientf.CredentialsId;
+            credentialsf = bookstoreDBContext.Credentials.Where(c => c.Id == idClient).FirstOrDefault();
             RefreshOrderDG();
             RefreshBook();
             RefreshOrderBooks();
@@ -63,6 +68,7 @@ namespace Bookstore_visually
             RefreshMostgenresBooks();
             RefreshMostAuthorBooks();
             RefreshMostSoldBooks();
+            RefreshSetting();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -607,5 +613,187 @@ namespace Bookstore_visually
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
+
+        private void ChangeBtn(object sender, RoutedEventArgs e)
+        {
+            if (Audit())
+            {
+                clientf.Email = EmailBox.Text;
+                clientf.Name = NameBox.Text;
+                credentialsf.Login = LoginBox.Text;
+                credentialsf.Password = PasswordBox.Text;
+                clientf.PhoneNumber = PhoneTextBox.Text;
+
+                bookstoreDBContext.Clients.Update(clientf);
+                bookstoreDBContext.Credentials.Update(credentialsf);
+                bookstoreDBContext.SaveChanges();
+                MessageBox.Show("Saved!");
+            }
+        }
+
+        private void RefreshSetting()
+        {
+            LoginBox.Text = credentialsf.Login;
+            PasswordBox.Text = credentialsf.Password;
+            NameBox.Text = clientf.Name;
+            EmailBox.Text = clientf.Email;
+            PhoneTextBox.Text = clientf.PhoneNumber;
+        }
+
+        private bool Audit()
+        {
+            if (credentialsf.Login != LoginBox.Text)
+            {
+                if (string.IsNullOrEmpty(LoginBox.Text))
+                {
+                    MessageBox.Show("Enter your login");
+                    return false;
+                }
+
+                if (LoginBox.Text.Length < 4 || LoginBox.Text.Length > 20)
+                {
+                    MessageBox.Show("Login should be between 4 and 20 characters long");
+                    return false;
+                }
+
+                if (!char.IsUpper(LoginBox.Text[0]))
+                {
+                    MessageBox.Show("Login should start with an uppercase letter");
+                    return false;
+                }
+
+                if (!LoginBox.Text.All(c => char.IsLetterOrDigit(c) || c == '_'))
+                {
+                    MessageBox.Show("Login should only contain letters, digits, and underscores");
+                    return false;
+                }
+
+                if (credentialsf.Login != LoginBox.Text)
+                {
+                    var sLoginDb = bookstoreDBContext.Credentials.Where(c => c.Login == LoginBox.Text).FirstOrDefault();
+                    var sLoginDb2 = bookstoreDBContext.Administrators.Where(c => c.Login == LoginBox.Text).FirstOrDefault();
+                    if (sLoginDb != null || sLoginDb2 != null)
+                    {
+                        MessageBox.Show("Such a login already exists");
+                        return false;
+                    }
+                }
+            }
+
+            if (credentialsf.Password != PasswordBox.Text)
+            {
+                if (string.IsNullOrEmpty(PasswordBox.Text))
+                {
+                    MessageBox.Show("Enter your password");
+                    return false;
+                }
+
+                if (!IsPasswordValid(PasswordBox.Text))
+                {
+                    MessageBox.Show("Password should be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one digit.");
+                    return false;
+                }
+            }
+            
+            if (clientf.Email != EmailBox.Text)
+            {
+                if (string.IsNullOrEmpty(EmailBox.Text))
+                {
+                    MessageBox.Show("Enter your email address");
+                    return false;
+                }
+
+                if (!IsValidEmail(EmailBox.Text))
+                {
+                    MessageBox.Show("Enter a valid email address");
+                    return false;
+                }
+
+                var user = bookstoreDBContext.Clients.FirstOrDefault(x => x.Email == EmailBox.Text);
+                var user2 = bookstoreDBContext.Administrators.FirstOrDefault(x => x.Email == EmailBox.Text);
+                if (user != null || user2 != null)
+                {
+                    MessageBox.Show("A user with this login already exists");
+                    return false;
+                }
+            }
+
+            if (string.IsNullOrEmpty(NameBox.Text))
+            {
+                MessageBox.Show("Enter your Name");
+                return false;
+            }
+
+            if (!ValidateName(NameBox.Text))
+            {
+                MessageBox.Show("Name should start with an uppercase letter and contain 4 to 20 characters (letters, numbers, spaces, dashes, underscores).");
+                return false;
+            }
+
+
+            if (string.IsNullOrEmpty(PhoneTextBox.Text))
+            {
+                MessageBox.Show("Enter your Phone");
+                return false;
+            }
+
+
+            if (!ValidatePhone(PhoneTextBox.Text))
+            {
+                MessageBox.Show("The phone number is incorrect, example: +380123456789");
+                return false;
+            }
+
+            if (clientf.PhoneNumber != PhoneTextBox.Text)
+            {
+                var phone = bookstoreDBContext.Clients.FirstOrDefault(x => x.PhoneNumber == PhoneTextBox.Text);
+                var phone2 = bookstoreDBContext.Administrators.FirstOrDefault(x => x.PhoneNumber == PhoneTextBox.Text);
+                if (phone != null || phone2 != null)
+                {
+                    MessageBox.Show("A user with this phone number already exists");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool IsPasswordValid(string password)
+        {
+            var passwordRegex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$");
+            return passwordRegex.IsMatch(password);
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            string emailRegexPattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+            Regex regex = new Regex(emailRegexPattern);
+            return regex.IsMatch(email);
+        }
+
+        private bool ValidateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return false;
+
+            if (name.Length < 4 || name.Length > 20)
+                return false;
+
+            if (!char.IsUpper(name[0]))
+                return false;
+
+            var allowedCharacters = new Regex(@"^[a-zA-Z0-9\s_-]+$");
+            if (!allowedCharacters.IsMatch(name))
+                return false;
+
+            return true;
+        }
+
+        private bool ValidatePhone(string phone)
+        {
+            Regex regex = new Regex(@"^\+380\d{9}$");
+            return regex.IsMatch(phone);
+        }
+
     }
 }

@@ -13,7 +13,7 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         
-        Title="RegisterWindow" Height="660" Width="450">
+        Title="RegisterWindow" Height="720" Width="480">
     <materialDesign:Card UniformCornerRadius="15" Background="{DynamicResource MaterialDesignPaper}" Margin="25" materialDesign:ShadowAssist.ShadowDepth="Depth4">
         
         <StackPanel>
@@ -91,7 +91,7 @@
 
 
                 <Button  x:Name="CreateCredentials" Style="{StaticResource MaterialDesignFlatMidBgButton}"
-                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="150"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="165"
                     materialDesign:ButtonAssist.CornerRadius="10" FontSize="16" Content="Create Credentials"
                     Command="{Binding Path=LoginCmd, UpdateSourceTrigger=PropertyChanged}"
                          Click="CreateCredentials_Click" Margin="0,0,5,0"/>

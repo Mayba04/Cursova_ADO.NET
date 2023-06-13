@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:ViewModel}"
           xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{x:Null}"
         AllowsTransparency="True"
         WindowStyle="None"
@@ -69,7 +69,7 @@
 
             <Button Margin="0 20 0 0" x:Name="signupInfo" Style="{StaticResource MaterialDesignFlatButton}"
                     materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="53" Width="300"
-                    materialDesign:ButtonAssist.CornerRadius="10" FontSize="18" Content="Create acount" Click="signupInfo_Click"/>
+                    materialDesign:ButtonAssist.CornerRadius="10" FontSize="18" Content="Create account " Click="signupInfo_Click"/>
 
 
         </StackPanel>

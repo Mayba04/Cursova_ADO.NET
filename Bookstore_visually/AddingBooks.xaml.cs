@@ -156,7 +156,12 @@ namespace Bookstore_visually
             throw new NotImplementedException();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AddBook_Button_Click(object sender, RoutedEventArgs e)
+        {
+            AddBooks();
+        }
+
+        private void AddBooks()
         {
             int year;
             decimal price;
@@ -182,10 +187,13 @@ namespace Bookstore_visually
                                                 year = int.Parse(YearBox.Text);
                                                 price = decimal.Parse(PriceBox.Text);
                                                 quantiti = int.Parse(QuantitiBox.Text);
-                                                var IdAuthor = bookstoreDBContext.Authors.Where(a => a.Name == AuthorNameBox.Text && a.Surname == AuthorSurnameBox.Text).FirstOrDefault();
+                                                var IdAuthor = bookstoreDBContext.Authors.
+                                                    Where(a => a.Name == AuthorNameBox.Text && a.Surname == AuthorSurnameBox.Text).FirstOrDefault();
                                                 var idGenre = bookstoreDBContext.Genres.Where(g => g.Name == GenreNameBox.Text).FirstOrDefault();
-                                                var IsChekedBook = bookstoreDBContext.Books.Where(b => b.Title == TitleBox.Text && b.Publisher == PublisherBox.Text && b.Year == year && b.Price == price && b.Quantity == quantiti
-                                                && b.BookGenres.FirstOrDefault().GenreId == idGenre.Id && b.BookAuthors.FirstOrDefault().AuthorId == IdAuthor.Id).FirstOrDefault();
+                                                var IsChekedBook = bookstoreDBContext.Books.
+                                                    Where(b => b.Title == TitleBox.Text && b.Publisher == PublisherBox.Text && b.Year == year &&
+                                                    b.Price == price && b.Quantity == quantiti && b.BookGenres.FirstOrDefault().GenreId == idGenre.Id 
+                                                    && b.BookAuthors.FirstOrDefault().AuthorId == IdAuthor.Id).FirstOrDefault();
                                                 if (IsChekedBook == null)
                                                 {
                                                     Book newBook =
@@ -256,7 +264,7 @@ namespace Bookstore_visually
                                 {
                                     Messagbox();
                                 }
-                               
+
                             }
                             else
                             {

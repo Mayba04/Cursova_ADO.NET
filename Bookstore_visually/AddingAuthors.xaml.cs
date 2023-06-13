@@ -30,6 +30,11 @@ namespace Bookstore_visually
 
         private void AddAthorBTN(object sender, RoutedEventArgs e)
         {
+            AddAthor();
+        }
+
+        private void AddAthor()
+        {
             if (AuthorNameBox.Text.Length > 0)
             {
                 if (AuthorSurnameBox.Text.Length > 0)
@@ -48,7 +53,7 @@ namespace Bookstore_visually
                     {
                         MessageBox.Show("Such an author already exists");
                     }
-                    
+
                 }
                 else
                 {
@@ -60,6 +65,7 @@ namespace Bookstore_visually
                 MessageBox.Show("Enter name Author!");
             }
         }
+
 
         private void closebtn(object sender, RoutedEventArgs e)
         {

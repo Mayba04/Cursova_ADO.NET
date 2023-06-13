@@ -60,20 +60,40 @@ namespace Bookstore_visually
 
         }
 
-        public void UpdateBook()
+        private void UpdateBook()
         {
-            var book = bookstoreDBContext.Books.Where(b=>b.Id == ID).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).FirstOrDefault();
+            var book = bookstoreDBContext.Books.
+                Where(b=>b.Id == ID).
+                Select(b => new 
+                { 
+                    Id = b.Id, 
+                    Title = b.Title, 
+                    Publisher = b.Publisher, 
+                    Year = b.Year, 
+                    Price = b.Price, 
+                    Quantity = b.Quantity, 
+                    Genre = b.BookGenres.FirstOrDefault().Genre.Name, 
+                    AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, 
+                    AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname 
+                }).FirstOrDefault();
 
             List<object> ff = new List<object>();
-            model.Books = $"Title: {book.Title}\nAuthor: {book.AuthorSurname} {book.AuthorName}\nPrice: {book.Price} UAH\nPublisher: {book.Publisher}\nYear of publication: {book.Year}";
+            model.Books = $"Title: " +
+                $"{book.Title}" +
+                $"\nAuthor: {book.AuthorSurname} {book.AuthorName}" +
+                $"\nPrice: {book.Price} UAH" +
+                $"\nPublisher: {book.Publisher}" +
+                $"\nYear of publication: {book.Year}";
             ff.Add(book);
             model.AddCDGBook(ff);
         }
 
-        public void UpdateComment()
+        private void UpdateComment()
         {
             model.ClearComment();
-            var comment = bookstoreDBContext.Comments.Where(b => b.BookId == ID).Select(c => new { ID = c.Id, Name = c.Client.Name, Date = c.CreatedAt, Text = c.Text }).ToList();
+            var comment = bookstoreDBContext.Comments.
+                Where(b => b.BookId == ID).
+                Select(c => new { ID = c.Id, Name = c.Client.Name, Date = c.CreatedAt, Text = c.Text }).ToList();
             
             foreach (var item in comment)
             {
@@ -92,15 +112,13 @@ namespace Bookstore_visually
             if (TextBox.Text.Length > 0)
             {
                 var client = bookstoreDBContext.Clients.Where(c => c.CredentialsId == IdClient).FirstOrDefault();
-                Comment comment =
-                           new Comment()
-                           {
-                               Text = TextBox.Text,
-                               CreatedAt = DateTime.Now,
-                               BookId = ID,
-                               ClientId = IdClient,
-
-                           };
+                Comment comment = new Comment()
+                {
+                    Text = TextBox.Text,
+                    CreatedAt = DateTime.Now,
+                    BookId = ID,
+                    ClientId = IdClient,
+                };
 
                 bookstoreDBContext.Comments.Add(comment);
                 bookstoreDBContext.SaveChanges();
@@ -127,20 +145,28 @@ namespace Bookstore_visually
 
         private void DeleteComment_Btn_Clik(object sender, RoutedEventArgs e)
         {
+            DeleteComment();
+        }
+
+        private void DeleteComment()
+        {
             if (CommentBox.SelectedItem != null)
             {
                 var comment = (dynamic)CommentBox.SelectedItem;
                 string n = comment.Name;
                 string t = comment.Text;
                 int id = comment.IdComment;
-                var coomentdb = bookstoreDBContext.Comments.Include(c=>c.Client).Where(c => c.Text == t && c.Client.Name == n && c.Id == id && c.ClientId == IdClient).FirstOrDefault();
+                var coomentdb = bookstoreDBContext.Comments.
+                    Include(c => c.Client).
+                        Where(c => c.Text == t && c.Client.Name == n && c.Id == id && c.ClientId == IdClient).
+                            FirstOrDefault();
                 if (coomentdb != null)
                 {
                     bookstoreDBContext.Remove(coomentdb);
                     bookstoreDBContext.SaveChanges();
                     UpdateComment();
                     MessageBox.Show("Comment deleted!");
-                } 
+                }
                 else
                 {
                     MessageBox.Show("You cannot delete comments that are not your own");

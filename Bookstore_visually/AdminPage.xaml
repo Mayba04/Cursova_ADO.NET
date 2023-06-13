@@ -22,8 +22,9 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <materialDesign:PopupBox HorizontalAlignment="Left" Margin="0,2,2,0" 
-                                         PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="25" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <materialDesign:PopupBox  Margin="0,2,2,0" 
+                                         PlacementMode="BottomAndAlignRightEdges" ToolTip="Action" StaysOpen="False" Height="25" VerticalAlignment="Center">
                     <StackPanel>
 
                         <Button Content="Darkmode On/Off" x:Name="themeToggle" Click="toggleTheme"  Margin="0 8 0 0"></Button>
@@ -31,7 +32,8 @@
                         <Button x:Name="btn_Exit" ToolTip="Exit" Margin="0 8 0 0" Content="Exit" Click="exitApp"/>
                     </StackPanel>
                 </materialDesign:PopupBox>
-
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center">Administrator panel</Label>
+                </StackPanel>
                 <StackPanel Grid.Column="1"  Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
                         materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
@@ -82,7 +84,7 @@
                         </TabItem>
                     </TabControl>
                 </TabItem>
-                <TabItem Header="Client" HorizontalAlignment="Left">
+                <TabItem Header="Clients" HorizontalAlignment="Left">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Width="60" Height="40" HorizontalAlignment="Left" ToolTip="Delete Client" Click="DeleteClientBTN">
@@ -98,7 +100,7 @@
                         <DataGrid Name="AdminCC" Height="550" Margin="10" IsReadOnly="False" ></DataGrid>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="Book" HorizontalAlignment="Left" >
+                <TabItem Header="Books" HorizontalAlignment="Left" >
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
                             <Button Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Add book" Width="60" Margin="5" Click="Button_Click_3">
@@ -155,7 +157,7 @@
                     </StackPanel>
 
                 </TabItem>
-                <TabItem Header="Author" HorizontalAlignment="Left" >
+                <TabItem Header="Authors" HorizontalAlignment="Left" >
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <Button Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" ToolTip="Delete Author" Click="DeleteAuthorBTN" Margin="6">
@@ -171,7 +173,7 @@
                         <DataGrid x:Name="AdminAuthor" Height="550" Margin="10"></DataGrid>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="Genre" HorizontalAlignment="Left" >
+                <TabItem Header="Genres" HorizontalAlignment="Left" >
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <Button Style="{StaticResource MaterialDesignFlatButton}" Width="60" Height="40" ToolTip="Delete Genre" Click="DeleteGenreBTN" Margin="6">

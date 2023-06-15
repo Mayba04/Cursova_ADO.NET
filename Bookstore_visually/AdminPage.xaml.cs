@@ -176,19 +176,14 @@ namespace Bookstore_visually
 
         private void DeleteBookBTN(object sender, RoutedEventArgs e)
         {
-            DeleteBook();
-        }
-
-        private void DeleteBook()
-        {
             if (dataGrid.SelectedItem != null)
             {
-                if (System.Windows.Forms.MessageBox.Show("Are you sure you want to delete the book?" +
-                    "\nAfter all, all the information associated with it will also be deleted!", "WARNING", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                if (System.Windows.Forms.MessageBox.Show("Are you sure you want to delete the book?\nAfter all, all the information associated with it will also be deleted!", "WARNING", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
                     var selectedRow = (dynamic)dataGrid.SelectedItem;
                     int id = selectedRow.Id;
-
+                    
+                    // bookstoreDBContext.Books.Remove(book as Book);
                     bookstoreDBContext.Books.Remove(bookstoreDBContext.Books.Where(b => b.Id == id).FirstOrDefault());
                     bookstoreDBContext.Photos.Remove(bookstoreDBContext.Photos.Where(p => p.BookId == id).FirstOrDefault());
                     bookstoreDBContext.Comments.RemoveRange(bookstoreDBContext.Comments.Where(c => c.BookId == id).ToList());
@@ -196,8 +191,8 @@ namespace Bookstore_visually
                     bookstoreDBContext.BookGenres.RemoveRange(bookstoreDBContext.BookGenres.Where(ba => ba.BookId == id).ToList());
                     var idOrders = bookstoreDBContext.OrderBooks.Where(OB => OB.BookId == id).ToList();
                     bookstoreDBContext.OrderBooks.RemoveRange(bookstoreDBContext.OrderBooks.Where(Ob => Ob.BookId == id).ToList());
-                    bookstoreDBContext.Reservations.RemoveRange(bookstoreDBContext.Reservations.Where(r => r.BookId == id).ToList());
-
+                    bookstoreDBContext.Reservations.RemoveRange(bookstoreDBContext.Reservations.Where(r=>r.BookId == id).ToList());
+                    
                     foreach (var item in idOrders)
                     {
                         bookstoreDBContext.Orders.Remove(bookstoreDBContext.Orders.Where(O => O.Id == item.OrderId).FirstOrDefault());
@@ -205,7 +200,7 @@ namespace Bookstore_visually
                     bookstoreDBContext.SaveChanges();
                     RefreshAll();
                 }
-
+               
             }
         }
 
@@ -239,23 +234,6 @@ namespace Bookstore_visually
         }
 
         private void DeleteCommentBTN(object sender, RoutedEventArgs e)
-        {
-            if (CommentBox.SelectedItem != null)
-            {
-                var selectedRow = (dynamic)CommentBox.SelectedItem;
-                int id = selectedRow.IdComment;
-                if (id > 0)
-                {
-                    bookstoreDBContext.Comments.Remove(bookstoreDBContext.Comments.Where(b => b.Id == id).FirstOrDefault());
-                    bookstoreDBContext.SaveChanges();
-                    RefreshComment();
-                    RefreshImage();
-                    RefreshBookInfo();
-                }
-            }
-        }
-
-        private void DeleteComment()
         {
             if (CommentBox.SelectedItem != null)
             {
@@ -647,11 +625,6 @@ namespace Bookstore_visually
 
         private void DeleteAdministratorBTN(object sender, RoutedEventArgs e)
         {
-            DeleteAdministrator();
-        }
-
-        private void DeleteAdministrator()
-        {
             if (AdminDG.ItemsSource != null)
             {
                 var selectedRow = (dynamic)AdminDG.SelectedItem;
@@ -666,7 +639,7 @@ namespace Bookstore_visually
                         MessageBox.Show("The administrator has been removed !");
                         RefreshAdministrators();
                     }
-                    else
+                    else 
                     {
                         MessageBox.Show("This administrator cannot be removed");
                     }
@@ -685,7 +658,7 @@ namespace Bookstore_visually
 
         private void Help_Button(object sender, RoutedEventArgs e)
         {
-            string url = "https://docs.google.com/document/d/10dTN9hMfxQVV_B1RDUqtlpTcOogBPV7gtqxmqtZJHyg/edit?usp=sharing";
+            string url = "https://docs.google.com/document/d/1sQKBGx-NLaHek8adIyP6l707hsCWU9U_f0UxksTkG5g/edit?usp=sharing";
 
             try
             {

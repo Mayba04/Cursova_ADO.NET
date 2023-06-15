@@ -29,7 +29,6 @@ using Application = System.Windows.Application;
 using MaterialDesignThemes.Wpf;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.ComponentModel;
 
 namespace Bookstore_visually
 {
@@ -76,8 +75,8 @@ namespace Bookstore_visually
         {
             RefreshBook();
         }
-       
-        private void ShowInformationBookAndWriteComment(object sender, RoutedEventArgs e)
+
+        private void WriteCommentBtn_Click(object sender, RoutedEventArgs e)
         {
             if (Book.SelectedItem != null)
             {
@@ -130,23 +129,7 @@ namespace Bookstore_visually
         private void RefreshBook()
         {
             List<object> ff = new List<object>();
-            var book = bookstoreDBContext.Books.
-                Include(b => b.BookAuthors).
-                    ThenInclude(ba => ba.Author).
-                        Include(b => b.BookGenres).
-                            ThenInclude(ba=> ba.Genre).
-                                Select(b => new 
-                                {
-                                    Id = b.Id,
-                                    Title = b.Title,
-                                    Publisher = b.Publisher,
-                                    Year = b.Year,
-                                    Price = b.Price,
-                                    Quantity = b.Quantity,
-                                    Genre = b.BookGenres.FirstOrDefault().Genre.Name,
-                                    AuthorName = b.BookAuthors.FirstOrDefault().Author.Name,
-                                    AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname
-                                }).ToList();
+            var book = bookstoreDBContext.Books.Include(b => b.BookAuthors).ThenInclude(ba => ba.Author).Include(b => b.BookGenres).ThenInclude(ba=> ba.Genre).Select(b => new { Id = b.Id, Title = b.Title, Publisher = b.Publisher, Year = b.Year, Price = b.Price, Quantity = b.Quantity, Genre = b.BookGenres.FirstOrDefault().Genre.Name, AuthorName = b.BookAuthors.FirstOrDefault().Author.Name, AuthorSurname = b.BookAuthors.FirstOrDefault().Author.Surname }).ToList();
             ff.AddRange(book);
             model.AddCDGBook(ff);
         }
@@ -310,6 +293,8 @@ namespace Bookstore_visually
             .Select(o => new { Id = o.Id, Date = o.Date, Price = o.Price, Quantity = o.Quantity, Payment_status = o.Payment_status, BookTitle = o.OrderBooks.FirstOrDefault().Book.Title, ClientName = o.Clients.Name }).ToList();
         }
 
+
+
         private void RefreshOrderBooks()
         {
             OrderBooksDataGrid.ItemsSource = bookstoreDBContext.Books.Include(b => b.BookAuthors).
@@ -322,19 +307,16 @@ namespace Bookstore_visually
 
         private void OrderBooks_ButtonClick(object sender, RoutedEventArgs e)
         {
-            ToOrder();
-        }
-
-        private void ToOrder()
-        {
+            int idClient = bookstoreDBContext.Clients.Where(c => c.CredentialsId == ((Client)Credential_user).CredentialsId).Select(c => c.CredentialsId).FirstOrDefault(); // Id користувача який зайшов в програму 
+          
             int Quantity_B;
-
+          
             if (OrderBooksDataGrid.SelectedItem != null)
             {
                 var selectedRow = (dynamic)OrderBooksDataGrid.SelectedItem;
                 int id = selectedRow.Id;
                 var dbBook = bookstoreDBContext.Books.FirstOrDefault(b => b.Id == id);
-                Book book = dbBook;
+                Book book = bookstoreDBContext.Books.FirstOrDefault(b => b.Id == id);
                 if (Quantity_Book.Text.Length > 0)
                 {
                     try
@@ -348,13 +330,13 @@ namespace Bookstore_visually
                              {
                                  Date = DateTime.Now,
                                  ClientId = idClient,
-                                 Price = book.Price * Quantity_B,
+                                 Price = book.Price * Quantity_B, 
                                  Quantity = Quantity_B,
                                  Clients = bookstoreDBContext.Clients.Where(i => i.CredentialsId == idClient).FirstOrDefault(),
-                                 Payment_status = false,
+                                 Payment_status=false,
                                  OrderBooks = (ICollection<OrderBook>)new List<OrderBook>()
                              };
-                            bookstoreDBContext.Orders.Add(neworder);
+                             bookstoreDBContext.Orders.Add(neworder);
                             bookstoreDBContext.SaveChanges();
 
                             if (dbBook != null)
@@ -364,12 +346,12 @@ namespace Bookstore_visually
                             }
 
 
-                            int latestOrder = bookstoreDBContext.Orders.OrderByDescending(o => o.Id).Select(o => o.Id).FirstOrDefault();
+                            int latestOrder = bookstoreDBContext.Orders.OrderByDescending(o => o.Id).Select(o=> o.Id).FirstOrDefault();
                             OrderBook neworderbook =
                             new OrderBook()
                             {
                                 OrderId = latestOrder,
-                                BookId = book.Id,
+                                BookId = book.Id, 
                                 Order = bookstoreDBContext.Orders.Where(i => i.Id == latestOrder).FirstOrDefault(),
                                 Book = dbBook
                             };
@@ -397,17 +379,12 @@ namespace Bookstore_visually
             {
                 MessageBox.Show("Select a book !");
             }
-            RefreshOrderBooks();
-            RefreshOrderDG();
-            RefreshBook();
-        }
+           RefreshOrderBooks();
+           RefreshOrderDG();
+           RefreshBook();
+        } 
 
         private void Payment_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            Payment();
-        }
-
-        private void Payment()
         {
             if (OrderDataGrid.SelectedItem != null)
             {
@@ -456,6 +433,7 @@ namespace Bookstore_visually
                     MessageBox.Show("The book has already been paid for");
                 }
             }
+           
         }
 
         private void Payment_Closed(object? sender, EventArgs e)
@@ -594,11 +572,6 @@ namespace Bookstore_visually
 
         private void DeleteReservbook_ButtonClick(object sender, RoutedEventArgs e)
         {
-            DeleteReservBook();
-        }
-
-        private void DeleteReservBook()
-        {
             if (ReservDataGrid.SelectedItem != null)
             {
                 var selectedRow = (dynamic)ReservDataGrid.SelectedItem;
@@ -643,12 +616,6 @@ namespace Bookstore_visually
 
         private void ChangeBtn(object sender, RoutedEventArgs e)
         {
-            ChangeClientData();
-        }
-
-        private void ChangeClientData()
-        {
-
             if (Audit())
             {
                 clientf.Email = EmailBox.Text;

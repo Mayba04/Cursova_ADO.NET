@@ -24,18 +24,16 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <materialDesign:PopupBox Margin="0,2,2,0" 
+                <materialDesign:PopupBox HorizontalAlignment="Left" Margin="0,2,2,0" 
                                          PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Height="25" VerticalAlignment="Center">
-                        <StackPanel>
+                    <StackPanel>
 
-                            <Button Content="Darkmode On/Off" x:Name="themeToggle" Click="toggleTheme"  Margin="0 8 0 0"></Button>
-                            <Button Margin="0 8 0 0" Content="Help Me" Click="Help_Button"/>
-                            <Button x:Name="btn_Exit" ToolTip="Exit" Margin="0 8 0 0" Content="Exit" Click="exitApp"/>
-                        </StackPanel>
-                    </materialDesign:PopupBox>
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">Client panel</Label>
-                </StackPanel>
+                        <Button Content="Darkmode On/Off" x:Name="themeToggle" Click="toggleTheme"  Margin="0 8 0 0"></Button>
+                        <Button Margin="0 8 0 0" Content="Help Me" Click="Help_Button"/>
+                        <Button x:Name="btn_Exit" ToolTip="Exit" Margin="0 8 0 0" Content="Exit" Click="exitApp"/>
+                    </StackPanel>
+                </materialDesign:PopupBox>
+
                 <StackPanel Grid.Column="1"  Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Margin="3"  Style="{StaticResource MaterialDesignFlatButton}"
                         materialDesign:ShadowAssist.ShadowDepth="Depth0" Height="35" Width="40"
@@ -51,7 +49,7 @@
             </Grid>
 
             <TabControl Grid.ColumnSpan="2" TabStripPlacement="Left"  >
-                <TabItem Header="Books " HorizontalAlignment="Left" Width="144.413333333333">
+                <TabItem Header="Book ">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
                             <Button  Style="{StaticResource MaterialDesignFlatButton}"
@@ -63,7 +61,7 @@
                             <Button  Style="{StaticResource MaterialDesignFlatButton}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
                                         materialDesign:ButtonAssist.CornerRadius="10"
-                                     ToolTip="Write a comment" Margin="5" Width="60" Height="40" Click="ShowInformationBookAndWriteComment">
+                                     ToolTip="Write a comment" Margin="5" Width="60" Height="40" Click="WriteCommentBtn_Click">
                                 <materialDesign:PackIcon Kind="CommentEdit" Height="40" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Button>
                             <Button  Style="{StaticResource MaterialDesignFlatButton}"
@@ -149,9 +147,9 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem Header="The most popular" HorizontalAlignment="Left">
+                <TabItem Header="The most popular">
                     <TabControl>
-                        <TabItem Header="Books">
+                        <TabItem Header="Sold">
                             <StackPanel>
                                 <Grid>
                                     <TextBlock Text="The most popular books sold" FontSize="24" Margin="10" HorizontalAlignment="Left"/>
@@ -170,7 +168,7 @@
                         <TabItem Header="Authors">
                             <StackPanel>
                                 <Grid>
-                                    <TextBlock Text="The most popular authors sold" FontSize="24" Margin="10,10,10,10" Grid.ColumnSpan="2"/>
+                                    <TextBlock Text="Most popular authors" FontSize="24" Margin="10,10,10,10" Grid.ColumnSpan="2"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Margin="71,0,0,0">
                                         <Button HorizontalAlignment="Right"  Style="{StaticResource MaterialDesignFlatButton}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
@@ -185,7 +183,7 @@
                         <TabItem Header="Genres">
                             <StackPanel>
                                 <Grid>
-                                    <TextBlock Text="The most popular genres sold" FontSize="24" Margin="10"/>
+                                    <TextBlock Text="Most popular genres" FontSize="24" Margin="10"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                         <Button  HorizontalAlignment="Right"  Style="{StaticResource MaterialDesignFlatButton}"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
@@ -281,7 +279,7 @@
                         </TabControl>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Settings" HorizontalAlignment="Left" Width="144.413333333333">
+                <TabItem Header="Settings">
                     <StackPanel>
                         <TextBox Margin="0,15,0,0" x:Name="LoginBox" Width="300" FontSize="14"
                        materialDesign:HintAssist.Hint="Login" BorderThickness="2"

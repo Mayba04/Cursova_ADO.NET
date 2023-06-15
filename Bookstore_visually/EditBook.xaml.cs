@@ -152,11 +152,6 @@ namespace Bookstore_visually
 
         private void Change_book(object sender, RoutedEventArgs e)
         {
-            ChangeBook();
-        }
-
-        private void ChangeBook()
-        {
             if (IdGenre != genre.Id || IdAuthor != author.Id || TitleBox.Text != book1.Title || PublisherBox.Text != book1.Publisher
                         || YearBox.Text != book1.Year.ToString() || PriceBox.Text != book1.Price.ToString() || QuantitiBox.Text != book1.Quantity.ToString())
             {
@@ -200,10 +195,10 @@ namespace Bookstore_visually
                 bookstoreDBContext.Books.Update(book1);
                 bookstoreDBContext.SaveChanges();
                 MessageBox.Show("Changes saved!");
+
             }
         }
-
-
+            
         private void closebtn(object sender, RoutedEventArgs e)
         {
             this.Close();

@@ -34,6 +34,7 @@ namespace Bookstore_visually
 
         public async void StartPayButton(string url, string data, string signature)
         {
+            //Build form and pay button
             var form = new StringBuilder();
             form.Append($"<form method=\"post\" action=\"{url}\" accept-charset=\"utf-8\">\n");
             form.Append($"<input type=\"hidden\" name=\"data\" value=\"{data}\" />\n");
@@ -41,83 +42,110 @@ namespace Bookstore_visually
             form.Append($"<button type=\"submit\">Pay</button>\n");
             form.Append("</form>\n");
 
+            //CoreWebView2 Innit
             await WebView.EnsureCoreWebView2Async();
 
+            //Render form and pay button in WebView
             WebView.CoreWebView2.NavigateToString(form.ToString());
 
+            //Delegate SourceChanged event
             WebView.SourceChanged += UrlChange;
         }
 
         public async void StartWebResourceRequest(string url, string data, string signature)
         {
-            string param = "data=" + data + "&signature=" + signature;
-            byte[] postData = Encoding.UTF8.GetBytes(param); 
-            MemoryStream postDataStream = new MemoryStream(postData.Length); 
-            postDataStream.Write(postData, 0, postData.Length); 
-            postDataStream.Seek(0, SeekOrigin.Begin); 
+            //Generate POST Request MemStream
+            string param = "data=" + data + "&signature=" + signature; // create request string
+            byte[] postData = Encoding.UTF8.GetBytes(param); //request string to byte array
+            MemoryStream postDataStream = new MemoryStream(postData.Length); // new memory stream by lenght
+            postDataStream.Write(postData, 0, postData.Length); //write params byte array to stream
+            postDataStream.Seek(0, SeekOrigin.Begin); //set start position to stream
 
+            //Generate HTTP Request Header
             StringBuilder headers = new StringBuilder();
             headers.AppendLine("Content-Type: application/x-www-form-urlencoded");
 
+            
+            //CoreWebView2 Innit
             await WebView.EnsureCoreWebView2Async();
 
+            // Generate WebResourceRequest
             var request = WebView.CoreWebView2.Environment.CreateWebResourceRequest(url, "POST", postDataStream, headers.ToString());
 
+            //Send request - Render response
             WebView.CoreWebView2.NavigateWithWebResourceRequest(request);
 
+            //Delegate SourceChanged event
             WebView.SourceChanged += UrlChange;
         }
 
+
+        //source change event delegate
         void UrlChange(object sender, EventArgs e)
         {
             var obj = (Microsoft.Web.WebView2.Wpf.WebView2)sender;
+            //Close WebView Window
             string url = obj.Source.ToString();
             if(url.Contains("checkout/success"))
             {
                 Task task = new Task(GetStatus);
                 task.Start();
                 task.Wait();
+                //this.Close();
             }
         }
 
 
         public void GetStatus()
         {
+            //enumerate orders where no pay status and update
+           // var orders = repositoryO.GetAll().Where(x => !x.Payment_status);// bookstoreDBContext.Orders.Where(x => !x.Payment_status).ToList();
             var orders = bookstoreDBContext.Orders.OrderByDescending(c => c.Id).FirstOrDefault();
-            var dataJson = new
+            //foreach (var item in orders)
             {
-                version = "3",
-                action = "status",
-                public_key = Config.LiqyPublicKey,
-                order_id = orders.Id.ToString()
-            };
-            
-            string jsonDataString = System.Text.Json.JsonSerializer.Serialize(dataJson);
 
-            string data = LiqyPayHelper.CreateData(jsonDataString);
-            string signature = LiqyPayHelper.CreateSign(data, Config.LiqypayPrivateKey);
+                var dataJson = new
+                {
+                    version = "3",
+                    action = "status",
+                    public_key = Config.LiqyPublicKey,
+                    order_id = orders.Id.ToString()
+                };
 
-            string url = Config.LiqyPayRequestURL;
-            
-            var webC = new WebClient();
-            webC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-            
-            string responseStr = webC.UploadString(new Uri(url), "POST", "data=" + data + "&signature=" + signature);
-            
-            var response = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(responseStr);
-            var status = response.First(x => x.Key == "status").Value.ToString();
-            
-            var dbEntry = repositoryO.GetById(orders.Id);
-            
-            if (status == "success")
-            {
-                dbEntry.Payment_status = true;
+                string jsonDataString = System.Text.Json.JsonSerializer.Serialize(dataJson);
+
+                string data = LiqyPayHelper.CreateData(jsonDataString);
+                string signature = LiqyPayHelper.CreateSign(data, Config.LiqypayPrivateKey);
+
+                string url = Config.LiqyPayRequestURL;
+
+                //Create web client and set content type in heder
+                var webC = new WebClient();
+                webC.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+
+                //Send POST request and get response string
+                string responseStr = webC.UploadString(new Uri(url), "POST", "data=" + data + "&signature=" + signature);
+
+                //deserialize respons to dictionary
+                var response = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(responseStr);
+
+                var status = response.First(x => x.Key == "status").Value.ToString();
+                //update order
+                var dbEntry = repositoryO.GetById(orders.Id);
+
+                //dbEntry.Payment_status = status == "success" ? true : false;
+                if (status == "success")
+                {
+                    dbEntry.Payment_status = true;
+                }
+                repositoryO.Update(dbEntry);
+                repositoryO.Save();
+                //bookstoreDBContext.Orders.Update(dbEntry);
+                bookstoreDBContext.SaveChanges();
+               
+                //end enumarate
             }
-            
-            repositoryO.Update(dbEntry);
-            repositoryO.Save();
 
-            bookstoreDBContext.SaveChanges();
         }
 
     }

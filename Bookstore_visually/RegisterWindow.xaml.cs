@@ -44,11 +44,6 @@ namespace Bookstore_visually
         private void CreateCredentials_Click(object sender, RoutedEventArgs e)
         {
 
-            CreateCredentials_Click();
-        }
-
-        private void CreateCredentials_Click()
-        {
             if (string.IsNullOrEmpty(LoginTextBox.Text))
             {
                 MessageBox.Show("Enter your login");
@@ -82,8 +77,7 @@ namespace Bookstore_visually
 
             if (!IsPasswordValid(PasswordBox.Text))
             {
-                MessageBox.Show("Password should be at least 8 characters long and contain at least one lowercase letter, " +
-                    "one uppercase letter, and one digit.");
+                MessageBox.Show("Password should be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one digit.");
                 return;
             }
 
@@ -164,12 +158,7 @@ namespace Bookstore_visually
             return regex.IsMatch(phone); 
         }
 
-        private void CreateAccount_Click(object sender, RoutedEventArgs e)
-        {
-            CreateAccountF();
-        }
-
-        private void CreateAccountF()
+    private void CreateAccount_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(EmailTextBox.Text))
             {
@@ -199,8 +188,7 @@ namespace Bookstore_visually
 
             if (!ValidateName(NameTextBox.Text))
             {
-                MessageBox.Show("Name should start with an uppercase letter and contain 4 to 20 characters " +
-                    "(letters, numbers, spaces, dashes, underscores).");
+                MessageBox.Show("Name should start with an uppercase letter and contain 4 to 20 characters (letters, numbers, spaces, dashes, underscores).");
                 return;
             }
 
@@ -209,6 +197,7 @@ namespace Bookstore_visually
                 MessageBox.Show("Enter your Phone");
                 return;
             }
+
 
             if (!ValidatePhone(PhoneTextBox.Text))
             {
@@ -244,6 +233,7 @@ namespace Bookstore_visually
             Login mainWindow = new Login();
             mainWindow.Show();
             this.Close();
+
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

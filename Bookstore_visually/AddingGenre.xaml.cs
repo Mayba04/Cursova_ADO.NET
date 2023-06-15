@@ -29,11 +29,6 @@ namespace Bookstore_visually
 
         private void AddGenreBTN(object sender, RoutedEventArgs e)
         {
-            AddGenre();
-        }
-
-        private void AddGenre()
-        {
             if (GenreNameBox.Text.Length > 0)
             {
                 var genre = bookstoreDBContext.Genres.Where(g => g.Name == GenreNameBox.Text).FirstOrDefault();

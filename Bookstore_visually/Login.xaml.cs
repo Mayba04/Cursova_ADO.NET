@@ -67,11 +67,6 @@ namespace Bookstore_visually
 
         private void logInfo_Click(object sender, RoutedEventArgs e)
         {
-            LogIn();
-        }
-
-        private void LogIn()
-        {
             string login = textUsername.Text;
             string password = txtPassword.Password;
 
